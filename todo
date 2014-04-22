@@ -1,8 +1,7 @@
 GET TAG EDITORS AND LISTS WORKING ON LIVE FIREBASE DATA
 
-- render checkmarks before confirmed tags
-- disappear tags on "no"
-- update and redraw user structure as yes/no buttons in editor are clicked
+- design fb datamodel (... for now, just like what's in js)
+- switch lists to be fblists
 - add buttons work to add activity
 - add button works to add goals in both editors
 
@@ -29,3 +28,6 @@ polish
 - range slider updates text value for frequences
 - get rid of tabs in favor of some kind of "add yours" thing and rest of review in modal
 - start incorporating css from review.css
+- render checkmarks before confirmed tags
+- disappear tags on "no"
+- update and redraw user structure as yes/no buttons in editor are clicked
