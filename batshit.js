@@ -30,17 +30,27 @@ batshit.parse_my_url = function(){
 
 // building blocks
 
-batshit.$ = function(x){
-    if (x.on || x.addEventListener) return x;
-    return (batshit.focus || document).querySelector(x);
+batshit.$ = function(x, fn){
+    if (x.on || x.addEventListener) return fn ?  fn(x) : x;
+    if (!fn) return (batshit.focus || document).querySelector(x);
+    var els = (batshit.focus || document).querySelectorAll(x);
+    for (var i = 0; i < els.length; i++) fn(els[i]);
 };
 
 batshit.on = function(el, ev, c){
-    el = batshit.$(el);
-    if (!batshit.focus) batshit.focus = document.body;
-    if (!batshit.focus.unshow_fns) batshit.focus.unshow_fns = [];
-    batshit.focus.unshow_fns.push(function(){ if (el.off) el.off(ev,c); else el.removeEventListener(ev,c); });
-    if (el.on) el.on(ev, c); else el.addEventListener(ev, c);
+    batshit.$(el, function(el){
+        if (!el.on){ el.on = el.addEventListener; el.off = el.removeEventListener; }
+        if (!el.listeners) {
+            el.listeners = {};
+            el.addEventListener('unwire', function(ev){
+                for (var k in el.listeners) el.off(k, el.listeners[k]);
+                el.listeners = {};
+            });
+        }
+        if (el.listeners[ev]) el.off(ev,el.listeners[ev]);
+        el.listeners[ev] = c;
+        el.on(ev, c);
+    });
 };
 
 
@@ -71,11 +81,11 @@ batshit.on = function(el, ev, c){
 
     batshit.object = function (el, o, calcfns) {
         if (calcfns) for (var k in calcfns) o[k] = calcfns[k](o);
-        mikrotemplate(batshit.$(el), o);
+        mikrotemplate($(el), o);
     };
 
     batshit.tabs = function (el, tabnames, onchange, default_tab) {
-        el = batshit.$(el);
+        el = $(el);
         var array = tabnames.map(function (n) { return {name: n}; });
         mikrotemplate(el, array);
         var children = el.childNodes;
@@ -93,7 +103,7 @@ batshit.on = function(el, ev, c){
     };
 
     batshit.hidable = function(el, shown){
-        el = batshit.$(el);
+        el = $(el);
         el.show = function(shown){
             if (!shown){
                 el.classList.add('hiding');
@@ -111,19 +121,31 @@ batshit.on = function(el, ev, c){
     };
 
     batshit.toggle = function(el, does, start_state){
-        el = batshit.$(el);
+        el = $(el);
         var state = start_state;
-        el.state = function(s){
+        el.state = function(s, ev){
             state = s;
             if (state) el.classList.add('on');
             else el.classList.remove('on');
-            does(state, el);
+            does(state, el, ev);
         };
-        batshit.on(el, 'click', function (ev) {
+        on(el, 'click', function (ev) {
             ev.preventDefault();
-            el.state(!state);
+            el.state(!state, ev);
             return false;
         });
+    };
+
+    batshit.list = function(el, array, onclick){
+        el = $(el);
+        el.render = function(array){
+            mikrotemplate(el, array);
+            if (!onclick) return;
+            var children = el.childNodes;
+            var f = function(ev){ onclick( this.data, ev, this ); };
+            for (var i = children.length - 1; i >= 0; i--) children[i].onclick = f;
+        };
+        if (array) el.render(array);
     };
 
 })();
@@ -135,7 +157,8 @@ batshit.on = function(el, ev, c){
 
 function mikrotemplate(el, obj_or_array, id_pfx){
     function decorate_element(el, json){
-        var directives = el.getAttribute('data-set') ? el.getAttribute('data-set').split(' ') : [];
+        var directive_string = el.getAttribute('data-set');
+        var directives = directive_string ? directive_string.split(' ') : [];
         directives.forEach(function(word){
             var parts = word.split(':');
             var attr = parts[1] ? parts[0] : 'text';
@@ -154,11 +177,10 @@ function mikrotemplate(el, obj_or_array, id_pfx){
     if (!id_pfx) id_pfx = '';
     if (!obj_or_array) return;
     if (!obj_or_array.forEach) return decorate_subtree(el, obj_or_array);
-    if (!mikrotemplate.templates) mikrotemplate.templates = {};
-    if (!mikrotemplate.templates[el.id]) mikrotemplate.templates[el.id] = el.firstElementChild.cloneNode(true);
+    if (!el.mikrotemplate) el.mikrotemplate = el.firstElementChild.cloneNode(true);
     el.innerHTML = "";
     obj_or_array.forEach(function(o){
-        var clone = mikrotemplate.templates[el.id].cloneNode(true);
+        var clone = el.mikrotemplate.cloneNode(true);
         clone.id = id_pfx + o.id;
         decorate_subtree(clone, o);
         el.appendChild(clone);

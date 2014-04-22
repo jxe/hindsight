@@ -35,30 +35,18 @@
    <span data-set="engaged_at">1 month ago</span>.
 
    It was about
-   <span class="choice_values tagfield editable">
-      <b>getting fit</b>
+   <span class="choice_values_list tagfield editable">
+      <b data-set="class:report text:name">wassup</b>
       <b>being my full self</b>
    </span>
 </section>
 
 <section class="relationship">
    <span class="relationship_type">You use it for</span>
-   <span class="personal_activities tagfield">
-      <b>distance biking</b>
+   <span class="personal_activities_list tagfield">
+      <b data-set="class:report text:name">distance biking</b>
    </span>
    <button>add</button>
-</section>
-
-
-<section class="activity">
-   <h2>Distance biking</h2>
-   <h3>I do this weekly</h3>
-   <input type=range>
-   <h3>To get</h3>
-   <span class="activity_values tagfield editable">
-      <b>fit</b>
-      <b>relaxed</b>
-   </span>
 </section>
 
 </div>
@@ -66,7 +54,20 @@
 
 <!-- modals -->
 
+<section class="activity">
+   <h2 data-set="name">Distance biking</h2>
+   <h3>I do this weekly</h3>
+   <input type=range>
+   <h3>To get</h3>
+   <span class="activity_values tagfield editable">
+      <b data-set="class:report text:name">fit</b>
+      <b>relaxed</b>
+   </span>
+</section>
+
+
 <section class="modal activities">
+    <button class="close">close</button>
    <h2>What do you use it for?</h2>
    <ul>
       <li>Distance biking
@@ -75,21 +76,30 @@
 </section>
 
 <section class="modal choice_values_editor">
+    <button class="close">close</button>
    <h2>Buying this felt</h2>
    <ul>
-      <li>bold  <button>yes</button><button>no</button>
-      <li>caring  <button>yes</button><button>no</button>
-      <li>thoughtful  <button>yes</button><button>no</button>
+       <div class="choice_values_editor_list" id="choice_values_editor_list">
+           <li data-set="class:report">
+               <b data-set="name"></b>
+               <button>yes</button><button>no</button>
+           </li>
+       </div>
       <li>add...
    </ul>
 </section>
 
 
 <section class="modal activity_values_editor">
-   <h2>Distance biking helps me get</h2>
+    <button class="close">close</button>
+   <h2 class="activity_values_editor_header"><b data-set="name">Distance biking</b> helps me get</h2>
    <ul>
-      <li>fit  <button>yes</button><button>no</button>
-      <li>relaxed  <button>yes</button><button>no</button>
+       <div class="activity_values_editor_list" id="activity_values_editor_list">
+           <li data-set="class:report">
+               <b data-set="name"></b>
+               <button>yes</button><button>no</button>
+           </li>
+       </div>
       <li>add...
    </ul>
 </section>
@@ -147,10 +157,46 @@ var fb_rdata = {
 };
 
 
+
 function vreview(data){
+    var selected_activity;
+
+    var user_activities = [
+        { name: 'chicken fishing', report: 'confirmed' },
+        { name: 'fig wrestling' }
+    ];
+
+    var user_choice_goals = [
+        { name: 'getting fit', report: 'confirmed' },
+        { name: 'being hot' }
+    ];
+
+    var user_activity_goals = {
+        'chicken fishing': [
+            { name: 'getting fit', report: 'confirmed' },
+            { name: 'being hot' }
+        ]
+    };
+
+
+    function redraw_tags(){
+        console.log(user_choice_goals);
+        batshit.list('.choice_values_list', user_choice_goals);
+        batshit.list('.personal_activities_list', user_activities);
+        batshit.list('.choice_values_editor_list', user_choice_goals);
+    }
+
     data.engagement_gerund = gerunds[data.engagement_type];
     data.engagement_past_tense = data.engagement_type;
     batshit.object('.review', data);
+
+    // same same
+    batshit.button('.close', function () {
+        $('.activities').show(false);
+        $('.choice_values_editor').show(false);
+        $('.activity_values_editor').show(false);
+    })
+
     batshit.tabs('.tabs', ['For others', 'For me'], function (tab_picked) {
         if (tab_picked == 'For others'){
             batshit.$('.community').style.display = '';
@@ -159,7 +205,7 @@ function vreview(data){
             batshit.$('.me').style.display = '';
             batshit.$('.community').style.display = 'none';
         }
-    }, 'For others');
+    }, 'For me');
     batshit.hidable('.activities', false);
     batshit.hidable('.choice_values_editor', false);
     batshit.hidable('.activity_values_editor', false);
@@ -167,15 +213,33 @@ function vreview(data){
     batshit.toggle('.activity_values', function (x) {
         $('.activity_values_editor').show(x);
     }, 0);
-    batshit.toggle('.choice_values', function (x) {
+    batshit.toggle('.choice_values_list', function (x) {
         $('.choice_values_editor').show(x);
     }, 0);
     batshit.toggle('.relationship button', function (x) {
         $('.activities').show(x);
     }, 0);
-    batshit.toggle('.personal_activities', function (x) {
+    batshit.toggle('.personal_activities_list', function (x, el, ev) {
         $('.activity').show(x);
+        if (x){
+            selected_activity = ev.target.innerText;
+            batshit.object('.activity', { name: selected_activity });
+            batshit.object('.activity_values_editor_header', { name: selected_activity });
+            batshit.list('.activity_values', user_activity_goals[selected_activity] || []);
+            batshit.list('.activity_values_editor_list', user_activity_goals[selected_activity] || [], function (data, ev) {
+                if (ev.target.innerText == "yes"){
+                    alert('yes clicked');
+                    // var goal_idx =
+                    // user_activity_goals[selected_activity].with(data.name).report = "yes";
+                } else if (ev.target.innerText == "no"){
+                    alert('no clicked');
+                }
+            });
+        }
     }, 0);
+
+    redraw_tags();
+
 }
 
 vreview(bike_rdata);

@@ -1,0 +1,31 @@
+GET TAG EDITORS AND LISTS WORKING ON LIVE FIREBASE DATA
+
+- render checkmarks before confirmed tags
+- disappear tags on "no"
+- update and redraw user structure as yes/no buttons in editor are clicked
+- add buttons work to add activity
+- add button works to add goals in both editors
+
+------------------------------------------------
+
+ADD IN TYPEAHEAD TEXTFIELDS TO EDITORS
+
+- copy typeahead stuff into batshit
+- figure out where the data for all values and all activities will live
+
+------------------------------------------------
+
+- fn to merge suggested tags and user settings to get a data structure like the above
+
+------------------------------------------------
+
+real data
+- data model includes popular outcomes for each common activity
+- user input data model with outcomes and freq per activity, choice values, activities confirmed, etc
+- batshit firepaint can change path
+
+
+polish
+- range slider updates text value for frequences
+- get rid of tabs in favor of some kind of "add yours" thing and rest of review in modal
+- start incorporating css from review.css

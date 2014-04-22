@@ -1,4 +1,4 @@
-.tagfield b { padding: 1px 8px; background: #9f9; border-radius: 10px; white-space: nowrap; line-height: 1.9em; font-weight: normal; }
+.tagfield b { padding: 1px 8px; background: #999; border-radius: 10px; white-space: nowrap; line-height: 1.9em; font-weight: normal; }
 .tagfield b svg { width: 14px; height: 14px; display:inline; }
 .tagfield.editable { padding: 2px 10px; display: block; background: white; box-shadow: inset rgba(0,0,0,0.5) 0px 0px 3px; }
 svg circle { stroke: green; fill: white; }
@@ -11,14 +11,21 @@ p{ margin-top: 0px; }
 
 
 .modal {
-    position: absolute;
+    position: fixed;
     top: 10px;
     margin: 10px;
-    width: 100%;
     border: solid thin gray;
     box-shadow: black 0px 0px 10px;
+    top: 10px;
+    left: 10px;
+    width: auto;
+    right: 10px;
+    min-height: 400px;
 }
 
+.tagfield b.confirmed {
+    background: #9f9;
+}
 
 .tabs {
     text-align:center;
