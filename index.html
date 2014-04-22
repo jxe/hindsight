@@ -1,0 +1,183 @@
+<title>Value aware product review</title>
+<meta name="route" content="/url/:url">
+<meta name="firebase" content="https://lifestyles.firebaseio.com">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />
+<link rel="stylesheet" href="vreview.css" type="text/css">
+
+<div class="review">
+
+<header>
+   <img>
+   <h1 data-set="item_title">Vitesse 21-speed Touring Bicycle</h1>
+</header>
+
+<div class="tabs"><b data-set="text:name"></b></div>
+
+<section class="community">
+   <span data-set="engagement_gerund">buying</span>
+   this was about
+   <span class="community_outcomes tagfield">
+      <b><svg><circle r=5 cx=7 cy=8 /></svg> getting fit</b>
+      <b><svg><circle r=5 cx=7 cy=8 /></svg> feeling more relaxed</b>
+      <b><svg><circle r=5 cx=7 cy=8 /></svg> feeling more alive</b>
+      <b>bold decisions</b>
+      <b>thoughtful decisions</b>
+      <b>caring decisions</b>
+   </span>
+</section>
+
+<div class="me">
+
+<section class="choice_values">
+   <p>You
+   <span data-set="engagement_past_tense">bought</span>
+   this
+   <span data-set="engaged_at">1 month ago</span>.
+
+   It was about
+   <span class="choice_values tagfield editable">
+      <b>getting fit</b>
+      <b>being my full self</b>
+   </span>
+</section>
+
+<section class="relationship">
+   <span class="relationship_type">You use it for</span>
+   <span class="personal_activities tagfield">
+      <b>distance biking</b>
+   </span>
+   <button>add</button>
+</section>
+
+
+<section class="activity">
+   <h2>Distance biking</h2>
+   <h3>I do this weekly</h3>
+   <input type=range>
+   <h3>To get</h3>
+   <span class="activity_values tagfield editable">
+      <b>fit</b>
+      <b>relaxed</b>
+   </span>
+</section>
+
+</div>
+
+
+<!-- modals -->
+
+<section class="modal activities">
+   <h2>What do you use it for?</h2>
+   <ul>
+      <li>Distance biking
+      <li>add...
+   </ul>
+</section>
+
+<section class="modal choice_values_editor">
+   <h2>Buying this felt</h2>
+   <ul>
+      <li>bold  <button>yes</button><button>no</button>
+      <li>caring  <button>yes</button><button>no</button>
+      <li>thoughtful  <button>yes</button><button>no</button>
+      <li>add...
+   </ul>
+</section>
+
+
+<section class="modal activity_values_editor">
+   <h2>Distance biking helps me get</h2>
+   <ul>
+      <li>fit  <button>yes</button><button>no</button>
+      <li>relaxed  <button>yes</button><button>no</button>
+      <li>add...
+   </ul>
+</section>
+
+</div>
+
+
+
+<!-- ________________________________________ -->
+
+<script type="text/javascript">
+window.onerror = function(x){ alert(x); };
+</script>
+<script src='https://cdn.firebase.com/v0/firebase.js'></script>
+<script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
+<script src="batshit.js"></script>
+<script src="hreview.js"></script>
+<script>
+
+//   ________________________________________
+
+
+batshit.parse_my_url();
+batshit.authenticate();
+var $ = batshit.$;
+
+var gerunds = {
+    bought: 'Buying',
+    visited: 'Visiting',
+    used: 'Using'
+};
+
+var bike_rdata = {
+  item_type: 'product',
+  item_title: 'Vitesse 21-speed touring bike',
+  item_img: '',
+  item_url: '',
+  engagement_type: 'bought',
+  engaged_at: 'one month ago',
+  common_outcomes:['felt relaxed'],
+  common_activities:['distance biking'],
+  outcome_summaries:{}
+};
+
+var fb_rdata = {
+  item_type: 'app',
+  item_title: 'facebook mobile app',
+  item_img: '',
+  item_url: '',
+  engagement_type: 'used',
+  engaged_at: 'last week',
+  common_outcomes:['felt relaxed'],
+  common_activities:['event organizing', 'flirting', 'mindless reading'],
+  outcome_summaries:{}
+};
+
+
+function vreview(data){
+    data.engagement_gerund = gerunds[data.engagement_type];
+    data.engagement_past_tense = data.engagement_type;
+    batshit.object('.review', data);
+    batshit.tabs('.tabs', ['For others', 'For me'], function (tab_picked) {
+        if (tab_picked == 'For others'){
+            batshit.$('.community').style.display = '';
+            batshit.$('.me').style.display = 'none';
+        } else {
+            batshit.$('.me').style.display = '';
+            batshit.$('.community').style.display = 'none';
+        }
+    }, 'For others');
+    batshit.hidable('.activities', false);
+    batshit.hidable('.choice_values_editor', false);
+    batshit.hidable('.activity_values_editor', false);
+    batshit.hidable('.activity', false);
+    batshit.toggle('.activity_values', function (x) {
+        $('.activity_values_editor').show(x);
+    }, 0);
+    batshit.toggle('.choice_values', function (x) {
+        $('.choice_values_editor').show(x);
+    }, 0);
+    batshit.toggle('.relationship button', function (x) {
+        $('.activities').show(x);
+    }, 0);
+    batshit.toggle('.personal_activities', function (x) {
+        $('.activity').show(x);
+    }, 0);
+}
+
+vreview(bike_rdata);
+
+</script>
