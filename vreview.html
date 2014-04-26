@@ -23,7 +23,7 @@
 ###
 
 
-## quick extensions to spacepen ##
+## quick extensions to the spacepen ##
 
 View::on = (ref, ev, fn) ->
   ref.on(ev, fn)
@@ -65,85 +65,70 @@ class Annotation extends View
 
 
 
-class Review extends View
-  @content: (inputs) ->
-    { item, engagement, tags, followup_info } = inputs
-    @div class: 'review', =>
+class Rationale extends View
+  @content: (item, engagement, @fbref, common_tags) ->
+    @div class: 'rationale', =>
+      @div class: 'item', =>
+        @img src: item.img
+        @h2 item.name
       @p class: 'engagement', =>
-        @text "You "
-        @b engagement.pasttense
-        @text " this "
-        @b engagement.ago
-        @text " ago, and it was about"
-        @subview 'tagfield', new Tagfield(tags)
-      @div class: 'followups', =>
-        for tag, data of tags
+        @text "What was "
+        @b engagement.gerund
+        @text " this about?"
+      @div class: 'queries', =>
+        for tag in common_tags
           [ type, tagname ] = tag.split(': ')
-          @subview tag, new appropriateFollowup[type](name: tagname, type: type, data: data)
+          @div tag: tag, =>
+            @h3 tagname
+            @p "I wanted this #{type}"
+            @button click: 'yes', 'yes'
+            @button click: 'no', 'no'
+      @button click: 'continue', "continue"
+  yes: (event, element) ->
+    tag = element.parentNode.getAttribute 'tag'
+    @fbref.update(tag, { intended: true })
+  no: (event, element) ->
+    tag = element.parentNode.getAttribute 'tag'
+    @fbref.update(tag, { intended: false })
+    $(element).hide()
+  continue: ->
+    alert('todo')
+    
 
 
-class Tagfield extends View
-  @content: (tags) ->
-    @ol class: 'tagfield editable', click: 'showTagEditor', =>
-      for tag, data of tags
-        [ type, tagname ] = tag.split(': ')
-        @b class: "#{type} #{data.now}", =>
-          @img src: "#{type}.png"
-          @text tagname
-        @text ' '
-  showTagEditor: ->
-    alert 'TODO: show TagEditor'
-
-
-
-
-class FBTagfield extends View
-  @content: (fbref) ->
-    @ol outlet: 'list', class: 'tagfield editable', click: 'showTagEditor', 'Loading...'
+class Outcomes extends View
+  @content: (@fbref) ->
+    @div class: 'outcomes', =>
+      @h2 "How has it gone?"
+      @div class: 'queries', outlet: 'list', "Loading..."
   initialize: (fbref) ->
     on fbref, 'value', (snap) ->
       @list.html $$ ->
         for tag, data of snap.val()
           [ type, tagname ] = tag.split(': ')
+
+          switch type
+            when 'activity'
+              @div =>
+                @h2 tagname
+                @h3 =>
+                  @span "I do this"
+                  @b outlet: 'how_often', "weekly"
+                @input type: 'range'
+
+            when 'outcome'
+              @div =>
+                @h2 tagname
+                @div "put toggler here - y/n"
+
+            when 'quality'
+              @div =>
+                @h2 tagname
+                @div "put toggler here - y/n"
+
           @b class: "#{type} #{data.now}", =>
-            @img src: "#{type}.png"
             @text tagname
           @text ' '
-  showTagEditor: ->
-    alert 'TODO: show TagEditor'
-
-
-
-
-
-# followups
-
-class ActivityFollowup extends View
-  @content: (activity) ->
-    @div =>
-      @h2 activity.name
-      @h3 =>
-        @span "I do this"
-        @b outlet: 'how_often', "weekly"
-      @input type: 'range'
-
-
-
-class OutcomeFollowup extends View
-  @content: (desired_outcome) ->
-    @div =>
-      @h2 desired_outcome.name
-      @div "put toggler here - y/n"
-
-
-
-class QualityFollowup extends View
-  @content: (quality) ->
-    @div =>
-      @h2 quality.name
-      @div "put toggler here - y/n"
-
-appropriateFollowup = activity: ActivityFollowup, outcome: OutcomeFollowup, quality: QualityFollowup
 
 
 
@@ -169,23 +154,6 @@ $ 'body'
       'quality: a bold decision':
         now: 'unknown'
 
-
-
-
-# followups
-
-
-
-###
-# class TagEditor extends View
-
-# class OutcomeInfo extends View
-#   @content: (item, engagement, common_tags) ->
-#     # other info
-#     # link to show review
-#     @subview 'review', new Review(item, engagement, common_tags)
-
-###
 
 
 
