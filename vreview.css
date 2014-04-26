@@ -23,9 +23,17 @@ p{ margin-top: 0px; }
     min-height: 400px;
 }
 
-.tagfield b.confirmed {
+.tagfield b.achieved {
     background: #9f9;
 }
+
+
+.tagfield b.notyet {
+    background: #f99;
+}
+
+
+
 
 .tabs {
     text-align:center;
@@ -60,4 +68,8 @@ p{ margin-top: 0px; }
 .tabs b.selected {
     color:white;
     background: #006383;
+}
+
+.tagfield b img {
+  max-height: 15px;
 }

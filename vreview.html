@@ -1,0 +1,195 @@
+<title>Value aware product review</title>
+<meta name="route" content="/url/:url">
+<meta name="firebase" content="https://lifestyles.firebaseio.com">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />
+<link rel="stylesheet" href="vreview.css" type="text/css">
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/coffeescript" src="space-pen.coffee"></script>
+<script src='https://cdn.firebase.com/v0/firebase.js'></script>
+<script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
+<script type="text/javascript"> window.onerror = function(x){ alert(x); }; </script>
+<!--  <script src="batshit.js"></script><script src="vreview.js"></script>  -->
+<body></body>
+<script type="text/coffeescript" charset="utf-8">
+
+
+###
+# --- todo ---
+# m1 - just tagfield, with buttons to add different types of tags, backed by a firebase user model
+# m3 - include in outcomes, at first as just a earlier div
+# m4 - outcomes become the main div, with a toggle showing/hiding the review tagfield/followups
+# m5 - tageditor modal
+###
+
+
+## quick extensions to spacepen ##
+
+View::on = (ref, ev, fn) ->
+  ref.on(ev, fn)
+  (@offs ||= []).push -> ref.off(ev, fn)
+
+View::beforeRemove = ->
+  off() for off in @offs if @offs
+
+
+
+
+
+## the basics
+
+
+
+class Item extends View
+  @content: (inputs) ->
+    { item, engagement, tags, followup_info } = inputs
+    @div class: 'item', =>
+      @img src: item.img
+      @h2 item.name
+      @subview 'annotation', new Annotation(inputs)
+
+
+
+class Annotation extends View
+  @content: (inputs) ->
+    { item, engagement, tags, followup_info } = inputs
+    @div class: 'annotation', =>
+      @p =>
+        @text "For others, "
+        @b engagement.gerund
+        @text " this was about..."
+      @div =>
+        @text "For you?"
+        @subview 'rationale', new Rationale(inputs)
+        @subview 'outcomes', new Outcomes(inputs)
+
+
+
+class Review extends View
+  @content: (inputs) ->
+    { item, engagement, tags, followup_info } = inputs
+    @div class: 'review', =>
+      @p class: 'engagement', =>
+        @text "You "
+        @b engagement.pasttense
+        @text " this "
+        @b engagement.ago
+        @text " ago, and it was about"
+        @subview 'tagfield', new Tagfield(tags)
+      @div class: 'followups', =>
+        for tag, data of tags
+          [ type, tagname ] = tag.split(': ')
+          @subview tag, new appropriateFollowup[type](name: tagname, type: type, data: data)
+
+
+class Tagfield extends View
+  @content: (tags) ->
+    @ol class: 'tagfield editable', click: 'showTagEditor', =>
+      for tag, data of tags
+        [ type, tagname ] = tag.split(': ')
+        @b class: "#{type} #{data.now}", =>
+          @img src: "#{type}.png"
+          @text tagname
+        @text ' '
+  showTagEditor: ->
+    alert 'TODO: show TagEditor'
+
+
+
+
+class FBTagfield extends View
+  @content: (fbref) ->
+    @ol outlet: 'list', class: 'tagfield editable', click: 'showTagEditor', 'Loading...'
+  initialize: (fbref) ->
+    on fbref, 'value', (snap) ->
+      @list.html $$ ->
+        for tag, data of snap.val()
+          [ type, tagname ] = tag.split(': ')
+          @b class: "#{type} #{data.now}", =>
+            @img src: "#{type}.png"
+            @text tagname
+          @text ' '
+  showTagEditor: ->
+    alert 'TODO: show TagEditor'
+
+
+
+
+
+# followups
+
+class ActivityFollowup extends View
+  @content: (activity) ->
+    @div =>
+      @h2 activity.name
+      @h3 =>
+        @span "I do this"
+        @b outlet: 'how_often', "weekly"
+      @input type: 'range'
+
+
+
+class OutcomeFollowup extends View
+  @content: (desired_outcome) ->
+    @div =>
+      @h2 desired_outcome.name
+      @div "put toggler here - y/n"
+
+
+
+class QualityFollowup extends View
+  @content: (quality) ->
+    @div =>
+      @h2 quality.name
+      @div "put toggler here - y/n"
+
+appropriateFollowup = activity: ActivityFollowup, outcome: OutcomeFollowup, quality: QualityFollowup
+
+
+
+
+# spin it up!
+
+$ 'body'
+  .append new Item
+    item:
+      name: 'vitesse bike'
+      img: ''
+    engagement:
+      pasttense: 'bought'
+      gerund: 'buying'
+      ago: '1 month'
+    tags:
+      'activity: distance biking':
+        now: 'unknown'
+      'outcome: getting fit':
+        now: 'achieved'
+      'outcome: feeling relaxed':
+        now: 'notyet'
+      'quality: a bold decision':
+        now: 'unknown'
+
+
+
+
+# followups
+
+
+
+###
+# class TagEditor extends View
+
+# class OutcomeInfo extends View
+#   @content: (item, engagement, common_tags) ->
+#     # other info
+#     # link to show review
+#     @subview 'review', new Review(item, engagement, common_tags)
+
+###
+
+
+
+
+
+
+</script></html>
