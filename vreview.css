@@ -1,0 +1,97 @@
+.icon.blue { color:blue; font-size: 16px; }
+.icon.gray { color:#ccc; font-size: 16px; }
+.icon.small { font-size: 16px; margin-right: 8px; }
+
+.icon.circled {
+  width: 30px;
+  height: 30px;
+  line-height: 16px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  padding: 5px;
+/*  margin: 3px;*/
+/*  font-size: 24px;*/
+/*  line-height: 50px;*/
+/*  text-align: center;*/
+/*  background-color: #fff;*/
+
+}
+
+
+.tagfield b {
+  white-space: nowrap; font-weight: normal;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: gray;
+  margin-right: 7px;
+}
+.tagfield b svg { width: 14px; height: 14px; display:inline; }
+
+.tagfield b img {
+  max-height: 14px;
+  position: relative;
+  top: 3px;
+  margin-right: 3px;
+}
+
+.tagfield b.achieved {
+    background: #9f9;
+}
+
+
+.tagfield b.notyet {
+    background: #f99;
+}
+
+.row{ display: -webkit-flex; display: flex; position: relative; }
+.row > * { -webkit-align-self: center; align-self: center; }
+input  { width: 100%; padding: 5px; font-size: 18px; }
+
+.item img {
+  width:50px; height: 50px; background: gray; -webkit-flex: 0 0 auto; flex: 0 0 auto; margin-right: 10px; -webkit-align-self: flex-start; align-self: flex-start; ;
+}
+.item {
+  margin: 14px 0px;
+}
+.expando {
+  -webkit-flex: 1 1 auto; flex: 1 1 auto;
+}
+.smileys{
+  font-size: 28px;
+  position: absolute;
+  top: 12px;
+  right: 5px;
+  color: gray;
+}
+.smileys span:last-child {
+  margin-left: 17px;
+}
+.smileys span.selected.well {
+  color: green;
+}
+.smileys span.selected.poorly {
+  color: red;
+}
+.rationale .prompt {
+  color: #bbb;
+  font-size: 13px;
+}
+.table-view-divider {
+  position: relative;
+}
+h5 {
+  margin-top: 30px;
+}
+.outcomes .table-view-divider{
+  background-color: #EBEBEB;
+  padding-top: 13px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #444;
+  text-shadow: white 0px 1px 2px;
+}
+
+.rationale_editor input {
+  margin:0;
+}
