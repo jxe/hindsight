@@ -2,16 +2,39 @@
 <meta name="route" content="/url/:url">
 <meta name="firebase" content="https://lifestyles.firebaseio.com">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />
-<link rel="stylesheet" href="vreview.css" type="text/css">
+<!-- <link rel="stylesheet" href="vreview.css" type="text/css"> -->
+<link href="vendor/ratchet/css/ratchet.min.css" rel="stylesheet">
+<link href="vendor/ratchet/css/ratchet-theme-ios.min.css" rel="stylesheet">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-<script type="text/coffeescript" src="space-pen.coffee"></script>
+<script type="text/coffeescript" src="vendor/space-pen.coffee"></script>
 <script src='https://cdn.firebase.com/v0/firebase.js'></script>
 <script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
 <script type="text/javascript"> window.onerror = function(x){ alert(x); }; </script>
 <script type="text/coffeescript" src="vreview.coffee"></script>
 <!--  <script src="batshit.js"></script><script src="vreview.js"></script>  -->
 <body></body>
+<style type="text/css" media="screen">
+  .icon.blue { color:blue; font-size: 16px; margin-left: 10px; }
+  .icon.small { font-size: 16px; margin-right: 8px; }
+  .tagfield b { padding: 1px 8px; background: #999; border-radius: 10px; white-space: nowrap; line-height: 1.9em; font-weight: normal; }
+  .tagfield b svg { width: 14px; height: 14px; display:inline; }
+
+  .tagfield b img {
+    max-height: 15px;
+  }
+
+  .tagfield b.achieved {
+      background: #9f9;
+  }
+
+
+  .tagfield b.notyet {
+      background: #f99;
+  }
+
+
+</style>
 <script type="text/coffeescript" charset="utf-8">
 
 
@@ -33,9 +56,9 @@
 class Item extends View
   @content: (inputs) ->
     { item, engagement, tags, followup_info } = inputs
-    @div class: 'item', =>
+    @div class: 'item row', =>
       @img src: item.img
-      @h2 item.name
+      @h1 item.name
       @subview 'annotation', new Annotation(inputs)
 
 
@@ -55,68 +78,98 @@ class Annotation extends View
 
 
 
-class Rationale extends View
+class Review extends View
   @content: (item, engagement, fbref, common_tags) ->
-    @section class: 'rationale', =>
-      @div class: 'item', =>
-        @img src: item.img
-        @h2 item.name
-      @p class: 'engagement', =>
-        @text "What was "
-        @b engagement.gerund
-        @text " this about?"
-      @div class: 'queries', =>
-        for tag in common_tags
-          [ type, tagname ] = tag.split(': ')
-          @div tag: tag, =>
-            @h3 tagname
-            @p "I wanted this #{type}"
-            @button click: 'yes', 'yes'
-            @button click: 'no', 'no'
-  initialize: (item, engagement, @fbref, common_tags) ->
-    true
-  yes: (event, element) =>
-    obj = {}
-    obj[ element.parent().attr 'tag' ] = { intended: true }
-    @fbref.update(obj)
-    $(element).parent().hide()
-  no: (event, element) =>
-    obj = {}
-    obj[ element.parent().attr 'tag' ] = { intended: false }
-    @fbref.update(obj)
-    $(element).parent().hide()
+    @div class: 'vreview', =>
+      @header class: 'item row bar bar-nav', =>
+        @h1 class: 'title',  "Review"
+      @div class: 'content', =>
+        @p class: 'content-padded', =>
+          @img src: item.img
+          @b item.name
+          @p click: 'editRationale', =>
+            @span class: 'media-object icon icon-plus pull-right'
+            @span outlet: 'rationale', =>
+              @text "What was "
+              @b engagement.gerund
+              @text " this about?"
+        @ul class: 'table-view outcomes', =>
+          @li class: 'table-view-divider', "How has it gone?"
+          @div class: 'queries', outlet: 'list', "Loading..."
 
+  editRationale: ->
+    $ 'body'
+      .append new RationaleEditor(@item, @engagement, @fbref, @common_tags)
 
-
-class Outcomes extends View
-  @content: (@fbref) ->
-    @section class: 'outcomes', =>
-      @h2 "How has it gone?"
-      @div class: 'queries', outlet: 'list', "Loading..."
-  initialize: (@fbref) ->
+  initialize: (@item, @engagement, @fbref, @common_tags) ->
     @sub @fbref, 'value', (snap) =>
+      tags = snap.val()
+      @rationale.html $$ ->
+        if !tags
+          @text "What was "
+          @b engagement.gerund
+          @text " this about?"
+        else
+          @ol class: 'tagfield', click: 'showTagEditor', =>
+            for tag, data of tags
+              [ type, tagname ] = tag.split(': ')
+              @b class: "#{type} #{data.now}", =>
+                @img src: "img/#{type}.png"
+                @text tagname
+              @text ' '
+
       @list.html $$ ->
-        for tag, data of snap.val()
+        for tag, data of tags
           [ type, tagname ] = tag.split(': ')
 
           switch type
             when 'activity'
-              @div =>
-                @h3 tagname
-                @h4 =>
-                  @span "I do this"
+              @li class: 'table-view-cell', =>
+                @b tagname
+                @p =>
+                  @text "I do this "
                   @b outlet: 'how_often', "weekly"
                 @input type: 'range'
 
             when 'outcome'
-              @div =>
-                @h3 tagname
-                @div "put toggler here - y/n"
+              @li class: 'table-view-cell', =>
+                @b tagname
+                @p "put toggler here - y/n"
 
             when 'quality'
-              @div =>
-                @h3 tagname
-                @div "put toggler here - y/n"
+              @li class: 'table-view-cell', =>
+                @b tagname
+                @p "put toggler here - y/n"
+
+
+
+
+class RationaleEditor extends View
+  @content: (item, engagement, fbref, common_tags) ->
+    @div class: 'modal rationale', =>
+      @ul class: 'table-view', =>
+        @li class: 'table-view-divider engagement', =>
+
+          @small class: 'small pull-right icon icon-up-nav'
+        for tag in common_tags
+          [ type, tagname ] = tag.split(': ')
+          @li class: 'table-view-cell', tag: tag, =>
+            @div =>
+              @b tagname
+              @p =>
+                @text "I wanted this "
+                @b type
+            @button class: 'btn btn-primary', click: 'add', 'add'
+  initialize: (item, engagement, @fbref, common_tags) ->
+    true
+  add: (event, element) =>
+    obj = {}
+    obj[ element.parent().attr 'tag' ] = { intended: true }
+    @fbref.update(obj)
+    $(element).parent().hide()
+
+
+
 
 
 
@@ -126,7 +179,7 @@ class Outcomes extends View
 batshit.setup_firebase()
 
 $ 'body'
-  .append new Rationale
+  .append new Review
     name: 'vitesse bike'
     img: ''
   ,
@@ -142,9 +195,6 @@ $ 'body'
       'outcome: feeling relaxed',
       'quality: a bold decision',
     ]
-
-$ 'body'
-  .append new Outcomes(fb('rationale_test'))
 
 
 

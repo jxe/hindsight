@@ -1,0 +1,121 @@
+
+
+.tagfield.editable { padding: 2px 10px; display: block; background: white; box-shadow: inset rgba(0,0,0,0.5) 0px 0px 3px; }
+svg circle { stroke: green; fill: white; }
+body { max-width: 320px; font-family: arial; font-size: 15px; }
+header, section { padding: 5px 10px; margin: 10px 0px; background: #eee; }
+h1, h2, h3 { margin: 0 }
+h3{ margin-top: 10px; }
+/*h2{ font-size: 14px; color: #888; margin-bottom: 6px; text-transform: uppercase;}*/
+p{ margin-top: 0px; }
+
+
+.modal {
+    position: fixed;
+    top: 10px;
+    margin: 10px;
+    border: solid thin gray;
+    box-shadow: black 0px 0px 10px;
+    top: 10px;
+    left: 10px;
+    width: auto;
+    right: 10px;
+    min-height: 400px;
+}
+
+
+/* basic layout */
+
+body  { margin: 0px; background: white; font-family: sans-serif; }
+@media (min-width: 500px) {
+  html { background: black; padding: 5px 50px;}
+  body { width: 320px; }
+}
+@media (max-width: 499px) {
+  html  { height: 100%;}
+  body {
+    display: -webkit-flex; display: flex;
+    flex-direction: column; -webkit-flex-direction: column;
+    height: 100%;
+  }
+}
+*  { box-sizing: border-box;}
+.row{ display: -webkit-flex; display: flex; position: relative; }
+.row > * { -webkit-align-self: center; align-self: center; }
+input  { width: 100%; padding: 5px; font-size: 18px; }
+
+
+
+
+.item img {
+  width:50px; height: 50px; background: gray; -webkit-flex: 0 0 auto; flex: 0 0 auto; margin-right: 10px; -webkit-align-self: flex-start; align-self: flex-start; ;
+}
+.expando {
+  -webkit-flex: 1 1 auto; flex: 1 1 auto;
+}
+
+
+
+/* styling */
+
+h1  { margin: 0; font-size: 20px; }
+h2 {
+  padding: 5px; font-size: 18px;
+  margin:10px;
+  margin-bottom: 20px;
+  margin-top: 0px;
+  border: none;
+  font-size: 28px;
+  background: rgb(250, 255, 192);
+  border-radius: 80px;
+  text-align: center;
+  box-shadow: inset rgba(0,0,0,0.6) 0px 0px 4px;
+}
+h3  { font-size: 16px; color: #444; margin:0 ;}
+h4 { margin: 0; margin-bottom: 26px; font-size: 14px; color: #004; margin-top:15px}
+h5  {
+  margin:0; text-align: right; padding: 4px; font-size: 10px;
+  text-transform: uppercase;
+  color: #ccc;
+  font-weight: normal;
+}
+section label {
+  display:block; text-transform: uppercase; color: #552C2C; font-size: 11px; margin: 0px 3px;
+  text-align: left;
+}
+.outcome {
+  padding: 12px 20px;
+  font-size: 13px;
+  color: #004397;
+  line-height: 1.7em;
+}
+.outcome b {
+  text-decoration: underline;
+}
+#intro { padding-top: 8px; padding-bottom: 10px; margin: 0 20px;}
+
+
+
+
+/* bubbles */
+
+.bubble  {
+  background: #ddd;
+  margin: 10px 20px;
+  margin-top: -20px;
+  z-index: 2;
+  padding: 10px 0px;
+  border-radius: 20px;
+  padding-bottom: 20px;
+}
+.bubble>div  {
+  font-size: 12px; color: #222;
+  padding: 5px 15px; text-align:center;
+}
+
+.query
+{
+  background: white;
+  border-radius: 5px;
+  margin:5px;
+}

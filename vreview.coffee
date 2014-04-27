@@ -71,10 +71,9 @@ window.batshit =
     base = window.location.pathname + window.location.search
     m = base.match(regex)
     return alert("unrecognized path for: " + route) unless m
-    x = 0
-    while x < assignments.length
-      window[assignments[x]] = m[x + 1]
-      x++
+    for assignment, i in assignments
+      window[assignment] = m[i + 1]
+
   setup_firebase: ->
     F = new Firebase(batshit.meta("firebase"))  unless F
   authenticate: (cb) ->
