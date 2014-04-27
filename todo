@@ -1,20 +1,26 @@
-TYPEAHEAD
-- typeahead lets you add tags  (options for activity, outcome, and ethic)
-- typeahead is server backed
+TYPEAHEAD (1h 30m)
+- (20m) typeahead.js is wired
+- (30m) typeahead lets you add tags  (options for activity, outcome, and ethic)
+- (30m) typeahead is server backed
 
 
-BARELY SHARABLE
-- arbitrary URLs
-  - pulls title and maybe image from page
-  - engagement type in URL, for now
-- login/auth
+BARELY SHARABLE (1h 30m)
+- (1h) arbitrary URLs
+  - (20m) pulls title
+  - (20m) pulls image from page
+  - (20m) engagement type & ago come from URL, for now
+- (20m) login/auth
 
 
-FINISH Outcomes
+FINISH Outcomes (2h)
 - design goingWell and goingPoorly content
 
 
-WIDELY SHARABLE
-- server guesses good tags
-- autocomplete search boxes for apps, websites, etc
-- range slider updates text value for frequences
+WIDELY SHARABLE (3h)
+- (1h) server caches prev used tags for resources & rationale_editor shows them
+- (2h) server guesses good outcome tags after you've added an activity
+- (10m) range slider updates text value for frequences
+- (1h) autocomplete search boxes for apps, websites, etc
+
+
+... 8h
