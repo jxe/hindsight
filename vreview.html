@@ -9,6 +9,7 @@
 <script src='https://cdn.firebase.com/v0/firebase.js'></script>
 <script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
 <script type="text/javascript"> window.onerror = function(x){ alert(x); }; </script>
+<script type="text/coffeescript" src="vreview.coffee"></script>
 <!--  <script src="batshit.js"></script><script src="vreview.js"></script>  -->
 <body></body>
 <script type="text/coffeescript" charset="utf-8">
@@ -16,22 +17,11 @@
 
 ###
 # --- todo ---
-# m1 - just tagfield, with buttons to add different types of tags, backed by a firebase user model
-# m3 - include in outcomes, at first as just a earlier div
-# m4 - outcomes become the main div, with a toggle showing/hiding the review tagfield/followups
-# m5 - tageditor modal
+# m1 - actual live fb version of Rationale; cheats on common tags and userid
+# m2 - add in Outcomes, with real firebase updates
+# m3 - integrate fb login and URL recognition
+# m4 - relate the item, the rationale, and the outcomes, realistically
 ###
-
-
-## quick extensions to the spacepen ##
-
-View::on = (ref, ev, fn) ->
-  ref.on(ev, fn)
-  (@offs ||= []).push -> ref.off(ev, fn)
-
-View::beforeRemove = ->
-  off() for off in @offs if @offs
-
 
 
 
@@ -66,8 +56,8 @@ class Annotation extends View
 
 
 class Rationale extends View
-  @content: (item, engagement, @fbref, common_tags) ->
-    @div class: 'rationale', =>
+  @content: (item, engagement, fbref, common_tags) ->
+    @section class: 'rationale', =>
       @div class: 'item', =>
         @img src: item.img
         @h2 item.name
@@ -83,26 +73,28 @@ class Rationale extends View
             @p "I wanted this #{type}"
             @button click: 'yes', 'yes'
             @button click: 'no', 'no'
-      @button click: 'continue', "continue"
-  yes: (event, element) ->
-    tag = element.parentNode.getAttribute 'tag'
-    @fbref.update(tag, { intended: true })
-  no: (event, element) ->
-    tag = element.parentNode.getAttribute 'tag'
-    @fbref.update(tag, { intended: false })
-    $(element).hide()
-  continue: ->
-    alert('todo')
-    
+  initialize: (item, engagement, @fbref, common_tags) ->
+    true
+  yes: (event, element) =>
+    obj = {}
+    obj[ element.parent().attr 'tag' ] = { intended: true }
+    @fbref.update(obj)
+    $(element).parent().hide()
+  no: (event, element) =>
+    obj = {}
+    obj[ element.parent().attr 'tag' ] = { intended: false }
+    @fbref.update(obj)
+    $(element).parent().hide()
+
 
 
 class Outcomes extends View
   @content: (@fbref) ->
-    @div class: 'outcomes', =>
+    @section class: 'outcomes', =>
       @h2 "How has it gone?"
       @div class: 'queries', outlet: 'list', "Loading..."
-  initialize: (fbref) ->
-    on fbref, 'value', (snap) ->
+  initialize: (@fbref) ->
+    @sub @fbref, 'value', (snap) =>
       @list.html $$ ->
         for tag, data of snap.val()
           [ type, tagname ] = tag.split(': ')
@@ -110,53 +102,49 @@ class Outcomes extends View
           switch type
             when 'activity'
               @div =>
-                @h2 tagname
-                @h3 =>
+                @h3 tagname
+                @h4 =>
                   @span "I do this"
                   @b outlet: 'how_often', "weekly"
                 @input type: 'range'
 
             when 'outcome'
               @div =>
-                @h2 tagname
+                @h3 tagname
                 @div "put toggler here - y/n"
 
             when 'quality'
               @div =>
-                @h2 tagname
+                @h3 tagname
                 @div "put toggler here - y/n"
-
-          @b class: "#{type} #{data.now}", =>
-            @text tagname
-          @text ' '
 
 
 
 
 # spin it up!
 
+batshit.setup_firebase()
+
 $ 'body'
-  .append new Item
-    item:
-      name: 'vitesse bike'
-      img: ''
-    engagement:
-      pasttense: 'bought'
-      gerund: 'buying'
-      ago: '1 month'
-    tags:
-      'activity: distance biking':
-        now: 'unknown'
-      'outcome: getting fit':
-        now: 'achieved'
-      'outcome: feeling relaxed':
-        now: 'notyet'
-      'quality: a bold decision':
-        now: 'unknown'
+  .append new Rationale
+    name: 'vitesse bike'
+    img: ''
+  ,
+    pasttense: 'bought'
+    gerund: 'buying'
+    ago: '1 month'
+  ,
+    fb('rationale_test')
+  ,
+    [
+      'activity: distance biking',
+      'outcome: getting fit',
+      'outcome: feeling relaxed',
+      'quality: a bold decision',
+    ]
 
-
-
-
+$ 'body'
+  .append new Outcomes(fb('rationale_test'))
 
 
 
