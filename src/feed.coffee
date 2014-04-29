@@ -15,5 +15,8 @@ class window.Feed extends View
               @p data.name
 
   rowclick: (ev) =>
+    unless window.current_user_id
+      batshit.please_login()
+      return false
     url = $(ev.target).attr('url') || $(ev.target).parents('li').attr('url')
     window.open_review @resources[Links.asFirebasePath(url)]
