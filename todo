@@ -1,26 +1,27 @@
-TYPEAHEAD (1h 30m)
-- (20m) typeahead.js is wired
+START RATING THINGS
+- editable 'bought' and '1 month ago'
 - (30m) typeahead lets you add tags  (options for activity, outcome, and ethic)
-- (30m) typeahead is server backed
+- profile page lists recent items, with links to re-review
 
 
-BARELY SHARABLE (1h 30m)
-- (1h) arbitrary URLs
-  - (20m) pulls title
-  - (20m) pulls image from page
-  - (20m) engagement type & ago come from URL, for now
-- (20m) login/auth
 
 
-FINISH Outcomes (2h)
+FINISH Outcomes (1h)
 - design goingWell and goingPoorly content
 
 
-WIDELY SHARABLE (3h)
+... 2h 30m
+
+
+---
+
+WIDELY SHARABLE (4h)
+- (30m) typeahead is server backed
 - (1h) server caches prev used tags for resources & rationale_editor shows them
 - (2h) server guesses good outcome tags after you've added an activity
 - (10m) range slider updates text value for frequences
 - (1h) autocomplete search boxes for apps, websites, etc
-
+- (20m) pulls image from page
+- process URLs!!!    nxhx.org/vreview/?url=facebook.com;did=visit;at=928173918723;for=30m
 
 ... 8h

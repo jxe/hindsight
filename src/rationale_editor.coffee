@@ -1,4 +1,4 @@
-class window.RationaleEditor extends View
+class window.RationaleEditor extends Modal
   @content: (item, engagement, fbref, common_tags) ->
     @div class: 'modal rationale_editor', =>
       @ul class: 'table-view', =>
@@ -42,6 +42,3 @@ class window.RationaleEditor extends View
     tag = $(event.target).parent().attr 'tag'
     if tag
       @fbref.child(tag).remove()
-  close: ->
-    this.toggleClass('active')
-    setTimeout((=> this.remove()), 1000)

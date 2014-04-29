@@ -1,8 +1,9 @@
-class window.Review extends View
+class window.Review extends Modal
   @content: (item, engagement, fbref, common_tags) ->
-    @div class: 'vreview', =>
-      @header class: 'row bar bar-nav', =>
+    @div class: 'vreview modal', =>
+      @header class: 'bar bar-nav', =>
         @h1 class: 'title',  "Values Review"
+        @a click: 'close', class: 'icon icon-close pull-right'
       @div class: 'content', =>
         @div class: 'content-padded', =>
           @div class:'item row', =>
@@ -18,9 +19,7 @@ class window.Review extends View
         @div class: 'outcomes', outlet: 'outcomes'
 
   editRationale: ->
-    x = new RationaleEditor(@item, @engagement, @fbref, @common_tags)
-    x.appendTo 'body'
-    setTimeout((-> x.toggleClass 'active'), 0)
+    RationaleEditor.show(@item, @engagement, @fbref, @common_tags)
 
   initialize: (@item, @engagement, @fbref, @common_tags) ->
     @sub @fbref, 'value', (snap) =>

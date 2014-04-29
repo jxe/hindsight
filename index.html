@@ -12,45 +12,33 @@
 
 <script type="text/javascript" src="vendor/coffee-script.min.js"></script>
 <script type="text/javascript" src="vendor/jquery.min.js"></script>
+<script type="text/javascript" src="vendor/typeahead.js"></script>
 <script type="text/coffeescript" src="vendor/space-pen.coffee"></script>
 <script src='https://cdn.firebase.com/v0/firebase.js'></script>
 <script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
 
 <script type="text/javascript"> window.onerror = function(x){ alert(x); }; </script>
 <script type="text/coffeescript" src="src/utils.coffee"></script>
+<script type="text/coffeescript" src="src/fireahead.coffee"></script>
+<script type="text/coffeescript" src="src/links.coffee"></script>
 <script type="text/coffeescript" src="src/review.coffee"></script>
 <script type="text/coffeescript" src="src/retrospectives.coffee"></script>
 <script type="text/coffeescript" src="src/rationale_editor.coffee"></script>
+<script type="text/coffeescript" src="src/item.coffee"></script>
 
-<body></body>
+
+
+<body>
+<!--   <form id="urlform">
+    <input id="url" value="" placeholder="Enter a URL to rate">
+    <button>Go</button>
+  </form>
+</body> -->
 <script type="text/coffeescript" charset="utf-8">
 
 
 
 ## the basics
-
-
-
-class Item extends View
-  @content: (inputs) ->
-    { item, engagement, tags, followup_info } = inputs
-    @div class: 'item row', =>
-      @img src: item.img
-      @h1 item.name
-      @subview 'annotation', new Annotation(inputs)
-
-
-
-class Annotation extends View
-  @content: (inputs) ->
-    { item, engagement, tags, followup_info } = inputs
-    @div class: 'annotation', =>
-      @p =>
-        @text "For others, "
-        @b engagement.gerund
-        @text " this was about..."
-      @div =>
-        @text "For you?"
 
 
 
@@ -60,25 +48,34 @@ class Annotation extends View
 # spin it up!
 
 batshit.setup_firebase()
+batshit.authenticate()
 
 $ 'body'
-  .append new Review
-    name: 'Vitesse 21-speed touring bike'
-    img: ''
-  ,
-    pasttense: 'bought'
-    gerund: 'buying'
-    ago: '1 month'
-  ,
-    fb('rationale_test/3')
-  ,
-    [
-      'activity: distance biking',
-      'outcome: getting fit',
-      'outcome: feeling relaxed',
-      'ethic: a bold decision',
-    ]
-
+  .append(new Fireahead 'Enter an app name or url', fb('apps'), (obj) ->
+    unless window.current_user_id
+      batshit.please_login()
+      return false
+    url = obj.typed || obj.url
+    Links.info url, (canonical_url, shortname, longname, img) ->
+      if obj.typed
+        fb('apps').push
+          url: canonical_url
+          name: shortname
+      Review.show
+        name: longname
+        img: img
+      ,
+        pasttense: 'bought'
+      ,
+        fb('rationale_test/').child(Links.asFirebasePath(canonical_url))
+      ,
+        [
+          'activity: distance biking',
+          'outcome: getting fit',
+          'outcome: feeling relaxed',
+          'ethic: a bold decision',
+        ]
+  )
 
 
 </script></html>

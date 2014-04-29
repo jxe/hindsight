@@ -10,49 +10,33 @@ View::[k] = v for own k, v of {
 }
 
 
+class window.Modal extends View
+  @show: (args...) ->
+    x = new this(args...)
+    x.appendTo 'body'
+    setTimeout((-> x.toggleClass 'active'), 0)
+  close: ->
+    this.toggleClass('active')
+    setTimeout((=> this.remove()), 1000)
 
 
-with_page_info = (url, cb) ->
-  $.ajax
-    url: "/url/" + encodeURIComponent(url),
-    dataType: 'json',
-    success: (data) ->
-      cb(url, data.title, data.title);
 
-canonicalize_link = (url) ->
-  return unless url
-  return url unless url.match(/^http/)
-  match = url.match(/:\/\/(.[^/]+)/)
-  return url unless match
-  return (match[1]).replace('www.','')
+window.gerunds =
+  buy: 'buying'
+  visit: 'visiting'
+  watch: 'watching'
+  listen: 'listening'
+  read: 'reading'
 
-
-encodeFirebasePath = (path) ->
-  return encodeURIComponent(path).replace(/\./g, '%2E')
-
-id_for_link = (url) ->
-  return encodeFirebasePath(canonicalize_link(url))
-
-guess_type_of_link = (data)->
-  return '' unless data
-  link = data.url || data.name || data;
-  if link.match(/vimeo|youtube/)
-    return 'a video'
-  else if link.match(/itunes|play/)
-    return 'an app'
-  else if link.match(/amazon|stripe|square|etsy|groupon/)
-    return 'a product'
-  else if link.match(/yelp|foursquare/)
-    return 'a venue'
-  else
-    return 'a website'
-
+window.pasttense =
+  buy: 'bought'
+  visit: 'visited'
+  watch: 'watched'
+  listen: 'listened'
+  read: 'read'
 
 
 F = undefined
-facebook_id = undefined
-facebook_name = undefined
-current_user_id = undefined
 on_auth = undefined
 firebase_auth = undefined
 
@@ -82,9 +66,9 @@ window.batshit =
     firebase_auth = new FirebaseSimpleLogin F, (error, user) ->
       return alert(error)  if error
       if user
-        current_user_id = user.uid
-        facebook_id = user.id
-        facebook_name = user.displayName
+        window.current_user_id = user.uid
+        window.facebook_id = user.id
+        window.facebook_name = user.displayName
         F.child("users").child(user.uid).update
           name: user.displayName
           facebook_id: facebook_id
