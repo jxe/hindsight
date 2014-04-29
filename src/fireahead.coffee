@@ -7,9 +7,9 @@ values= (obj) ->
 class window.Fireahead extends View
   @content: (hint, fbref, cb) ->
     @form =>
-      @input outlet: 'input'
-      @button type: 'submit'
-  initialize: (hint, fbref, cb) =>
+      @input outlet: 'input', placeholder: hint, type: (hint == 'Search' ? 'search' : 'text'), class: 'fireahead'
+      @button type: 'submit', class: 'not_there'
+  initialize: (hint, fbref, cb, add_choices) =>
     @options = []
     @sub fbref, 'value', (snap) ->
       @options = values(snap.val());
@@ -23,10 +23,12 @@ class window.Fireahead extends View
       @input.typeahead('val', '')
     @input.typeahead({autoselect:true},
       displayKey: 'name',
-      source: (query, cb) ->
-        q = query && query.toLowerCase()
-        cb(options.filter((x) ->
-          return !query || (x.name&&x.name.toLowerCase().indexOf(q) >= 0)
-        ))
+      source: (query, cb) =>
+        q = query?.toLowerCase?()
+        return cb(@options) unless q
+        choices = options.filter (x) ->
+          return x.name&&x.name.toLowerCase().indexOf(q) >= 0
+        return cb(add_choices(query)) if add_choices and not choices.length
+        return cb(choices)
     )
     @input.typeahead('val', '')

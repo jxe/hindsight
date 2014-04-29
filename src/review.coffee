@@ -10,12 +10,12 @@ class window.Review extends Modal
             @img src: item.img
             @div =>
               @b item.name
-              @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
+              @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago" if engagement
         @ol class: 'table-view', click: 'editRationale', =>
           @li class: 'table-view-cell', =>
             @span class: 'btn btn-link icon icon-plus circled gray'
             @span class: 'rationale', outlet: 'rationale', =>
-              @span class: 'prompt', "What was #{engagement.gerund} this about?"
+              @span class: 'prompt', "What was #{engagement?.gerund || "engaging with"} this about?"
         @div class: 'outcomes', outlet: 'outcomes'
 
   editRationale: ->
@@ -27,7 +27,7 @@ class window.Review extends Modal
 
       @rationale.html $$ ->
         if !tags
-          @span class: 'prompt', "What was #{engagement.gerund} this about?"
+          @span class: 'prompt', "What was #{engagement?.gerund || "engaging with"} this about?"
         else
           @span class: 'tagfield', click: 'showTagEditor', =>
             for tag, data of tags

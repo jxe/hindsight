@@ -4,10 +4,29 @@ class window.RationaleEditor extends Modal
       @ul class: 'table-view', =>
         @li class: 'table-view-divider engagement', =>
           @text "What was "
-          @b engagement.gerund
+          @b engagement?.gerund || "engaging with"
           @text " this about?"
           @span click: 'close', class: 'media-object icon icon-close pull-right'
-        @input type: 'search', placeholder: 'search'
+        @subview 'search', new Fireahead 'Search', fb('tags'),
+          (clicked) ->
+            if clicked.name
+              obj = {}
+              obj[ clicked.name ] = { intended: true }
+              fbref.update(obj)
+              if clicked.new
+                fb('tags').child(clicked.name).set name: clicked.name
+          ,
+          (typed) ->
+            return [
+              name: "activity: #{typed}"
+              new: true
+            ,
+              name: "ethic: #{typed}"
+              new: true
+            ,
+              name: "outcome: #{typed}"
+              new: true
+            ]
         for tag in common_tags
           [ type, tagname ] = tag.split(': ')
           @li class: 'table-view-cell', tag: tag, =>

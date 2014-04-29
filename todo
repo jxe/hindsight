@@ -1,27 +1,26 @@
-START RATING THINGS
+BEFORE SHARING
+
+- (20m) better canonicalization (http/https?)
+- (20m) server caches prev used tags for resources & rationale_editor shows them
+- (10m) range slider updates text value for frequences
+- (20m) tabs: you rated | latest
+
+... 1h
+
+- (3h) design goingWell and goingPoorly content
 - editable 'bought' and '1 month ago'
-- (30m) typeahead lets you add tags  (options for activity, outcome, and ethic)
-- profile page lists recent items, with links to re-review
 
-
-
-
-FINISH Outcomes (1h)
-- design goingWell and goingPoorly content
-
-
-... 2h 30m
+... 3h
 
 
 ---
 
 WIDELY SHARABLE (4h)
-- (30m) typeahead is server backed
-- (1h) server caches prev used tags for resources & rationale_editor shows them
+
 - (2h) server guesses good outcome tags after you've added an activity
-- (10m) range slider updates text value for frequences
 - (1h) autocomplete search boxes for apps, websites, etc
-- (20m) pulls image from page
 - process URLs!!!    nxhx.org/vreview/?url=facebook.com;did=visit;at=928173918723;for=30m
+- resources/% gets updated with time as priority
+
 
 ... 8h

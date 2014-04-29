@@ -21,6 +21,7 @@
 <script type="text/coffeescript" src="src/utils.coffee"></script>
 <script type="text/coffeescript" src="src/fireahead.coffee"></script>
 <script type="text/coffeescript" src="src/links.coffee"></script>
+<script type="text/coffeescript" src="src/feed.coffee"></script>
 <script type="text/coffeescript" src="src/review.coffee"></script>
 <script type="text/coffeescript" src="src/retrospectives.coffee"></script>
 <script type="text/coffeescript" src="src/rationale_editor.coffee"></script>
@@ -29,11 +30,14 @@
 
 
 <body>
-<!--   <form id="urlform">
-    <input id="url" value="" placeholder="Enter a URL to rate">
-    <button>Go</button>
-  </form>
-</body> -->
+<header class="bar bar-nav">
+  <h1 class="title">Hello there</h1>
+</header>
+<div id="content" class="content">
+  <div class="content-padded">
+    <form id="meat"></form>
+  </div>
+</div>
 <script type="text/coffeescript" charset="utf-8">
 
 
@@ -50,32 +54,42 @@
 batshit.setup_firebase()
 batshit.authenticate()
 
-$ 'body'
+window.open_review = (obj) ->
+  Review.show
+    name: obj.name
+    img: obj.image
+  ,
+    obj.engagement
+  ,
+    fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
+  ,
+    [
+      'activity: distance biking',
+      'outcome: getting fit',
+      'outcome: feeling relaxed',
+      'ethic: a bold decision',
+    ]
+
+
+
+$ '#meat'
   .append(new Fireahead 'Enter an app name or url', fb('apps'), (obj) ->
     unless window.current_user_id
       batshit.please_login()
       return false
     url = obj.typed || obj.url
+    return open_review obj unless obj.typed
     Links.info url, (canonical_url, shortname, longname, img) ->
-      if obj.typed
-        fb('apps').push
-          url: canonical_url
-          name: shortname
-      Review.show
-        name: longname
-        img: img
-      ,
-        pasttense: 'bought'
-      ,
-        fb('rationale_test/').child(Links.asFirebasePath(canonical_url))
-      ,
-        [
-          'activity: distance biking',
-          'outcome: getting fit',
-          'outcome: feeling relaxed',
-          'ethic: a bold decision',
-        ]
+      obj =
+        url: canonical_url
+        name: shortname
+        image: img
+      fb('resources').child(Links.asFirebasePath(canonical_url)).set obj
+      open_review obj
   )
+
+$ '#content'
+  .append(new Feed(fb('resources')))
 
 
 </script></html>
