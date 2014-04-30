@@ -1,6 +1,6 @@
 class window.Feed extends View
   @content: (fbref) ->
-    @ol class: 'table-view', click: 'rowclick'
+    @div click: 'rowclick'
 
   initialize: (@fbref) ->
     @sub @fbref, 'value', (snap) =>

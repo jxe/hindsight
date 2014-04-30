@@ -7,7 +7,7 @@ values= (obj) ->
 class window.Fireahead extends View
   @content: (hint, fbref, cb) ->
     @form =>
-      @input outlet: 'input', placeholder: hint, type: (hint == 'Search' ? 'search' : 'text'), class: 'fireahead'
+      @input outlet: 'input', placeholder: hint, type: 'search', class: 'fireahead'
       @button type: 'submit', class: 'not_there'
   initialize: (hint, fbref, cb, add_choices) =>
     @options = []

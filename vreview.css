@@ -100,6 +100,7 @@ button.not_there {
   visibility: hidden;
   width: 0px;
   height: 0px;
+  position: absolute;
 }
 
 
@@ -124,6 +125,7 @@ button.not_there {
 }
 
 .tt-dropdown-menu {
+  z-index: 100000;
   width: 422px;
   margin-top: 12px;
   padding: 8px 0;
@@ -158,4 +160,20 @@ button.not_there {
 .table-view img {
   max-height: 70px;
   max-width: 70px;
+}
+
+.twitter-typeahead {
+  width: 100%;
+}
+
+form {
+  margin-bottom: 0px;
+}
+
+.content > #content {
+  margin-top: 0px;
+}
+
+input[type=search] {
+  margin-bottom: 0px;
 }

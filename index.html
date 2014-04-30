@@ -33,10 +33,10 @@
 <header class="bar bar-nav">
   <h1 class="title">Hello there</h1>
 </header>
-<div id="content" class="content">
-  <div class="content-padded">
-    <form id="meat"></form>
-  </div>
+<div class="content">
+  <ol id="content" class="table-view">
+      <form class="input-group" id="meat"></form>
+  </ol>
 </div>
 <script type="text/coffeescript" charset="utf-8">
 
@@ -73,7 +73,7 @@ window.open_review = (obj) ->
 
 
 $ '#meat'
-  .append(new Fireahead 'Enter an app name or url', fb('apps'), (obj) ->
+  .append(new Fireahead 'Search for apps or urls', fb('resources'), (obj) ->
     unless window.current_user_id
       batshit.please_login()
       return false
