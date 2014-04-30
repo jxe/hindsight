@@ -11,7 +11,7 @@ class window.Fireahead extends View
       @button type: 'submit', class: 'not_there'
   initialize: (hint, fbref, cb, add_choices) =>
     @options = []
-    @sub fbref, 'value', (snap) ->
+    @sub fbref, 'value', (snap) =>
       @options = values(snap.val());
     @sub this, 'submit', (ev) =>
       ev.preventDefault();
@@ -26,7 +26,7 @@ class window.Fireahead extends View
       source: (query, cb) =>
         q = query?.toLowerCase?()
         return cb(@options) unless q
-        choices = options.filter (x) ->
+        choices = @options.filter (x) ->
           return x.name&&x.name.toLowerCase().indexOf(q) >= 0
         return cb(add_choices(query)) if add_choices and not choices.length
         return cb(choices)
