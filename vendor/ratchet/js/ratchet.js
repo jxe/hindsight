@@ -941,4 +941,39 @@
     toggle    = false;
   });
 
+  window.addEventListener('click', function (e) {
+    e = e.originalEvent || e;
+
+    toggle = findToggle(e.target);
+    
+    if (!toggle) {
+      return;
+    }
+
+    var handle      = toggle.querySelector('.toggle-handle');
+    var toggleWidth = toggle.clientWidth;
+    var handleWidth = handle.clientWidth;
+    var offset      = (toggleWidth - handleWidth);
+    var slideOn     = !toggle.classList.contains('active');
+
+    if (slideOn) {
+      handle.style.webkitTransform = 'translate3d(' + offset + 'px,0,0)';
+    } else {
+      handle.style.webkitTransform = 'translate3d(0,0,0)';
+    }
+
+    toggle.classList[slideOn ? 'add' : 'remove']('active');
+
+    e = new CustomEvent('toggle', {
+      detail: { isActive: slideOn },
+      bubbles: true,
+      cancelable: true
+    });
+
+    toggle.dispatchEvent(e);
+
+    touchMove = false;
+    toggle    = false;
+  });
+
 }());

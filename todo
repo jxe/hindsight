@@ -1,16 +1,36 @@
+(10m)
+
+- resources/URL/tags/TAG/{y,n,total}
+  - keep accurate counts during review
+  - display in feed w. counts
+
+(10m)
+
+- resources/URL/reviewed_by/user_id/{name,img,at}
+    - add during review
+    - display faces as part of feed
+
+(10m)
+
+- in feed, add in current users review as happy faces / sad faces after counts
+
+
+(30m)
+
+- (20m) design goingWell and goingPoorly content
+- editable 'bought' and '1 month ago'
+
+
+
+
+
 BEFORE SHARING
 
 - (20m) better canonicalization (http/https?)
-- (20m) server caches prev used tags for resources & rationale_editor shows them
 - (10m) range slider updates text value for frequences
-- (20m) tabs: you rated | latest
 
 ... 1h
 
-- (3h) design goingWell and goingPoorly content
-- editable 'bought' and '1 month ago'
-
-... 3h
 
 
 ---

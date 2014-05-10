@@ -20,7 +20,7 @@ SelfClosingTags = {}
 Events =
   'blur change click dblclick error focus input keydown
    keypress keyup load mousedown mousemove mouseout mouseover
-   mouseup resize scroll select submit unload'.split /\s+/
+   mouseup resize scroll select submit unload toggle'.split /\s+/
 
 # Use native matchesSelector if available, otherwise fall back
 # on jQuery.is (slower, but compatible)

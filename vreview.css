@@ -17,13 +17,24 @@
 
 }
 
+.tagfield {
+  background: white;
+display: block;
+padding: 3px 10px;
+border-radius: 5px;
+box-shadow: inset black 0px 0px 1px;
+min-height: 40px;
+}
 
 .tagfield b {
-  white-space: nowrap; font-weight: normal;
-  text-transform: uppercase;
-  font-size: 11px;
-  color: gray;
-  margin-right: 7px;
+  white-space: nowrap;
+font-size: 11px;
+color: rgb(24, 45, 112);
+margin-right: 7px;
+background: #9bf;
+padding: 2px 4px;
+border-radius: 3px;
+text-shadow: rgba(255,255,255,0.3) 0px 1px 0px;
 }
 .tagfield b svg { width: 14px; height: 14px; display:inline; }
 
@@ -176,4 +187,31 @@ form {
 
 input[type=search] {
   margin-bottom: 0px;
+}
+
+.nose{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: -14px;
+  left: 155px;
+  -webkit-transform: rotate(45deg);
+  z-index: -1;
+  border: gray 2px solid;
+background: white;
+}
+
+.nosebox {
+  border-bottom: solid 2px gray;
+  height: 6px;
+}
+
+.table-view.with-nose {
+  padding-top: 10px;
+  background-image: none;
+  overflow: hidden;
+}
+
+.with-nose form {
+  margin: 0px 10px;
 }

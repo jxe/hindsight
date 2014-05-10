@@ -1,4 +1,4 @@
-<title>Value aware product review</title>
+<title>Practical Wisdom</title>
 <meta name="route" content="/url/:url">
 <meta name="firebase" content="https://lifestyles.firebaseio.com">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />
@@ -7,7 +7,8 @@
 
 <link href="vendor/ratchet/css/ratchet.min.css" rel="stylesheet">
 <link href="vendor/ratchet/css/ratchet-theme-ios.min.css" rel="stylesheet">
-<script type="text/javascript" src="vendor/ratchet/js/ratchet.min.js"></script>
+<script type="text/javascript" src="vendor/ratchet/js/ratchet.js"></script>
+<!-- <script type="text/javascript" src="vendor/ratchet/js/fingerblast.js"></script> -->
 
 <link href="vreview.css" rel="stylesheet">
 
@@ -25,7 +26,6 @@
 <script type="text/coffeescript" src="src/feed.coffee"></script>
 <script type="text/coffeescript" src="src/review.coffee"></script>
 <script type="text/coffeescript" src="src/retrospectives.coffee"></script>
-<script type="text/coffeescript" src="src/rationale_editor.coffee"></script>
 <script type="text/coffeescript" src="src/item.coffee"></script>
 
 
@@ -65,12 +65,7 @@ window.open_review = (obj) ->
   ,
     fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
   ,
-    [
-      'activity: distance biking',
-      'outcome: getting fit',
-      'outcome: feeling relaxed',
-      'ethic: a bold decision',
-    ]
+    fb('resources/%/tags', Links.asFirebasePath(obj.url))
 
 
 
@@ -93,5 +88,8 @@ $ '#meat'
 $ '#content'
   .append(new Feed(fb('resources')))
 
+# touch_capable = ('ontouchstart' in document.documentElement);
+# if !touch_capable && window.FingerBlast
+#   new FingerBlast(document)
 
 </script></html>
