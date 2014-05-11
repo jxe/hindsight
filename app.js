@@ -61,8 +61,8 @@ fbutil.auth(fburl, process.env.FB_TOKEN).done(function() {
           // console.log("err:",err);
           // otherwise try scrapin
 
-          var m = chunk.match(/<title[^>]*?>(.*)<\/title>/);
-          var img = chunk.match(/<meta content="([^"]+)" property="og:image" \/>/);
+          var m = body.match(/<title[^>]*?>(.*)<\/title>/);
+          var img = body.match(/<meta content="([^"]+)" property="og:image" \/>/);
           if (m){
             res.send(JSON.stringify({
               url: req.params.url,
@@ -70,7 +70,7 @@ fbutil.auth(fburl, process.env.FB_TOKEN).done(function() {
               img: img && img[1]
             }));
           } else {
-            console.log(chunk);
+            console.log(body);
             res.send('error');
           }
 
