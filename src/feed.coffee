@@ -31,8 +31,8 @@ class window.Feed extends View
               @b self.who_reviewed(data)
               @text " reviewed "
               @b data.name
-              @p data.url
               @subview 'label', new WarningLabel(data.tags)
+              @p data.url
 
   rowclick: (ev) =>
     unless window.current_user_id

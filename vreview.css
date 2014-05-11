@@ -234,3 +234,22 @@ background: white;
   width: 45%;
   padding: 5px;
 }
+
+
+#feed {
+  font-size: 13px;
+}
+
+#feed li {
+  padding-right: 15px;
+}
+
+#feed .tagfield {
+  background-color: none;
+  box-shadow: none;
+}
+
+
+#feed .tagfield b {
+  background-color: #D5E2FC;
+}

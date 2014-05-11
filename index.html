@@ -39,7 +39,7 @@
   <form id="meat"></form>
 </div>
 <div class="content">
-  <ol id="content" class="table-view"></ol>
+  <ol id="feed" class="table-view"></ol>
 </div>
 <script type="text/coffeescript" charset="utf-8">
 
@@ -68,7 +68,7 @@ $ '#meat'
       open_review obj
   )
 
-$ '#content'
+$ '#feed'
   .append(new Feed(fb('resources')))
 
 
