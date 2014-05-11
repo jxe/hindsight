@@ -213,9 +213,24 @@ background: white;
 
 .table-view.with-nose {
   background-image: none;
-  overflow: hidden;
+  /*overflow: hidden;*/
+  position: relative;
+  z-index: 100000;
+  padding: 10px;
 }
 
 .with-nose form {
-  margin: 10px;
+}
+
+
+.table-view-cell.how-going {
+  width: 120%;
+}
+
+
+.table-view-cell.how-going button {
+  border-radius: 5px;
+  margin-right: 10px;
+  width: 45%;
+  padding: 5px;
 }

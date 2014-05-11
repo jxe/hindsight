@@ -1,6 +1,6 @@
 class window.Review extends Modal
   @content: (ctx) ->
-    {name, image, engagement, fbref, common_fbref} = ctx
+    {name, image, engagement, db} = ctx
     @div class: 'vreview modal', =>
       @header class: 'bar bar-nav', =>
         @h1 class: 'title',  "Values Review"
@@ -23,7 +23,7 @@ class window.Review extends Modal
                 obj = {}
                 obj[ clicked.name ] = { intended: true }
                 db.review.update(obj)
-                common_fbref.child(clicked.name).child('added').set(true)
+                db.resource.child('tags').child(clicked.name).child('added').set(true)
                 if clicked.new
                   fb('tags').child(clicked.name).set name: clicked.name
             ,
@@ -61,7 +61,8 @@ class window.Review extends Modal
     @outcomes.html $$ ->
       if myTags
         @div =>
-          for tag, data of myTags
+          for tag in Object.keys(myTags).sort()
+            data = myTags[tag]
             if data != false
               [ type, tagname ] = tag.split(': ')
               switch type

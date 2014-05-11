@@ -11,6 +11,7 @@ class SmileyView extends View
       @db.review.child(@tag).update going: 'poorly'
       @db.resource.fb('tags/%/going_well_for', @tag).remove_user()
       @db.resource.fb('tags/%/going_poorly_for', @tag).add_user()
+      @db.resource.touch()
 
   goingWell: ->
     if @data.going == 'well'
@@ -20,6 +21,7 @@ class SmileyView extends View
       @db.review.child(@tag).update going: 'well'
       @db.resource.fb('tags/%/going_poorly_for', @tag).remove_user()
       @db.resource.fb('tags/%/going_well_for', @tag).add_user()
+      @db.resource.touch()
 
   remove: (ev) ->
     @db.review.child(@tag).set(false)
@@ -53,12 +55,12 @@ class SmileyView extends View
           @div class: 'toggle-handle'
       if data
         going = data.going
-        @li class: 'table-view-cell', =>
-          @button click: 'goingWell', class: "btn-positive #{ going == 'well' ? 'selected' : ''}", =>
-            @raw '&#9786;'
+        @li class: 'table-view-cell how-going', =>
+          @button click: 'goingWell', class: "btn-positive #{ if going != 'well' then 'btn-outlined' }", =>
+            @raw '&#9786; '
             @text "Going well"
-          @button click: 'goingPoorly', class: "btn btn-negative #{ going == 'poorly' ? 'selected' : ''}", =>
-            @raw '&#9785;'
+          @button click: 'goingPoorly', class: "btn-negative #{ if going != 'poorly' then 'btn-outlined'}", =>
+            @raw '&#9785; '
             @text "Going poorly"
       if data?.going
         switch data.going

@@ -93,5 +93,8 @@ Firebase.prototype.add_user = ->
 Firebase.prototype.remove_user = ->
   this.child(current_user_id).remove()
 
+Firebase.prototype.touch = ->
+  this.setPriority(Date.now())
+
 window.fb = ->
   F.fb.apply(F, Array::slice.call(arguments))

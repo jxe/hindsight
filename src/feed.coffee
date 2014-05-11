@@ -17,12 +17,14 @@ class window.Feed extends View
     return user_names.join(', ')
 
   initialize: (@fbref) ->
-    @sub @fbref, 'value', (snap) =>
+    @sub @fbref.limit(50), 'value', (snap) =>
       @resources = resources = snap.val()
       self = this
 
       @html $$ ->
-        for url, data of resources
+        urls = Object.keys(resources).reverse()
+        for url in urls
+          data = resources[url]
           @li url: data.url, class: 'table-view-cell media', =>
             @img class: 'media-object pull-left', src: data.image
             @div class: "media-body", =>

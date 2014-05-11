@@ -1,11 +1,5 @@
-- feed is in order and limited to recent!
+- BUG: typeahead opions are below the rest of the view, hidden
 
-
-- (20m) design goingWell and goingPoorly content
-
-
-
-- make the going well and going poorly buttons real nice, and toggle selected state
 
 
 in feed
@@ -13,16 +7,61 @@ in feed
   - in feed, add in current users review as happy faces / sad faces after counts
 
 
-(20m)
-
 
 - (10m) kill slider?
-
-
-
-(30m)
-
 - editable 'bought' and '1 month ago'
 - (20m) better canonicalization (http/https?)
 - (2h) server guesses good outcome tags after you've added an activity
 - process URLs!!!    nxhx.org/vreview/?url=facebook.com;did=visit;at=928173918723;for=30m
+
+---
+
+- integrate tokenfield (below)
+- design firebase stores for migration data
+
+---
+
+
+- integrate http://sliptree.github.io/bootstrap-tokenfield/
+- make a tokenview that can ask for just activities, outcomes, ethics, autocomplete, and takes a callback for reporting the data into firebase
+- figure out where to stash the migration data in firebase
+
+
+MIGRATIONS TO STORE
+  - within outcome
+    - activity migration
+    - resource migration
+  - within activity
+    - best for getting started
+  - activity to activity, irrespective of outcomes (??)
+  - outcome to outcome
+  - ethic to ethic
+
+----
+
+activity, bad:
+  - other activity for same goals?
+
+activity, good:
+  - another product helped you get started?
+
+outcome, bad:
+  - are you still into this outcome?
+    y:
+      - another activity has helped?
+      - another resource has helped?
+    n:
+      - what outcomes are more important to you now?
+
+outcome, good:
+  "yay!"
+
+ethic, good:
+  "Yay!"
+
+ethic bad:
+  - are you still into this ethic?
+    y:
+      - text string? "what have you learned?"
+    n:
+      - new ethics?
