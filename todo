@@ -1,46 +1,28 @@
-(10m)
+- feed is in order and limited to recent!
 
-- resources/URL/tags/TAG/{y,n,total}
-  - keep accurate counts during review
-  - display in feed w. counts
 
-(10m)
+- (20m) design goingWell and goingPoorly content
 
-- resources/URL/reviewed_by/user_id/{name,img,at}
-    - add during review
-    - display faces as part of feed
 
-(10m)
 
-- in feed, add in current users review as happy faces / sad faces after counts
+- make the going well and going poorly buttons real nice, and toggle selected state
+
+
+in feed
+  - display reviewer faces as part of feed
+  - in feed, add in current users review as happy faces / sad faces after counts
+
+
+(20m)
+
+
+- (10m) kill slider?
+
 
 
 (30m)
 
-- (20m) design goingWell and goingPoorly content
 - editable 'bought' and '1 month ago'
-
-
-
-
-
-BEFORE SHARING
-
 - (20m) better canonicalization (http/https?)
-- (10m) range slider updates text value for frequences
-
-... 1h
-
-
-
----
-
-WIDELY SHARABLE (4h)
-
 - (2h) server guesses good outcome tags after you've added an activity
-- (1h) autocomplete search boxes for apps, websites, etc
 - process URLs!!!    nxhx.org/vreview/?url=facebook.com;did=visit;at=928173918723;for=30m
-- resources/% gets updated with time as priority
-
-
-... 8h

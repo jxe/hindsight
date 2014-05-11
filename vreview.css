@@ -36,7 +36,12 @@ padding: 2px 4px;
 border-radius: 3px;
 text-shadow: rgba(255,255,255,0.3) 0px 1px 0px;
 }
-.tagfield b svg { width: 14px; height: 14px; display:inline; }
+.tagfield b svg {
+  width: 14px;
+  height: 8px;
+  display: inline;
+  margin-right: 5px;
+}
 
 .tagfield b img {
   max-height: 14px;
@@ -207,11 +212,10 @@ background: white;
 }
 
 .table-view.with-nose {
-  padding-top: 10px;
   background-image: none;
   overflow: hidden;
 }
 
 .with-nose form {
-  margin: 0px 10px;
+  margin: 10px;
 }

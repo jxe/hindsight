@@ -23,6 +23,7 @@
 <script type="text/coffeescript" src="src/utils.coffee"></script>
 <script type="text/coffeescript" src="src/fireahead.coffee"></script>
 <script type="text/coffeescript" src="src/links.coffee"></script>
+<script type="text/coffeescript" src="src/warning_label.coffee"></script>
 <script type="text/coffeescript" src="src/feed.coffee"></script>
 <script type="text/coffeescript" src="src/review.coffee"></script>
 <script type="text/coffeescript" src="src/retrospectives.coffee"></script>
@@ -42,32 +43,14 @@
 </div>
 <script type="text/coffeescript" charset="utf-8">
 
-
-
-## the basics
-
-
-
-
-
-
-# spin it up!
-
 batshit.setup_firebase()
 batshit.authenticate()
 
 window.open_review = (obj) ->
-  Review.show
-    name: obj.name
-    img: obj.image
-  ,
-    obj.engagement
-  ,
-    fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
-  ,
-    fb('resources/%/tags', Links.asFirebasePath(obj.url))
-
-
+  obj.db =
+    review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
+    resource: fb('resources/%', Links.asFirebasePath(obj.url))
+  Review.show obj
 
 $ '#meat'
   .append(new Fireahead 'Search for apps or urls', fb('resources'), (obj) ->
@@ -88,8 +71,5 @@ $ '#meat'
 $ '#content'
   .append(new Feed(fb('resources')))
 
-# touch_capable = ('ontouchstart' in document.documentElement);
-# if !touch_capable && window.FingerBlast
-#   new FingerBlast(document)
 
 </script></html>

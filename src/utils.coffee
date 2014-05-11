@@ -80,11 +80,18 @@ window.batshit =
       rememberMe: true
 
 
+Firebase.prototype.fb = ->
+  args = Array::slice.call(arguments)
+  this.child args.shift().replace(/%/g, ((m) -> args.shift()))
+
+Firebase.prototype.add_user = ->
+  this.child(current_user_id).set
+    name: window.facebook_name,
+    image: "https://graph.facebook.com/#{facebook_id}/picture",
+    at: Firebase.ServerValue.TIMESTAMP
+
+Firebase.prototype.remove_user = ->
+  this.child(current_user_id).remove()
 
 window.fb = ->
-  args = Array::slice.call(arguments)
-  str = args.shift()
-  path = str.replace(/%/g, (m) ->
-    args.shift()
-  )
-  F.child path
+  F.fb.apply(F, Array::slice.call(arguments))

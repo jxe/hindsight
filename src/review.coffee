@@ -1,5 +1,6 @@
 class window.Review extends Modal
-  @content: (item, engagement, fbref, common_fbref) ->
+  @content: (ctx) ->
+    {name, image, engagement, fbref, common_fbref} = ctx
     @div class: 'vreview modal', =>
       @header class: 'bar bar-nav', =>
         @h1 class: 'title',  "Values Review"
@@ -7,21 +8,21 @@ class window.Review extends Modal
       @div class: 'content', =>
         @div class: 'content-padded', =>
           @div class:'item row', =>
-            @img src: item.img
+            @img src: image
             @div =>
-              @b item.name
+              @b name
               @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago" if engagement
           @div =>
             @span class: 'rationale', outlet: 'rationale', =>
         @div class: 'nosebox', =>
           @div class: 'nose'
         @ol class: 'table-view with-nose', =>
-          @subview 'search', new Fireahead "What was #{engagement?.gerund || "engaging with"} this about?", fb('tags'),
+          @subview 'search', new Fireahead "Search / Add", fb('tags'),
             (clicked) ->
               if clicked.name
                 obj = {}
                 obj[ clicked.name ] = { intended: true }
-                fbref.update(obj)
+                db.review.update(obj)
                 common_fbref.child(clicked.name).child('added').set(true)
                 if clicked.new
                   fb('tags').child(clicked.name).set name: clicked.name
@@ -44,7 +45,7 @@ class window.Review extends Modal
       if !myTags
         @span class: 'prompt', "What was #{engagement?.gerund || "engaging with"} this about?"
       else
-        @span class: 'tagfield', click: 'showTagEditor', =>
+        @span class: 'tagfield', =>
           for tag, data of myTags
             if data
               [ type, tagname ] = tag.split(': ')
@@ -53,7 +54,7 @@ class window.Review extends Modal
                 @text tagname
               @text ' '
 
-  drawFollowups: (myTags, commonTags, fbref) ->
+  drawFollowups: (myTags, commonTags, db) ->
     for tag, data of commonTags
       myTags[tag] = 0 if myTags[tag] == undefined
 
@@ -66,25 +67,26 @@ class window.Review extends Modal
               switch type
                 when 'activity'
                   @div =>
-                    @subview(tag, new ActivityResults(fbref, tag, tagname, data))
+                    @subview(tag, new ActivityResults(db, tag, tagname, data))
 
                 when 'outcome'
                   @div =>
-                    @subview(tag, new OutcomeResults(fbref, tag, tagname, data))
+                    @subview(tag, new OutcomeResults(db, tag, tagname, data))
 
                 when 'ethic'
                   @div =>
-                    @subview(tag, new EthicResults(fbref, tag, tagname, data))
+                    @subview(tag, new EthicResults(db, tag, tagname, data))
 
 
-  initialize: (@item, @engagement, @fbref, @common_fbref) ->
+  initialize: (ctx) ->
+    { @item, @engagement, @db } = ctx
     @tags = {}
     @common_tags = {}
-    @sub @fbref, 'value', (snap) =>
+    @sub @db.review, 'value', (snap) =>
       @tags = snap.val() || {}
       @drawRationale @tags
-      @drawFollowups @tags, @common_tags, fbref
-    @sub @common_fbref, 'value', (snap) =>
+      @drawFollowups @tags, @common_tags, @db
+    @sub @db.resource.child('tags'), 'value', (snap) =>
       @common_tags = snap.val() || {}
       console.log 'common_tags', @common_tags
-      @drawFollowups @tags, @common_tags, fbref
+      @drawFollowups @tags, @common_tags, @db
