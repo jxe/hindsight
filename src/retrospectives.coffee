@@ -45,53 +45,49 @@ class SmileyView extends View
         @h5 class: '', =>
           @text tagname
           if !data?.going
-            @span click: 'remove', class: 'icon icon-close pull-right'
-      @ul class: 'table-view', =>
-        @li class: 'table-view-cell', tag: tag, =>
-          [ type, tagname ] = tag.split(': ')
-          @div =>
-            @p =>
-              @text "I wanted this "
-              @b type
-          @div toggle: 'toggled', class: "toggle #{ 'active' if data }", =>
+            @span click: 'remove', class: 'icon icon-close'
+          @div toggle: 'toggled', class: "pull-right toggle #{ 'active' if data }", =>
             @div class: 'toggle-handle'
         if data
           going = data.going
-          @li class: 'table-view-cell how-going', =>
-            @button click: 'goingWell', class: "btn-positive #{ if going != 'well' then 'btn-outlined' }", =>
-              @raw '&#9786; '
-              @text "Going well"
-            @button click: 'goingPoorly', class: "btn-negative #{ if going != 'poorly' then 'btn-outlined'}", =>
+          @div class: 'segmented-control', =>
+            @a click: 'goingPoorly', class: "red control-item  #{ if going == 'poorly' then 'active' }", =>
               @raw '&#9785; '
               @text "Going poorly"
-        if data?.going
-          switch data.going
-            when 'well'
-              @goingWellContent(tagname, data)
-            when 'poorly'
-              @goingPoorlyContent(tagname, data)
+            @a click: 'goingWell', class: "green control-item  #{ if going == 'well' then 'active' }", =>
+              @raw '&#9786; '
+              @text "Going well"
+      if data?.going
+        switch data.going
+          when 'well'
+            @goingWellContent(tagname, data)
+          when 'poorly'
+            @goingPoorlyContent(tagname, data)
 
 
   # these are just defaults to be overriden
 
   @goingWellContent: (tagname, data) ->
-    @li class: 'table-view-cell', "Yay!"
+    # @ul class: 'table-view', =>
+    #   @li class: 'table-view-cell', "Yay!"
   @goingPoorlyContent: (tagname, data) ->
-    @li class: 'table-view-cell', "Sorry to hear it"
+    # @ul class: 'table-view', =>
+    #   @li class: 'table-view-cell', "Sorry to hear it"
 
 
 
 class window.ActivityResults extends SmileyView
   @goingWellContent: (tagname, data) ->
-    @li class: 'table-view-cell', =>
-      @p =>
-        @text "I do this "
-        @b outlet: 'how_often', "weekly"
-      @input type: 'range'
-    @li class: 'table-view-cell', =>
-      @text "Product helped me get started"
-      @div class: "toggle", =>
-        @div class: 'toggle-handle'
+    @ul class: 'table-view card', =>
+      @li class: 'table-view-cell', =>
+        @p =>
+          @text "I do this "
+          @b outlet: 'how_often', "weekly"
+        @input type: 'range'
+      @li class: 'table-view-cell', =>
+        @p "Product helped me get started"
+        @div class: "toggle", =>
+          @div class: 'toggle-handle'
 
 
 class window.OutcomeResults extends SmileyView

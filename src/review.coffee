@@ -2,42 +2,39 @@ class window.Review extends Modal
   @content: (ctx) ->
     {name, image, engagement, db} = ctx
     @div class: 'vreview modal', =>
-      @header class: 'bar bar-nav', =>
-        @h1 class: 'title',  "Values Review"
-        @a click: 'close', class: 'icon icon-close pull-right'
       @div class: 'content', =>
         @div class: 'content-padded', =>
           @div class:'item row', =>
             @img src: image
             @div =>
-              @b name
+              @a click: 'close', class: 'icon icon-close pull-right'
+              @h3 name
               @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago" if engagement
-          @div =>
-            @span class: 'rationale', outlet: 'rationale', =>
-        @div class: 'nosebox', =>
+              @div class: 'rationale', outlet: 'rationale'
+        @div class: 'popup', =>
           @div class: 'nose'
-        @subview 'search', new Fireahead "Search / Add", fb('tags'),
-          (clicked) ->
-            if clicked.name
-              obj = {}
-              obj[ clicked.name ] = { intended: true }
-              db.review.update(obj)
-              db.resource.child('tags').child(clicked.name).child('added').set(true)
-              if clicked.new
-                fb('tags').child(clicked.name).set name: clicked.name
-          ,
-          (typed) ->
-            return [
-              name: "activity: #{typed}"
-              new: true
+          @subview 'search', new Fireahead "Add", fb('tags'),
+            (clicked) ->
+              if clicked.name
+                obj = {}
+                obj[ clicked.name ] = { intended: true }
+                db.review.update(obj)
+                db.resource.child('tags').child(clicked.name).child('added').set(true)
+                if clicked.new
+                  fb('tags').child(clicked.name).set name: clicked.name
             ,
-              name: "ethic: #{typed}"
-              new: true
-            ,
-              name: "outcome: #{typed}"
-              new: true
-            ]
-        @div class: 'outcomes', outlet: 'outcomes'
+            (typed) ->
+              return [
+                name: "activity: #{typed}"
+                new: true
+              ,
+                name: "ethic: #{typed}"
+                new: true
+              ,
+                name: "outcome: #{typed}"
+                new: true
+              ]
+          @div class: 'outcomes', outlet: 'outcomes'
 
   drawRationale: (myTags) =>
     @rationale.html $$ ->
@@ -45,10 +42,17 @@ class window.Review extends Modal
         @span class: 'prompt', "What was #{engagement?.gerund || "engaging with"} this about?"
       else
         @span class: 'tagfield', =>
+          @span class: 'label', "For you, it's about"
           for tag, data of myTags
             if data
               [ type, tagname ] = tag.split(': ')
+              going_well_percent = if data.going == 'well' then 1.0 else 0.0
+              r1w = r2x = going_well_percent * 14
+              r2w = 14 - r1w
+              svg = "<svg><rect fill='rgb(121, 211, 121)' x='0' y='0' width='#{r1w}' height='6'/><rect fill='rgb(196, 108, 108)' x='#{r2x}' y='0' width='#{r2w}' height='6'/></svg>"
+
               @b class: "#{type} #{data.now}", =>
+                @raw svg
                 # @img src: "img/#{type}.png"
                 @text tagname
               @text ' '

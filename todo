@@ -1,7 +1,11 @@
+- display only top three tags in warning label
+
+
+
 - for thermometer:
   - less than 50%, gray on good side, and a very light red for the bad side
   - greater than or equal to 50%, green on good side, and gray on the bad side
-- display only top three tags in warning label
+
 
 
 

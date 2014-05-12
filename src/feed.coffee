@@ -32,8 +32,8 @@ class window.Feed extends View
             @img class: 'media-object pull-left', src: data.image
             @div class: "media-body", =>
               @b data.name
-              @text ", reviewed by "
-              @b (if count > 1 then "#{count} people" else "one person")
+              @text " has "
+              @b (if count > 1 then "#{count} reviews" else "one review")
               @subview 'label', new WarningLabel(data.tags)
               @p data.url
 

@@ -66,7 +66,7 @@ background-color: #ECECEC;
 input  { width: 100%; padding: 5px; font-size: 18px; }
 
 .item img {
-  width:50px; height: 50px; background: gray; -webkit-flex: 0 0 auto; flex: 0 0 auto; margin-right: 10px; -webkit-align-self: flex-start; align-self: flex-start; ;
+  max-width:50px; max-height: 50px; background: gray; -webkit-flex: 0 0 auto; flex: 0 0 auto; margin-right: 10px; -webkit-align-self: flex-start; align-self: flex-start; ;
 }
 .item {
   margin: 14px 0px;
@@ -200,29 +200,24 @@ input[type=search] {
   position: absolute;
   width: 20px;
   height: 20px;
-  bottom: -14px;
+  top: -8px;
   left: 155px;
   -webkit-transform: rotate(45deg);
   z-index: -1;
-  border: gray 2px solid;
-background: rgb(240, 240, 240);
+  border: rgb(197, 195, 195) 2px solid;
+  background: #efeff4;
 }
 
-.nosebox {
-  border-bottom: solid 2px gray;
-  height: 6px;
-}
-
-.with-nose {
-  /*overflow: hidden;*/
-  position: relative;
-  z-index: 100000;
-  padding: 10px;
+.popup {
+  box-shadow: rgba(0,0,0,0.5) 0px -1px 3px;
+  border-radius: 15px;
 }
 
 .vreview form {
-  background: rgb(240, 240, 240);
+  background: #efeff4;
   padding: 10px;
+  margin-bottom: -18px;
+  border-radius: 15px;
 }
 
 .vreview form input {
@@ -230,15 +225,7 @@ background: rgb(240, 240, 240);
 }
 
 .table-view-cell.how-going {
-  padding-right: 0px;
-}
-
-
-.table-view-cell.how-going button {
-  border-radius: 5px;
-  margin-right: 10px;
-  width: 45%;
-  padding: 5px;
+  padding-right: 10px;
 }
 
 
@@ -265,9 +252,74 @@ margin-top: -3px;
 .facerow img {
   max-width: 20px; max-height: 20px; margin-right: 3px;
   border-radius: 3px;
+  opacity: 0.5;
 }
 
 
-h5 .icon.pull-right {
-  line-height: 0.5;
+h5 .icon {
+  position: absolute;
+top: -5px;
+margin-left: 10px;
+}
+
+h5 .toggle.pull-right {
+  margin-top: -4px;
+  height: 20px;
+}
+
+h5 .toggle.pull-right .toggle-handle {
+  top: -6px;
+}
+
+h5 {
+  position: relative;
+}
+
+.content-padded .segmented-control {
+  margin-top: 15px;
+    margin-bottom: -5px;
+    background: white;
+    margin-left: 10px;
+margin-right: 10px;
+border-color: #B4B4B4;
+
+}
+
+.segmented-control .control-item.active {
+  box-shadow: inset rgba(0,0,0,0.5) 0px 1px 4px -1px;
+}
+
+.segmented-control .control-item.active.green {
+  background-color: rgb(149, 245, 149);
+  color: black;
+}
+
+.segmented-control .control-item.active.red {
+  background-color: rgb(255, 208, 208);
+  color: black;
+}
+
+.tagfield .label {
+  text-transform: uppercase;
+  font-size: 11px;
+  color: gray;
+  display: block;
+}
+
+.vreview .content .popup {
+  background-color: #efeff4;
+  min-height: 100%;
+}
+
+.vreview .content {
+  background: white;
+}
+
+.vreview h5 {
+  margin-top: 40px;
+  color: #353536;
+}
+
+.vreview .card {
+  margin: 0px 20px;
 }
