@@ -80,14 +80,15 @@ class window.ActivityResults extends SmileyView
   @goingWellContent: (tagname, data) ->
     @ul class: 'table-view card', =>
       @li class: 'table-view-cell', =>
+        @p "Product helped me get started"
+        @div class: "toggle", =>
+          @div class: 'toggle-handle'
+      @li class: 'table-view-cell', =>
         @p =>
           @text "I do this "
           @b outlet: 'how_often', "weekly"
         @input type: 'range'
-      @li class: 'table-view-cell', =>
-        @p "Product helped me get started"
-        @div class: "toggle", =>
-          @div class: 'toggle-handle'
+
 
 
 class window.OutcomeResults extends SmileyView
