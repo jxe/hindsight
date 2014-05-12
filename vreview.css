@@ -221,7 +221,7 @@ input[type=search] {
 }
 
 .vreview form input[type=search] {
-  background: white;
+  background-color: white;
   border-radius: 30px;
 }
 
