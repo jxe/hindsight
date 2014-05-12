@@ -16,10 +16,10 @@ class window.WarningLabel extends View
             r1w = r2x = going_well_percent * 14
             r2w = 14 - r1w
 
-            svg = "<svg><rect fill='green' x='0' y='0' width='#{r1w}' height='8'/><rect fill='red' x='#{r2x}' y='0' width='#{r2w}' height='8'/></svg>"
+            svg = "<svg><rect fill='rgb(121, 211, 121)' x='0' y='0' width='#{r1w}' height='6'/><rect fill='rgb(196, 108, 108)' x='#{r2x}' y='0' width='#{r2w}' height='6'/></svg>"
 
             @b class: "#{type} #{userdata?.now}", =>
               @raw svg
-              @img src: "img/#{type}.png"
+              # @img src: "img/#{type}.png"
               @text tagname
             @text ' '

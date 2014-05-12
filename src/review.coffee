@@ -16,28 +16,27 @@ class window.Review extends Modal
             @span class: 'rationale', outlet: 'rationale', =>
         @div class: 'nosebox', =>
           @div class: 'nose'
-        @ol class: 'table-view with-nose', =>
-          @subview 'search', new Fireahead "Search / Add", fb('tags'),
-            (clicked) ->
-              if clicked.name
-                obj = {}
-                obj[ clicked.name ] = { intended: true }
-                db.review.update(obj)
-                db.resource.child('tags').child(clicked.name).child('added').set(true)
-                if clicked.new
-                  fb('tags').child(clicked.name).set name: clicked.name
+        @subview 'search', new Fireahead "Search / Add", fb('tags'),
+          (clicked) ->
+            if clicked.name
+              obj = {}
+              obj[ clicked.name ] = { intended: true }
+              db.review.update(obj)
+              db.resource.child('tags').child(clicked.name).child('added').set(true)
+              if clicked.new
+                fb('tags').child(clicked.name).set name: clicked.name
+          ,
+          (typed) ->
+            return [
+              name: "activity: #{typed}"
+              new: true
             ,
-            (typed) ->
-              return [
-                name: "activity: #{typed}"
-                new: true
-              ,
-                name: "ethic: #{typed}"
-                new: true
-              ,
-                name: "outcome: #{typed}"
-                new: true
-              ]
+              name: "ethic: #{typed}"
+              new: true
+            ,
+              name: "outcome: #{typed}"
+              new: true
+            ]
         @div class: 'outcomes', outlet: 'outcomes'
 
   drawRationale: (myTags) =>
@@ -50,7 +49,7 @@ class window.Review extends Modal
             if data
               [ type, tagname ] = tag.split(': ')
               @b class: "#{type} #{data.now}", =>
-                @img src: "img/#{type}.png"
+                # @img src: "img/#{type}.png"
                 @text tagname
               @text ' '
 

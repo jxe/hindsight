@@ -31,14 +31,16 @@ min-height: 40px;
 font-size: 11px;
 color: rgb(24, 45, 112);
 margin-right: 7px;
-background: #9bf;
+/*background: #9bf;*/
 padding: 2px 4px;
 border-radius: 3px;
 text-shadow: rgba(255,255,255,0.3) 0px 1px 0px;
+/*background-color: #D5E2FC;*/
+background-color: #ECECEC;
 }
 .tagfield b svg {
   width: 14px;
-  height: 8px;
+  height: 7px;
   display: inline;
   margin-right: 5px;
 }
@@ -203,7 +205,7 @@ input[type=search] {
   -webkit-transform: rotate(45deg);
   z-index: -1;
   border: gray 2px solid;
-background: white;
+background: rgb(240, 240, 240);
 }
 
 .nosebox {
@@ -211,20 +213,24 @@ background: white;
   height: 6px;
 }
 
-.table-view.with-nose {
-  background-image: none;
+.with-nose {
   /*overflow: hidden;*/
   position: relative;
   z-index: 100000;
   padding: 10px;
 }
 
-.with-nose form {
+.vreview form {
+  background: rgb(240, 240, 240);
+  padding: 10px;
 }
 
+.vreview form input {
+  background: white;
+}
 
 .table-view-cell.how-going {
-  width: 120%;
+  padding-right: 0px;
 }
 
 
@@ -249,7 +255,19 @@ background: white;
   box-shadow: none;
 }
 
+.facerow {
+  overflow: hidden;
+  margin-left: 50px;
+margin-bottom: 4px;
+margin-top: -3px;
+}
 
-#feed .tagfield b {
-  background-color: #D5E2FC;
+.facerow img {
+  max-width: 20px; max-height: 20px; margin-right: 3px;
+  border-radius: 3px;
+}
+
+
+h5 .icon.pull-right {
+  line-height: 0.5;
 }

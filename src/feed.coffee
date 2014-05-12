@@ -4,17 +4,17 @@ class window.Feed extends View
 
   who_reviewed: (rdata) ->
     user_ids = {}
+    user_faces = []
     user_names = []
     for tag, data of rdata.tags
-      if data.going_well_for
-        for user, info of data.going_well_for
-          user_names.push(info.name) unless user_ids[user]
-          user_ids[user] = true
-      if data.going_poorly_for
-        for user, info of data.going_poorly_for
-          user_names.push(info.name) unless user_ids[user]
-          user_ids[user] = true
-    return user_names.join(', ')
+      for batch in [ data.going_well_for, data.going_poorly_for ]
+        if batch
+          for user, info of batch
+            unless user_ids[user]
+              user_names.push(info.name)
+              user_faces.push("<img src='#{info.image}'/>")
+              user_ids[user] = true
+    return [user_faces.join(''), user_names.length]
 
   initialize: (@fbref) ->
     @sub @fbref.limit(50), 'value', (snap) =>
@@ -26,11 +26,14 @@ class window.Feed extends View
         for url in urls
           data = resources[url]
           @li url: data.url, class: 'table-view-cell media', =>
+            [ faces, count ] = self.who_reviewed(data)
+            @div class: 'facerow', =>
+              @raw faces
             @img class: 'media-object pull-left', src: data.image
             @div class: "media-body", =>
-              @b self.who_reviewed(data)
-              @text " reviewed "
               @b data.name
+              @text ", reviewed by "
+              @b (if count > 1 then "#{count} people" else "one person")
               @subview 'label', new WarningLabel(data.tags)
               @p data.url
 
