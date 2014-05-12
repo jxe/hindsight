@@ -226,6 +226,10 @@ input[type=search] {
   box-shadow: inset rgba(0,0,0,0.3) 0px 0px 3px;
 }
 
+.vreview form input[type=search]:disabled {
+  opacity: 1.0;
+}
+
 .table-view-cell.how-going {
   padding-right: 10px;
 }
