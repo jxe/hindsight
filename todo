@@ -1,6 +1,4 @@
-- display only top three tags in warning label
-
-
+- add autocomplete for better resource, better activity/outcome/ethic
 
 - for thermometer:
   - less than 50%, gray on good side, and a very light red for the bad side
