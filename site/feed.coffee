@@ -43,3 +43,33 @@ class window.Feed extends View
       return false
     url = $(ev.target).attr('url') || $(ev.target).parents('li').attr('url')
     window.open_review @resources[Links.asFirebasePath(url)]
+
+
+window.onload = ->
+  batshit.setup_firebase()
+  batshit.authenticate()
+
+  window.open_review = (obj) ->
+    obj.db =
+      review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
+      resource: fb('resources/%', Links.asFirebasePath(obj.url))
+    Review.show obj
+
+  $ '#meat'
+    .append(new Fireahead 'Search for apps or urls', fb('resources'), (obj) ->
+      unless window.current_user_id
+        batshit.please_login()
+        return false
+      url = obj.typed || obj.url
+      return open_review obj unless obj.typed
+      Links.info url, (canonical_url, shortname, longname, img) ->
+        obj =
+          url: canonical_url
+          name: shortname
+          image: img
+        fb('resources').child(Links.asFirebasePath(canonical_url)).set obj
+        open_review obj
+    )
+
+  $ '#feed'
+    .append(new Feed(fb('resources')))

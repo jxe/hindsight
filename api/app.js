@@ -22,7 +22,7 @@ fbutil.auth(fburl, process.env.FB_TOKEN).done(function() {
   // app part
 
   app.use(express.logger());
-  app.use(express.static(__dirname));
+  app.use(express.static(__dirname + '/../site'));
   app.use(express.bodyParser());
 
   app.get('/url/:url', function(req, res){
