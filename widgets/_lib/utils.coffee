@@ -10,32 +10,6 @@ View::[k] = v for own k, v of {
 }
 
 
-class window.Modal extends View
-  @show: (args...) ->
-    x = new this(args...)
-    x.appendTo 'body'
-    setTimeout((-> x.toggleClass 'active'), 0)
-  close: ->
-    this.toggleClass('active')
-    setTimeout((=> this.remove()), 1000)
-
-
-
-window.gerunds =
-  buy: 'buying'
-  visit: 'visiting'
-  watch: 'watching'
-  listen: 'listening'
-  read: 'reading'
-
-window.pasttense =
-  buy: 'bought'
-  visit: 'visited'
-  watch: 'watched'
-  listen: 'listened'
-  read: 'read'
-
-
 F = undefined
 on_auth = undefined
 firebase_auth = undefined

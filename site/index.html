@@ -21,14 +21,19 @@
 <script type="text/javascript" src="compiled.js"></script>
 
 
-<body>
 <header class="bar bar-nav">
   <h1 class="title">IsGoodForWhat.org</h1>
 </header>
-<div class="bar bar-standard bar-header-secondary">
-  <form id="meat"></form>
-</div>
+<div id="search-bar" class="bar bar-standard bar-header-secondary"></div>
 <div class="content">
   <ol id="feed" class="table-view"></ol>
 </div>
-</html>
+
+<script charset="utf-8">
+  window.onload = function () {
+    batshit.setup_firebase();
+    batshit.authenticate();
+    $('#search-bar').append(new SearchToReview(fb('resources')));
+    $('#feed').append(new Feed(fb('resources')));
+  };
+</script>

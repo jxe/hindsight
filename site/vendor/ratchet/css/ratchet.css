@@ -1043,7 +1043,7 @@ select {
       -ms-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
 }
-.popover .bar ~ .table-view {
+.popover .bar + .table-view {
   padding-top: 44px;
 }
 

@@ -1,1 +1,1 @@
-web: node api/app.js
+web: sh -c 'make; node api/app.js'

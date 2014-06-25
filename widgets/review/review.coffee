@@ -1,4 +1,9 @@
 class window.Review extends Modal
+  @open: (obj) ->
+    obj.db =
+      review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
+      resource: fb('resources/%', Links.asFirebasePath(obj.url))
+    @show obj
   @content: (ctx) ->
     {name, image, engagement, db} = ctx
     @div class: 'vreview modal', =>
