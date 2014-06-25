@@ -5,18 +5,16 @@ class window.Signal extends View
     @div class: 'hindsight-signal', =>
       @drawLabel top_desire, best_options[top_desire.id], related_desires[top_desire.id]
       if top_desires.length
-        @span =>
-          @raw "&bull;&bull;&bull; &#x25B6;"
+        @div class: 'hindsight-lozenge trailer', =>
+          @raw "&#x25B6;"
 
   @drawLabel: (desire, best_options, related_desires) ->
     rating = Ratings.situate(desire, best_options)
-    @div class: "hindsight-label #{rating}", click: 'openDreambox', =>
-      @div class: 'fraction', =>
-        @div class: 'numerator', =>
-          @text "#{Ratings.label(rating)} "
-          @i "for"
-        @div class: 'denominator', =>
-          @text desire.id.split(': ')[1]
+    @div class: "hindsight-lozenge #{rating}", click: 'openDreambox', =>
+      @span class: 'gem'
+      @span class: 'text', =>
+        @b "#{desire.id.split(': ')[1]}: "
+        @text Ratings.label(rating)
           # if Desires.strong_migrations(related_desires)
           #   @img src: 'img/migrations-alert.png'
 
