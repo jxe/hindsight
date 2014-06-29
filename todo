@@ -1,4 +1,22 @@
+
+------------------------------
+
+PROFILE m1
+
+- a page with sections, vertically, and product images
+- products have signal attached
+- an add button that opens an interface for adding a URL
+
+
+PROFILE m2
+
+- profile actually supports reviewing
 - mod review to use signals
+
+
+------------------------------
+
+
 - work on profile
 - desktop site support
 - mod dreambox to use example data

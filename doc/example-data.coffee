@@ -10,7 +10,7 @@ window.EXAMPLE_DATA =
 
   common_desires:
     "facebook.com":
-      "outcome: feeling relaxed":
+      "state: feeling relaxed":
         going_well_percent: .1
         going_well_user_count: 1
         going_poorly_user_count: 9
@@ -60,27 +60,50 @@ window.EXAMPLE_DATA =
 
   # individual reviews
 
-  reviews:
+  engagements:
     'facebook:514190':
       'facebook.com':
-        engagement:
-          time: '50h'
-          money: null
-          usage_pattern: '???'
-          as_of: 29820412
-          starting: 120398123
-          verified_by: 'firefox:TOKEN'
-        outcomes:
-          'activity: mindless reading':
-            intended: true
-            going: 'poorly'
-            desire_abandoned: true
-            replacement_desire: 'state: feeling relaxed'
+        type: 'used'
+        time: '50h'
+        money: null
+        timeline: '???'
+        began_at: 120398123
+        ended_at: 150398123
+        reported_at: 220398123
+        verified_by: 'firefox:TOKEN'
+        public: true
+
+  desires:
+    'facebook:514190':
+      'activity: mindless reading':
+        still_desired: false
+        led_to_desire: 'state: feeling relaxed'
+        desired_on: 220398123
+        desired_from: null
+        desired_until: null
+        public: true
+      'state: feeling relaxed':
+        desired_on: 1029830321
+        desired_from: 1029830321
+        desired_until: 1203980123
+        still_desired: false
+        led_to_desire: 'virtue: boldness'
+        public: true
+
+  outcomes:
+    'facebook:514190':
+      'facebook.com':
+        'activity: mindless reading':
+          intended: true
+          going: 'poorly'
+          public: true
 
   reviewers:
     'facebook.com':
       'facebook:514190':
         reviewed_at: 29820412
+
+
 
 
   # detail info about objects
@@ -130,20 +153,21 @@ window.EXAMPLE_DATA =
   # for more active users, profile information
   # FIXME: some of this data is redundant with review data
 
-  user_profile_resources:
-    'facebook:514190':
-      'facebook.com':
-        added: 109283121
-        engaged_from: 1029830321
-        engaged_until: 1203980123
 
-  user_profile_desires:
+
+  # indexes
+
+  profile_public_resources:
     'facebook:514190':
-      'state: feeling relaxed':
-        added: 109283121
-        desired_from: 1029830321
-        desired_until: 1203980123
-        replacement_desire: 'virtue: boldness'
+      'facebook.com': true
+
+  profile_public_desires:
+    'facebook:514190':
+      'activity: mindless reading': true
+      'virtue: being bold': true
+      'state: feeling relaxed': true
+
+
 
 
 ##### NOTES
