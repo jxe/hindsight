@@ -1,15 +1,25 @@
-- figure out how to work coffee compiling in
+- mod review to use signals
+- work on profile
+- desktop site support
+- mod dreambox to use example data
+- create server summarization engine
+
+- design
+
+
+m9 - feed is rewritten to use Signal
+m10 - feed is css changed to support desktop better
+
+
 
 
 m2 - resource rendered from firebase test data
 m3 - resource outcomes indicator with one label rendered
-m4 - ResourceOutcomeInfoView rendered, including goal migration info
 m5 - ResourceOutcomesIndicator supports other outcomes indicator and ResourceOtherOutcomesListView
 m6 - ResourceOutcomeLabel supports IndividualReview and blank states, with question mark etc
 m7 - ResourceOutcomeLabel and IndividualReview are used in the review
 m8 - it's possible to review the resource yourself from a link in the ResourceOutcomeLabel / ResourceOtherOutcomesListView
-m9 - feed is rewritten to use ResourceOutcomesIndicator
-m10 - feed is css changed to support desktop better
+
 m11 -
 
 

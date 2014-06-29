@@ -4,30 +4,32 @@ class window.Dreambox extends Popover
       @ul class: 'table-view', =>
         @li class: 'table-view-divider', =>
           @text "Fans of "
-          @b "MINDLESS READING"
+          @b "FEELING RELAXED"
           @text " later prefer"
         @li class: 'table-view-cell', =>
-          @b "being bold"
-          @p "3 events tonight"
+          @b "feeling loved"
+          @p "2 friends want this"
         @li class: 'table-view-cell', =>
           @b "being creative"
-          @p "2 events"
+          @p "2 events tonight, 15 activities"
         @li class: 'table-view-divider', =>
           @text "More options for "
-          @b "MINDLESS READING"
+          @b "FEELING RELAXED"
         @li class: 'table-view-cell', =>
           @img class: 'media-object pull-left', src: '/img/random-app.jpg'
           @div class: 'media-body', =>
-            @b "Random App"
-            @p "less addictive, higher satisfaction"
+            @b "A walk outside"
+            @p "3 nearby venues"
         @li class: 'table-view-cell', =>
           @img class: 'media-object pull-left', src: '/img/library.png'
           @div class: 'media-body', =>
-            @b "Your local library"
-            @p "synergistic satisfier"
+            @b "Yoga"
+            @p "3 videos"
         @li class: 'table-view-divider', =>
           @text "How "
           @b "FACEBOOK"
           @text " stacks up:"
         @li class: 'table-view-cell', =>
-          @p class: 'map', "awesome map here"
+          @img class: 'map', src: '/img/map-facebook-walk.png'
+          # @p class: 'map', "awesome map here"
+          # @p "time investment -->"

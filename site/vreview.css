@@ -442,12 +442,17 @@ padding-bottom: 2px;
 }
 
 .dreambox .map {
-  border: solid thin hsl(0, 0%, 50%);
+  /*border: solid thin hsl(0, 0%, 50%);
   background: hsl(0, 0%, 93%);
   padding: 20px 10px;
   text-align: center;
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 13px;*/
+
+  width: 250px;
+/* height: 200px; */
+  max-width: none;
+  max-height: none;
 }
 
 .dreambox.popover {

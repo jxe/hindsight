@@ -10,6 +10,14 @@ window.EXAMPLE_DATA =
 
   common_desires:
     "facebook.com":
+      "outcome: feeling relaxed":
+        going_well_percent: .1
+        going_well_user_count: 1
+        going_poorly_user_count: 9
+        going_well_user_time_cost_avg: '30h'
+        going_poorly_user_time_cost_avg: '50h'
+        intended_user_count: 10
+        total_user_count: 10
       "activity: mindless reading":
         going_well_percent: .1
         going_well_user_count: 1
