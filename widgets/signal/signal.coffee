@@ -1,11 +1,13 @@
 class window.Signal extends View
+  initialize: (@resource_url) ->
+    # no op
   @content: (resource_url, user_desires, common_desires, best_options, related_desires) ->
     top_desires = Desires.personalize(user_desires, common_desires)
     top_desire = top_desires.shift()
     @div class: 'hindsight-signal', =>
       @drawLabel top_desire, best_options[top_desire.id], related_desires[top_desire.id]
       if top_desires.length
-        @div class: 'hindsight-lozenge trailer', =>
+        @div click: 'openReview', class: 'hindsight-lozenge trailer', =>
           @raw "&#x25B6;"
 
   @drawLabel: (desire, best_options, related_desires) ->
@@ -34,3 +36,6 @@ class window.Signal extends View
   openDreambox: ->
     Dreambox.show()
     # alert('I love the world!')
+
+  openReview: ->
+    Review.open_url("https://facebook.com")

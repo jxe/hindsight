@@ -110,7 +110,7 @@ window.EXAMPLE_DATA =
 
   resources:
     'facebook.com':
-      icon: 'URL HERE'
+      icon: 'http://img2.wikia.nocookie.net/__cb20130501121248/logopedia/images/f/fb/Facebook_icon_2013.svg'
       title: 'Facebook'
       url: 'http://facebook.com'
       type: 'app'
@@ -119,7 +119,7 @@ window.EXAMPLE_DATA =
     'facebook:514190':
       name: 'Joe Edelman'
       facebook_id: '514190'
-      photo: '...'
+      photo: 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/t1.0-1/p50x50/10346047_10100265769347896_3000165581634871280_o.jpg'
       city: '<WOEID>'
       birthyear: 1976
       gender: 'm'

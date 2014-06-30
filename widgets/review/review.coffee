@@ -1,9 +1,16 @@
 class window.Review extends Modal
+  @open_url: (url) ->
+    fb('resources/%', Links.asFirebasePath(url)).on 'value', (snap) =>
+      @open snap.val()
+
   @open: (obj) ->
     obj.db =
       review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
+      engagement: fb('engagements/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
+      outcomes: fb('outcomes/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
       resource: fb('resources/%', Links.asFirebasePath(obj.url))
     @show obj
+
   @content: (ctx) ->
     {name, image, engagement, db} = ctx
     @div class: 'vreview modal', =>
@@ -23,7 +30,8 @@ class window.Review extends Modal
               if clicked.name
                 obj = {}
                 obj[ clicked.name ] = { intended: true }
-                db.review.update(obj)
+                db.outcomes.update(obj)
+                db.engagement.update type: 'used'
                 db.resource.child('tags').child(clicked.name).child('added').set(true)
                 if clicked.new
                   fb('tags').child(clicked.name).set name: clicked.name
@@ -91,7 +99,7 @@ class window.Review extends Modal
     { @item, @engagement, @db } = ctx
     @tags = {}
     @common_tags = {}
-    @sub @db.review, 'value', (snap) =>
+    @sub @db.outcomes, 'value', (snap) =>
       @tags = snap.val() || {}
       @drawRationale @tags
       @drawFollowups @tags, @common_tags, @db

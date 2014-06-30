@@ -43,9 +43,10 @@ window.batshit =
         window.current_user_id = user.uid
         window.facebook_id = user.id
         window.facebook_name = user.displayName
-        F.child("users").child(user.uid).update
+        F.child("people").child(user.uid).update
           name: user.displayName
           facebook_id: facebook_id
+          photo: 'https://graph.facebook.com/' + facebook_id + '/picture'
       window.on_auth_ready() if window.on_auth_ready
       window.auth_ready = true
   please_login: ->
@@ -70,5 +71,47 @@ Firebase.prototype.remove_user = ->
 Firebase.prototype.touch = ->
   this.setPriority(Date.now())
 
+Firebase.prototype.set_mirror_loc = (obj, value) ->
+  r = this.root().toString()
+  path = this.toString().split(r)[1]
+  dirs = path.split('/')
+  dirs.shift()
+  console.log(dirs)
+  last = dirs.pop()
+  obj[r] = {} if !obj[r]
+  obj = obj[r]
+  for x in dirs
+    obj[x] = {} if !obj[x]
+    obj = obj[x]
+  obj[last] = value
+
+Firebase.prototype.plus = (ref, cb) ->
+  q = new FirebaseQuery()
+  q.plus this
+  q.plus ref, cb
+  q
+
 window.fb = ->
   F.fb.apply(F, Array::slice.call(arguments))
+
+class window.FirebaseQuery
+  constructor: ->
+    @v = {}
+    @q = {}
+    @on = null
+  on_full_value: (cb) ->
+    @on = cb
+  check: ->
+    for k, v of @q
+      if !v
+        return false
+    @on(@v) if @on
+  plus: (ref, cb) ->
+    @q[ref.toString()] = false
+    ref.on 'value', (snap) =>
+      v = snap.val()
+      ref.set_mirror_loc(@v, v)
+      @q[ref.toString()] = true
+      cb(v, this) if cb
+      @check()
+    this

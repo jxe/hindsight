@@ -3,21 +3,35 @@
 
 PROFILE m1
 
-- a page with sections, vertically, and product images
-- products have signal attached
-- an add button that opens an interface for adding a URL
+(1h)
+
+- (10m) reviewing / links.coffee should set resource.type and resource.icon
+- (10m) review's use of db.outcomes should match example data
+- review should also set desires/USERID
+
+
+- decide whether to include the protocol in the resource URL
+- URL canonicalization issue
 
 
 PROFILE m2
 
-- profile actually supports reviewing
-- mod review to use signals
+(30m)
+
+- (20m) signals support userdata display mode
+- (5m) mod review to use signals
+
+
+
+PROFILE m3
+
+- (20m) reviews come as popups
+- (20m) popups have backdrop and disappear when clicked outside of
+- review needs to set more engagement info
 
 
 ------------------------------
 
-
-- work on profile
 - desktop site support
 - mod dreambox to use example data
 - create server summarization engine

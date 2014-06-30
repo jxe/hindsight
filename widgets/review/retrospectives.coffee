@@ -5,26 +5,28 @@ class SmileyView extends View
 
   goingPoorly: ->
     if @data.going == 'poorly'
-      @db.review.child(@tag).child('going').remove()
+      @db.outcomes.child(@tag).child('going').remove()
       @db.resource.fb('tags/%/going_poorly_for', @tag).remove_user()
     else
-      @db.review.child(@tag).update going: 'poorly'
+      @db.outcomes.child(@tag).update going: 'poorly'
       @db.resource.fb('tags/%/going_well_for', @tag).remove_user()
       @db.resource.fb('tags/%/going_poorly_for', @tag).add_user()
+      @db.engagement.update type: 'used'
       @db.resource.touch()
 
   goingWell: ->
     if @data.going == 'well'
-      @db.review.child(@tag).child('going').remove()
+      @db.outcomes.child(@tag).child('going').remove()
       @db.resource.fb('tags/%/going_well_for', @tag).remove_user()
     else
-      @db.review.child(@tag).update going: 'well'
+      @db.outcomes.child(@tag).update going: 'well'
       @db.resource.fb('tags/%/going_poorly_for', @tag).remove_user()
       @db.resource.fb('tags/%/going_well_for', @tag).add_user()
+      @db.engagement.update type: 'used'
       @db.resource.touch()
 
   remove: (ev) ->
-    @db.review.child(@tag).set(false)
+    @db.outcomes.child(@tag).set(false)
     @db.resource.fb('tags/%/going_poorly_for', @tag).remove_user()
     @db.resource.fb('tags/%/going_well_for', @tag).remove_user()
 
@@ -32,9 +34,9 @@ class SmileyView extends View
     if $(ev.target).is '.active'
       obj = {}
       obj[ @tag ] = { intended: true }
-      @db.review.update(obj)
+      @db.outcomes.update(obj)
     else
-      @db.review.child(@tag).remove()
+      @db.outcomes.child(@tag).remove()
 
 
   # drawing

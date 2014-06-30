@@ -17,7 +17,10 @@
   <div id="meat" class='content-padded'></div>
 </div>
 <script charset="utf-8">
-  $('#meat').append(new Profile(EXAMPLE_DATA['people']['facebook:514190'],
-  EXAMPLE_DATA['resources'], EXAMPLE_DATA['engagements']['facebook:514190'],
-  EXAMPLE_DATA['desires']['facebook:514190']))
+  batshit.setup_firebase();
+  batshit.authenticate();
+  Profile.load_into('#meat', 'facebook:514190')
+  // $('#meat').append(new Profile(EXAMPLE_DATA['people']['facebook:514190'],
+  // EXAMPLE_DATA['resources'], EXAMPLE_DATA['engagements']['facebook:514190'],
+  // EXAMPLE_DATA['desires']['facebook:514190']))
 </script>
