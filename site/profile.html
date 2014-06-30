@@ -1,8 +1,10 @@
 <meta name="firebase" content="https://lifestyles.firebaseio.com">
+
 <link href="/vendor/ratchet/css/ratchet.css" rel="stylesheet">
 <link href="/vendor/ratchet/css/ratchet-theme-ios.min.css" rel="stylesheet">
-<!-- <script type="text/javascript" src="vendor/ratchet/js/ratchet.js"></script> -->
 <link href="vreview.css" rel="stylesheet">
+
+<script type="text/javascript" src="vendor/ratchet/js/ratchet.js"></script>
 <script type="text/javascript" src="vendor/jquery.min.js"></script>
 <script type="text/javascript" src="vendor/typeahead.js"></script>
 <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -11,16 +13,10 @@
 <script type="text/javascript" src="compiled.js"></script>
 
 
+<div class="content"> <div class='content-padded'></div> </div>
 
-<!-- <header class="bar bar-nav"><h1 class="title">Profile</h1></header> -->
-<div class="content">
-  <div id="meat" class='content-padded'></div>
-</div>
-<script charset="utf-8">
+<script>
   batshit.setup_firebase();
   batshit.authenticate();
-  Profile.load_into('#meat', 'facebook:514190')
-  // $('#meat').append(new Profile(EXAMPLE_DATA['people']['facebook:514190'],
-  // EXAMPLE_DATA['resources'], EXAMPLE_DATA['engagements']['facebook:514190'],
-  // EXAMPLE_DATA['desires']['facebook:514190']))
+  Profile.load_into('.content-padded', 'facebook:514190')
 </script>

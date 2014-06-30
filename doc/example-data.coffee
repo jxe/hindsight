@@ -90,7 +90,7 @@ window.EXAMPLE_DATA =
         led_to_desire: 'virtue: boldness'
         public: true
 
-  outcomes:
+  resource_outcomes:
     'facebook:514190':
       'facebook.com':
         'activity: mindless reading':

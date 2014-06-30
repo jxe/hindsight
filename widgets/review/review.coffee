@@ -8,6 +8,7 @@ class window.Review extends Modal
       review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
       engagement: fb('engagements/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
       outcomes: fb('outcomes/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
+      desires: fb('desires/%', window.current_user_id)
       resource: fb('resources/%', Links.asFirebasePath(obj.url))
     @show obj
 

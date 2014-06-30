@@ -4,6 +4,8 @@ window.Ratings =
     return 'mixed'
   label: (type) ->
     switch type
+      when 'good'
+        return 'good reviews'
       when 'mixed'
         return 'mixed reviews'
       when 'poorly'

@@ -527,6 +527,8 @@ padding-bottom: 2px;
   margin:0;
   margin-right: 10px;
   box-shadow: hsla(0, 0%, 0%, 0.3) 0px 1px 2px;
+  margin-bottom: 4px;
+  min-width: 270px;
 }
 
 .profile ul.items li.item h2 {
@@ -542,4 +544,15 @@ padding-bottom: 2px;
   color: #666;
   font-size: 12px;
   text-transform: uppercase;
+}
+
+.profile header {
+  display: flex;
+  align-items: center;
+}
+
+.profile header h2 { margin:0; padding: 0; margin-left: 20px; }
+
+.profile .item img {
+  margin-right: 18px;
 }

@@ -21,11 +21,17 @@ class window.Profile extends View
 
   @content: (person, resources, engagements, desires, outcomes) ->
     @div class:'profile', =>
-      @header class: 'clearfix', =>
-        @img class: 'pull-left', src: person.photo
+      @header =>
+        @img src: person.photo
         @h2 person.name
+      @h3 'Goals'
+      @ul =>
+        for desire, info of desires
+          @li =>
+            @b desire
+            @p "still_desired: #{info.still_desired}"
       @h3 "Reviews"
-      @subview 'search', new SearchToReview(fb('resources'))
+      @subview 'search', new SearchToReview(fb('resources'), 'Add apps or URLs')
       for type, label of sections
         contents = Object.keys(resources).filter((url) -> resources[url]?.type == type)
         @h4 "#{label}"
@@ -36,9 +42,3 @@ class window.Profile extends View
               @div class: 'text', =>
                 @h2 resources[url].name
                 @subview 'signal', Signal.withOutcomes(decodeURIComponent(url), outcomes[url])
-      @h3 'Goals'
-      @ul =>
-        for desire, info of desires
-          @li =>
-            @b desire
-            @p "still_desired: #{info.still_desired}"

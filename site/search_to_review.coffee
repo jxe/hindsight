@@ -1,7 +1,8 @@
 class window.SearchToReview extends View
-  @content: (fb_path) ->
+  @content: (fb_path, hint) ->
+    hint ||= 'Search for apps or urls'
     @form =>
-      @subview 'typeahead-input', new Fireahead 'Search for apps or urls', fb_path, (obj) ->
+      @subview 'typeahead-input', new Fireahead hint, fb_path, (obj) ->
         unless window.current_user_id
           batshit.please_login()
           return false

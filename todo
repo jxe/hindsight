@@ -1,27 +1,21 @@
 
 ------------------------------
 
-PROFILE m1
-
-(1h)
-
-- (10m) item styling is better
-
-- (30m)review should also set desires/USERID
-
-
 PROFILE m2
 
 - (10m) mod review to use lozenges in its list
-- (10m) review's use of db.outcomes should match example data
+- (10m) use URL parsing to show other people's profiles
+
+- (10m) review's use of db.resource_outcomes / db.desires / db.engagement should match example data
 
 
 PROFILE m3
 
-- review needs to set more engagement info
 - (20m) reviews come as popups on big screens
-- use URL parsing to show other people's profiles
 
+- a few things to add to ratchet css
+    - double wide carded tableviews
+    - a content-padding with a max-width that sticks to the left
 
 ------------------------------
 

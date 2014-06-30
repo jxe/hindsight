@@ -90,7 +90,17 @@ class window.ActivityResults extends SmileyView
           @text "I do this "
           @b outlet: 'how_often', "weekly"
         @input type: 'range'
-
+  @goingPoorlyContent: (tagname, data) ->
+    @ul class: 'table-view card', =>
+      @li class: 'table-view-cell', =>
+        @p "Still desired?"
+        @div toggle: 'toggleDesired', class: "toggle", =>
+          @div class: 'toggle-handle'
+  toggleDesired: (ev) ->
+    if $(ev.target).is '.active'
+      @db.desires.child(@tag).update still_desired: true
+    else
+      @db.desires.child(@tag).update still_desired: false
 
 
 class window.OutcomeResults extends SmileyView
