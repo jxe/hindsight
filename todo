@@ -5,29 +5,22 @@ PROFILE m1
 
 (1h)
 
-- (10m) reviewing / links.coffee should set resource.type and resource.icon
-- (10m) review's use of db.outcomes should match example data
-- review should also set desires/USERID
+- (10m) item styling is better
 
-
-- decide whether to include the protocol in the resource URL
-- URL canonicalization issue
+- (30m)review should also set desires/USERID
 
 
 PROFILE m2
 
-(30m)
-
-- (20m) signals support userdata display mode
-- (5m) mod review to use signals
-
+- (10m) mod review to use lozenges in its list
+- (10m) review's use of db.outcomes should match example data
 
 
 PROFILE m3
 
-- (20m) reviews come as popups
-- (20m) popups have backdrop and disappear when clicked outside of
 - review needs to set more engagement info
+- (20m) reviews come as popups on big screens
+- use URL parsing to show other people's profiles
 
 
 ------------------------------

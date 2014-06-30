@@ -110,7 +110,7 @@ window.EXAMPLE_DATA =
 
   resources:
     'facebook.com':
-      icon: 'http://img2.wikia.nocookie.net/__cb20130501121248/logopedia/images/f/fb/Facebook_icon_2013.svg'
+      image: 'http://img2.wikia.nocookie.net/__cb20130501121248/logopedia/images/f/fb/Facebook_icon_2013.svg'
       title: 'Facebook'
       url: 'http://facebook.com'
       type: 'app'

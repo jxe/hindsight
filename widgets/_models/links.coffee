@@ -21,6 +21,20 @@ window.Links =
   resourceType: (data)->
     return '' unless data
     link = data.url || data.name || data;
+    if link.match(/city/)
+      return 'city'
+    else if link.match(/itunes|play/)
+      return 'app'
+    else if link.match(/amazon|stripe|square|etsy|groupon/)
+      return 'product'
+    else if link.match(/yelp|foursquare/)
+      return 'venue'
+    else
+      return 'website'
+
+  resourceLabel: (data)->
+    return '' unless data
+    link = data.url || data.name || data;
     if link.match(/vimeo|youtube/)
       return 'a video'
     else if link.match(/itunes|play/)

@@ -351,9 +351,7 @@ border-color: #B4B4B4;
 }
 
 
-.hindsight-lozenge.mixed {
-  color: hsl(0, 100%, 29%);
-}
+
 
 .hindsight-lozenge {
   font-size: 11px;
@@ -378,13 +376,13 @@ padding-top: 4px;
 padding-bottom: 2px;
 }
 
-.hindsight-lozenge.mixed span.gem {
-  background: hsl(0, 100%, 39%);
+.hindsight-lozenge span.gem {
   width: 25px;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   box-shadow: inset hsla(0, 0%, 0%, 0.29) -1px 0px 5px -1px;
 }
+
 
 .hindsight-lozenge span.text {
   padding: 2px 8px;
@@ -394,13 +392,7 @@ padding-bottom: 2px;
   color: hsl(0, 0%, 20%);
 }
 
-.hindsight-label.good {
-  color:green;
-}
 
-.hindsight-label.mixed {
-  color:red;
-}
 .hindsight-label img {
   max-height: 12px;
   opacity: 0.5;
@@ -430,6 +422,34 @@ padding-bottom: 2px;
 .hindsight-label .denominator {
   font-weight: bold;
   text-shadow: hsl(0, 100%, 100%) 0px 0px 0px;
+}
+
+
+
+/* lozenge colors!!!! */
+
+.hindsight-lozenge.mixed, .hindsight-lozenge.poorly {
+  color: hsl(0, 100%, 29%);
+}
+
+.hindsight-lozenge.well, .hindsight-lozenge.good {
+  color: hsl(110, 100%, 29%);
+}
+
+.hindsight-lozenge.mixed span.gem, .hindsight-lozenge.poorly span.gem {
+  background: hsl(0, 100%, 39%);
+}
+
+.hindsight-lozenge.well span.gem, .hindsight-lozenge.good span.gem {
+  background: hsl(110, 100%, 39%);
+}
+
+.hindsight-lozenge span.text span {
+  display:none;
+}
+
+.hindsight-lozenge:hover span.text span {
+  display:inline;
 }
 
 
@@ -484,4 +504,42 @@ padding-bottom: 2px;
 .dreambox .table-view-divider b {
   font-size: 12px;
   color: hsl(240, 40%, 33%);
+}
+
+.profile h3 {
+  border-top: solid thin black;
+  margin-top: 20px;
+  padding-top: 10px;
+}
+
+.profile ul.items {
+  list-style: none;
+  padding:0; margin:0;
+}
+
+.profile ul.items li.item {
+  display: inline-flex;
+  /*border: solid thin gray;*/
+  /*text-align:center;*/
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin:0;
+  margin-right: 10px;
+  box-shadow: hsla(0, 0%, 0%, 0.3) 0px 1px 2px;
+}
+
+.profile ul.items li.item h2 {
+  font-size: 16px;
+}
+.profile ul.items li.item img {
+  float:left;
+}
+
+.profile h4 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
 }

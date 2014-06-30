@@ -74,16 +74,17 @@ Firebase.prototype.touch = ->
 Firebase.prototype.set_mirror_loc = (obj, value) ->
   r = this.root().toString()
   path = this.toString().split(r)[1]
+  console.log(path)
   dirs = path.split('/')
   dirs.shift()
-  console.log(dirs)
+  # console.log(dirs)
   last = dirs.pop()
   obj[r] = {} if !obj[r]
   obj = obj[r]
   for x in dirs
     obj[x] = {} if !obj[x]
     obj = obj[x]
-  obj[last] = value
+  obj[decodeURIComponent(last)] = value
 
 Firebase.prototype.plus = (ref, cb) ->
   q = new FirebaseQuery()

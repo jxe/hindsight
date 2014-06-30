@@ -12,5 +12,6 @@ class window.SearchToReview extends View
             url: canonical_url
             name: shortname
             image: img
+            type: Links.resourceType(canonical_url)
           fb('resources').child(Links.asFirebasePath(canonical_url)).set obj
           Review.open(obj)

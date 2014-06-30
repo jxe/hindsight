@@ -1,28 +1,42 @@
 class window.Signal extends View
-  initialize: (@resource_url) ->
-    # no op
-  @content: (resource_url, user_desires, common_desires, best_options, related_desires) ->
+  @withGuess: (resource_url, user_desires, common_desires, best_options, related_desires) ->
     top_desires = Desires.personalize(user_desires, common_desires)
-    top_desire = top_desires.shift()
+    for desire in top_desires
+      desire.rating = Ratings.situate(desire, best_options[desire.id])
+    new Signal(resource_url, top_desires)
+
+  @withOutcomes: (resource_url, outcomes) ->
+    outcomes_ary = []
+    console.log outcomes
+    for outcome, data of outcomes
+      if data
+        data.rating = data.going || '?'
+        data.id = outcome
+        outcomes_ary.push data
+    new Signal(resource_url, outcomes_ary)
+
+  initialize: (@resource_url) ->
+  @content: (resource_url, outcomes) ->
+    console.log outcomes
     @div class: 'hindsight-signal', =>
-      @drawLabel top_desire, best_options[top_desire.id], related_desires[top_desire.id]
-      if top_desires.length
+      @drawLabel outcomes.shift()
+      if true # outcomes.length
         @div click: 'openReview', class: 'hindsight-lozenge trailer', =>
           @raw "&#x25B6;"
 
-  @drawLabel: (desire, best_options, related_desires) ->
-    rating = Ratings.situate(desire, best_options)
-    @div class: "hindsight-lozenge #{rating}", click: 'openDreambox', =>
+  @drawLabel: (desire) ->
+    @div class: "hindsight-lozenge #{desire.rating}", click: 'openDreambox', =>
       @span class: 'gem'
       @span class: 'text', =>
-        @b "#{desire.id.split(': ')[1]}: "
-        @text Ratings.label(rating)
+        @b "#{desire.id.split(': ')[1]}"
+        @raw '&nbsp;'
+        @span Ratings.label(desire.rating)
           # if Desires.strong_migrations(related_desires)
           #   @img src: 'img/migrations-alert.png'
 
   @load_from_url: (url, cb) ->
     # TODO: use firebase instead
-    s = new Signal(url, null, EXAMPLE_DATA.common_desires[url], EXAMPLE_DATA.best_options, EXAMPLE_DATA.related_desires)
+    s = Signal.withGuess(url, null, EXAMPLE_DATA.common_desires[url], EXAMPLE_DATA.best_options, EXAMPLE_DATA.related_desires)
     cb(s)
 
   @attach_to_divs: (product_selector, signal_selector) ->
@@ -38,4 +52,4 @@ class window.Signal extends View
     # alert('I love the world!')
 
   openReview: ->
-    Review.open_url("https://facebook.com")
+    Review.open_url(@resource_url)

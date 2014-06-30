@@ -945,7 +945,7 @@
     e = e.originalEvent || e;
 
     toggle = findToggle(e.target);
-    
+
     if (!toggle) {
       return;
     }
