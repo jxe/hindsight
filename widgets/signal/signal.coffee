@@ -7,7 +7,7 @@ class window.Signal extends View
 
   @withOutcomes: (resource_url, outcomes) ->
     outcomes_ary = []
-    console.log outcomes
+    # console.log outcomes
     for outcome, data of outcomes
       if data
         data.rating = data.going || '?'
@@ -15,12 +15,20 @@ class window.Signal extends View
         outcomes_ary.push data
     new Signal(resource_url, outcomes_ary)
 
+  @withOutcome: (resource_url, data) ->
+    if data.going_well_for
+      data.going = 'well'
+    else if data.going_poorly_for
+      data.going = 'poorly'
+    data.rating = data.going || '?'
+    new Signal(resource_url, [data], true)
+
   initialize: (@resource_url) ->
-  @content: (resource_url, outcomes) ->
-    console.log outcomes
+  @content: (resource_url, outcomes, hide_tail) ->
+    # console.log outcomes
     @div class: 'hindsight-signal', =>
       @drawLabel outcomes.shift()
-      if true # outcomes.length
+      if !hide_tail # outcomes.length
         @div click: 'openReview', class: 'hindsight-lozenge trailer', =>
           @raw "&#x25B6;"
 
@@ -52,4 +60,4 @@ class window.Signal extends View
     # alert('I love the world!')
 
   openReview: ->
-    Review.open_url(@resource_url)
+    Review.open_url(this, @resource_url)

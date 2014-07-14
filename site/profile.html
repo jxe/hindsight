@@ -1,7 +1,7 @@
 <meta name="firebase" content="https://lifestyles.firebaseio.com">
 
 <link href="/vendor/ratchet/css/ratchet.css" rel="stylesheet">
-<link href="/vendor/ratchet/css/ratchet-theme-ios.min.css" rel="stylesheet">
+<link href="/vendor/ratchet/css/ratchet-theme-ios.css" rel="stylesheet">
 <link href="vreview.css" rel="stylesheet">
 
 <script type="text/javascript" src="vendor/ratchet/js/ratchet.js"></script>
@@ -13,10 +13,10 @@
 <script type="text/javascript" src="compiled.js"></script>
 
 
-<div class="content"> <div class='content-padded'></div> </div>
+<div class="content" id="meat"> </div>
 
 <script>
   batshit.setup_firebase();
   batshit.authenticate();
-  Profile.load_into('.content-padded', 'facebook:514190')
+  Profile.load_into('#meat', 'facebook:514190')
 </script>

@@ -8,6 +8,8 @@ cheerio  = require('cheerio'),
 fbutil   = require('./fbutil'),
 fburl = 'https://' + process.env.FB_NAME + '.firebaseio.com/',
 express = require('express'),
+htmlcarve = require("htmlcarve"),
+cardi = require("cardi"),
 app = express();
 
 function get(url, cb){
@@ -28,39 +30,25 @@ fbutil.auth(fburl, process.env.FB_TOKEN).done(function() {
   app.get('/url/:url', function(req, res){
     console.log("URL: " + req.params.url);
 
-    request({
-      url: req.params.url,
-      headers: {
-        'User-Agent': 'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)'
-      }
-    }, function(error, response, body) {
-      console.log("Got response: " + response.statusCode);
-      response.setEncoding('utf8');
-      var meta = {};
+    cardi.fromUrl(req.params.url, function (error, card) {
+      console.log(card);
+      if (!error){
 
-      // console.log('data:', chunk);
-      $ = cheerio.load(body);
-      $('meta').each(function () {
-        x = this;
-        var p = $(x).attr('property') || $(x).attr('name');
-        if (p) meta[p] = $(x).attr('content');
-      });
-
-      console.log('Open Graph data', meta);
-      // console.log(body);
-      // first, try open graph
-
-      var title = meta && (meta['og:title'] || meta['og:site_name']);
-      if (title){
         res.send(JSON.stringify({
           url: req.params.url,
-          title: title,
-          img: meta['og:image']
+          title: card.title,
+          img: card.image
         }));
-      } else {
-          // console.log("err:",err);
-          // otherwise try scrapin
 
+      } else {
+        request({
+          url: req.params.url,
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1 (+https://www.facebook.com/externalhit_uatext.php)'
+          }
+        }, function(error, response, body) {
+          console.log("Got response: " + response.statusCode);
+          response.setEncoding('utf8');
           var m = body.match(/<title[^>]*?>(.*)<\/title>/);
           var img = body.match(/<meta content="([^"]+)" property="og:image" \/>/);
           if (m){
@@ -73,15 +61,22 @@ fbutil.auth(fburl, process.env.FB_TOKEN).done(function() {
             console.log(body);
             res.send('error');
           }
+        }).on('error', function(e) {
+          console.log("Got error: " + e.message);
+        });
 
       }
-
-
-
-    }).on('error', function(e) {
-      console.log("Got error: " + e.message);
     });
-
+    // htmlcarve.fromUrl(req.params.url, function(error, data){
+    //   if (!error){
+    //     console.log(JSON.stringify(data));
+    //
+    //   } else {
+    //
+    //
+    //
+    //   }
+    // });
   });
 
   var port = process.env.PORT || 5000;

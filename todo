@@ -1,17 +1,26 @@
+// new reviewer
+
+- popup places itself on screen
+- popup positions its nose correctly
+- lozenges are displayed inside carded tables instead of outside
+- lozenges are centered inside carded tables
+- replace signal with engagement reminder
+
 
 ------------------------------
 
 PROFILE m2
 
-- (10m) mod review to use lozenges in its list
 - (10m) use URL parsing to show other people's profiles
-
+- figure out the schema for db.desires
+  tag ->
+    still_desired
+    going_well_with: ...
+    going_poorly_with: ...
 - (10m) review's use of db.resource_outcomes / db.desires / db.engagement should match example data
 
 
 PROFILE m3
-
-- (20m) reviews come as popups on big screens
 
 - a few things to add to ratchet css
     - double wide carded tableviews

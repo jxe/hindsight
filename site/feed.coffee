@@ -43,8 +43,3 @@ class window.Feed extends View
       return false
     url = $(ev.target).attr('url') || $(ev.target).parents('li').attr('url')
     Review.open @resources[Links.asFirebasePath(url)]
-
-
-  $ '#meat'
-    .append(
-    )

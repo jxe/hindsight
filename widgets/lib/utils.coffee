@@ -74,7 +74,7 @@ Firebase.prototype.touch = ->
 Firebase.prototype.set_mirror_loc = (obj, value) ->
   r = this.root().toString()
   path = this.toString().split(r)[1]
-  console.log(path)
+  # console.log(path)
   dirs = path.split('/')
   dirs.shift()
   # console.log(dirs)

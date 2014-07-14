@@ -1,10 +1,23 @@
 class window.Popover extends View
-  @show: (args...) ->
+  @show: (attach_element, args...) ->
     x = new this(args...)
+    $('.popover, .backdrop').remove();
     x.appendTo 'body'
     setTimeout((->
       x.toggleClass 'visible'
-      x.css display: "block", top: "110px"
+      
+      rect = attach_element[0].getBoundingClientRect()
+
+      # position vertically
+      x.css display: "block", top: rect.bottom + 20
+      
+      # position horizontally
+      x.css left: "150px"
+      
+      # position nose
+      ## not sure how to address :before in js
+
+      
       x.show_backdrop()
     ), 0)
   show_backdrop: ->

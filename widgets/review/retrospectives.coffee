@@ -42,22 +42,18 @@ class SmileyView extends View
   # drawing
 
   @content: (db, tag, tagname, data) ->
-    @div =>
-      @div class: 'content-padded', =>
-        @h5 class: '', =>
-          @text tagname
+    @ul class: 'table-view card', =>
+      if data
+        going = data.going
+        @li class: 'table-view-cell signalrow', =>
           if !data?.going
-            @span click: 'remove', class: 'icon icon-close'
-          @div toggle: 'toggled', class: "pull-right toggle #{ 'active' if data }", =>
-            @div class: 'toggle-handle'
-        if data
-          going = data.going
+            @span click: 'remove', class: 'icon icon-close pull-right'
+          @subview 'signal', Signal.withOutcome('..', data || { id: tag })
+        @li class: 'table-view-cell segmentrow', =>
           @div class: 'segmented-control', =>
             @a click: 'goingPoorly', class: "red control-item  #{ if going == 'poorly' then 'active' }", =>
-              @raw '&#9785; '
               @text "Going poorly"
             @a click: 'goingWell', class: "green control-item  #{ if going == 'well' then 'active' }", =>
-              @raw '&#9786; '
               @text "Going well"
       if data?.going
         switch data.going
@@ -80,7 +76,7 @@ class SmileyView extends View
 
 class window.ActivityResults extends SmileyView
   @goingWellContent: (tagname, data) ->
-    @ul class: 'table-view card', =>
+    @div =>
       @li class: 'table-view-cell', =>
         @p "Product helped me get started"
         @div class: "toggle", =>
@@ -91,7 +87,7 @@ class window.ActivityResults extends SmileyView
           @b outlet: 'how_often', "weekly"
         @input type: 'range'
   @goingPoorlyContent: (tagname, data) ->
-    @ul class: 'table-view card', =>
+    @div =>
       @li class: 'table-view-cell', =>
         @p "Still desired?"
         @div toggle: 'toggleDesired', class: "toggle", =>

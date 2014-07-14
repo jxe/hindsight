@@ -82,6 +82,10 @@ window.EXAMPLE_DATA =
         desired_from: null
         desired_until: null
         public: true
+        going_well_with:
+          'itunes.com/randomapp': true
+        going_poorly_with:
+          'facebook.com'
       'state: feeling relaxed':
         desired_on: 1029830321
         desired_from: 1029830321
