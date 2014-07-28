@@ -1,9 +1,17 @@
+- support embedding reminder inside search form
+- a popup is a kind of pager which supports .init(page_dom), .push(page_dom), and .back()
+- signal displays review using new Popup().init(new Review(url))
+
+
+
 // new reviewer
+
+- fix engagement reminder display
+- redesign going well / going poorly so it separates the goal and the engagement blame
+
 
 - popup places itself on screen
 - popup positions its nose correctly
-- lozenges are displayed inside carded tables instead of outside
-- lozenges are centered inside carded tables
 - replace signal with engagement reminder
 
 

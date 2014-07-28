@@ -16,8 +16,11 @@ class window.Review extends Popover
     {name, image, engagement, db} = ctx
     @div class: 'vreview popover', =>
       @ul class: 'table-view', =>
-        @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago" if engagement
-        @subview 'search', new Fireahead "Add", fb('tags'),
+        if engagement
+          @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
+        else
+          @p class: 'reminder', "This week, you've spent 4 hours"
+        @subview 'search', new Fireahead "What is #{name} about for you?", fb('tags'),
           (clicked) ->
             if clicked.name
               obj = {}
