@@ -1,25 +1,36 @@
 class window.Review extends Popover
-  @open_url: (attach_element, url) ->
+  @for_url: (url, cb) ->
     fb('resources/%', Links.asFirebasePath(url)).on 'value', (snap) =>
-      @open attach_element, snap.val()
+      v = snap.val()
+      return cb(Review.for_obj(v)) if v
+      Links.info url, (canonical_url, shortname, longname, img) ->
+        obj =
+          url: canonical_url
+          name: shortname
+          image: img
+          type: Links.resourceType(canonical_url)
+        fb('resources').child(Links.asFirebasePath(canonical_url)).set obj
+        cb(Review.for_obj(obj))
+  
+  @open_url: (attach_element, url) ->
+    Review.for_url url, (r) -> Popover.show(attach_element, r)
 
-  @open: (attach_element, obj) ->
+  @for_obj: (obj) ->
     obj.db =
       review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
       engagement: fb('engagements/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
       outcomes: fb('outcomes/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
       desires: fb('desires/%', window.current_user_id)
       resource: fb('resources/%', Links.asFirebasePath(obj.url))
-    @show attach_element, obj
+    new Pager(new Review(obj))
+
+  @open: (attach_element, obj) ->
+    Popover.show(attach_element, Review.for_obj(obj))
 
   @content: (ctx) ->
     {name, image, engagement, db} = ctx
-    @div class: 'vreview popover', =>
+    @div class: 'vreview', =>
       @ul class: 'table-view', =>
-        if engagement
-          @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
-        else
-          @p class: 'reminder', "This week, you've spent 4 hours"
         @subview 'search', new Fireahead "What is #{name} about for you?", fb('tags'),
           (clicked) ->
             if clicked.name
@@ -43,6 +54,10 @@ class window.Review extends Popover
               new: true
             ]
       @div class: 'outcomes', outlet: 'outcomes'
+      if engagement
+        @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
+      else
+        @p class: 'reminder', "This week, you've spent 4 hours"
 
   drawFollowups: (myTags, commonTags, db) ->
     for tag, data of commonTags

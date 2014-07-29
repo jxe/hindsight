@@ -1,0 +1,29 @@
+{
+   "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
+
+  
+   "externally_connectable": {
+      "matches": [
+        "*://retroreview.herokuapp.com/*",
+        "*://localhost/*"
+      ]
+   },
+   "browser_action": {
+      "default_icon": "images/meditator.png",
+      "default_name": "Hindsight",
+      "default_title": "Hindsight",
+      "default_popup": "popup.html"
+   },
+   "description": "Browse the web with no regrets.",
+   "icons": {
+      "128": "images/icon128.png",
+      "16": "images/icon16.png",
+      "48": "images/icon48.png"
+   },
+   "manifest_version": 2,
+   "name": "Hindsight",
+   "background": { "page": "background.html" },
+   "permissions": [ "tabs", "idle", "webRequest", "http://*/*", "https://*/*" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}

@@ -42,12 +42,16 @@ class SmileyView extends View
   # drawing
 
   @content: (db, tag, tagname, data) ->
-    @ul class: 'table-view card', =>
+    @ul class: 'table-view', =>
       if data
         going = data.going
         @li class: 'table-view-cell signalrow', =>
           if !data?.going
             @span click: 'remove', class: 'icon icon-close pull-right'
+          if data.going == 'well'
+            @h3 class: 'well', click: 'boom', 'Helped with'
+          else
+            @h3 class: 'poorly', 'Didn\'t help with'
           @subview 'signal', Signal.withOutcome('..', data || { id: tag })
         @li class: 'table-view-cell segmentrow', =>
           @div class: 'segmented-control', =>
@@ -65,6 +69,10 @@ class SmileyView extends View
 
   # these are just defaults to be overriden
 
+  boom: (ev) ->
+    this.parents('.pager_viewport').view().push("<div style='background:red'></div>")
+    return false
+  
   @goingWellContent: (tagname, data) ->
     # @ul class: 'table-view', =>
     #   @li class: 'table-view-cell', "Yay!"

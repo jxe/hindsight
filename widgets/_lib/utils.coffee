@@ -10,7 +10,7 @@ View::[k] = v for own k, v of {
 }
 
 
-F = undefined
+window.F = undefined
 on_auth = undefined
 firebase_auth = undefined
 
@@ -33,21 +33,28 @@ window.batshit =
       window[assignment] = m[i + 1]
 
   setup_firebase: ->
-    F = new Firebase(batshit.meta("firebase"))  unless F
+    window.F = new Firebase(batshit.meta("firebase")) unless F
+  
+  setup_user: (user) ->
+    if user
+      window.current_user_id = user.uid
+      window.facebook_id = user.id
+      window.facebook_name = user.displayName
+      F.child("users").child(user.uid).update
+        name: user.displayName
+        facebook_id: facebook_id
+      window.got_user(user) if window.got_user
+  
   authenticate: (cb) ->
     batshit.setup_firebase()
     window.on_auth_ready = cb
     firebase_auth = new FirebaseSimpleLogin F, (error, user) ->
       return alert(error)  if error
-      if user
-        window.current_user_id = user.uid
-        window.facebook_id = user.id
-        window.facebook_name = user.displayName
-        F.child("users").child(user.uid).update
-          name: user.displayName
-          facebook_id: facebook_id
+      console.log 'running auth'
+      batshit.setup_user(user)
       window.on_auth_ready() if window.on_auth_ready
       window.auth_ready = true
+  
   please_login: ->
     alert "Please login with facebook to complete this action!"
     firebase_auth.login "facebook",

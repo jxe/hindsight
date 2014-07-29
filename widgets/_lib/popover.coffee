@@ -1,6 +1,8 @@
 class window.Popover extends View
-  @show: (attach_element, args...) ->
-    x = new this(args...)
+  @content: (attach_element) ->
+    @div class: 'popover'
+  @show: (attach_element, el) ->
+    x = new this()
     $('.popover, .backdrop').remove();
     x.appendTo 'body'
     setTimeout((->
@@ -17,8 +19,8 @@ class window.Popover extends View
       # position nose
       ## not sure how to address :before in js
 
-      
       x.show_backdrop()
+      x.append(el)
     ), 0)
   show_backdrop: ->
     @back = document.createElement('div')

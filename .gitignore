@@ -2,3 +2,8 @@
 site/compiled.js
 api/node_modules
 site/compiled.map
+vendor.js
+compiled.js
+compiled.map
+all.css
+node_modules

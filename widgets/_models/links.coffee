@@ -2,18 +2,18 @@ window.Links =
   info: (url, cb) =>
     url = Links.canonicalize(url)
     $.ajax
-      url: "/url/" + encodeURIComponent(url),
+      url: "http://retroreview.herokuapp.com/url/" + encodeURIComponent(url),
       dataType: 'json',
       success: (data) ->
         cb(url, data.title, data.title, data.img);
 
   canonicalize: (url) ->
-    return url
+#    return url
     return unless url
     return url unless url.match(/^http/)
     match = url.match(/:\/\/(.[^/]+)/)
     return url unless match
-    return (match[1]).replace('www.','')
+    return "https://" + (match[1]).replace('www.','')
 
   asFirebasePath: (url) =>
     return encodeURIComponent(Links.canonicalize(url)).replace(/\./g, '%2E')
