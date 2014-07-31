@@ -1,29 +1,40 @@
 {
-   "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
-
-  
+   
+  "oauth2": {
+    "client_id": "597794547855-ch6i876etjf1qphkiuvm1ho4ghsle1gi.apps.googleusercontent.com",
+    "scopes": [
+        "https://www.googleapis.com/auth/plus.login",      
+        "https://www.googleapis.com/auth/plus.me"
+    ]
+  },
    "externally_connectable": {
       "matches": [
         "*://retroreview.herokuapp.com/*",
         "*://localhost/*"
       ]
    },
+  "permissions": [ "tabs", "idle", "identity", "webRequest", "activeTab", "http://ajax.googleapis.com/", "http://*/*", "https://*/*" ],
+  "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
+  
+   "name": "Hindsight",
+   "description": "Browse the web with no regrets.",
+   "version": "0.0.0.1",
    "browser_action": {
-      "default_icon": "images/meditator.png",
+      "default_icon": "images/eye.png",
       "default_name": "Hindsight",
       "default_title": "Hindsight",
       "default_popup": "popup.html"
    },
-   "description": "Browse the web with no regrets.",
+  
    "icons": {
       "128": "images/icon128.png",
       "16": "images/icon16.png",
       "48": "images/icon48.png"
    },
+
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtuPTN6CHJe0gq3MQZ+DEAxw4dfmhUgMwMpJc0+/ykxfuJYZbcn86+6RUwI5zkX6+mC/4/j823ED4kTvwk9yixdgYv8EehVQUA/8xQFs0czLzpN9pYEFWLRpRli2Zj0bzt8MaluWBgY8q87MYP5JV1BrOZPnibpWJhRddETUt5dxm6UgAoVlyM6B/T7uczSjHfmOwgND+8m5M5AtSqabayXcB56VeD8fZhXVvsej02occbYsvSDHryR4MjcUU9hWMsZsi9MIojta46VXafFx2DJtW5E9vXZjwDWC//krQymrOaDpBJvLAYHaSF//gQYm25rQhMhNtV99xUkgJZ9C5WwIDAQAB",
+
    "manifest_version": 2,
-   "name": "Hindsight",
    "background": { "page": "background.html" },
-   "permissions": [ "tabs", "idle", "webRequest", "http://*/*", "https://*/*" ],
-   "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0"
+   "update_url": "https://clients2.google.com/service/update2/crx"
 }

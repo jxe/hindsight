@@ -35,11 +35,23 @@ window.batshit =
   setup_firebase: ->
     window.F = new Firebase(batshit.meta("firebase")) unless F
   
+  with_user: (el, cb) ->
+    return cb() if window.current_user_id
+    if x = localStorage.user
+      batshit.setup_user(JSON.parse(x))
+      return cb()
+    # if on_auth_ready hasn't been called yet, defer this whole thing til then
+    # if we have a user at that point, just call the callback
+    # otherwise, set el to be an iframe pointing to auth.html
+    # and when we finally get a call to setup_user, call the callback
+    
   setup_user: (user) ->
     if user
+      F.auth(user.firebaseAuthToken)
       window.current_user_id = user.uid
       window.facebook_id = user.id
       window.facebook_name = user.displayName
+      localStorage.user = JSON.stringify(user)
       F.child("users").child(user.uid).update
         name: user.displayName
         facebook_id: facebook_id

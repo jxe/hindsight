@@ -10,13 +10,9 @@ batshit.setup_firebase();
 
 window.got_user = function(user){
   var crx = "fkglfopiplaceiefegmnmhogjkpiencg";
-  chrome.runtime.sendMessage(crx, {
-    acceptFirebaseToken: user.firebaseAuthToken, 
-    user: user
-  });
+  chrome.runtime.sendMessage(crx, { user: user });
 };
 
 batshit.authenticate();
 batshit.please_login();
-  
 </script>

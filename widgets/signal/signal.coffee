@@ -37,8 +37,8 @@ class window.Signal extends View
       @span class: 'gem'
       @span class: 'text', =>
         @b "#{desire.id.split(': ')[1]}"
-        @raw '&nbsp;'
-        @span Ratings.label(desire.rating)
+#        @raw '&nbsp;'
+#        @span Ratings.label(desire.rating)
           # if Desires.strong_migrations(related_desires)
           #   @img src: 'img/migrations-alert.png'
 

@@ -21,7 +21,7 @@ class window.Fireahead extends View
     @sub @input, 'typeahead:selected', (ev, data) =>
       cb(data)
       @input.typeahead('val', '')
-    @input.typeahead({autoselect:true},
+    @input.typeahead({autoselect:true, minLength: 0},
       displayKey: 'name',
       source: (query, cb) =>
         q = query?.toLowerCase?()

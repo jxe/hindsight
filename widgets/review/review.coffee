@@ -1,37 +1,24 @@
-class window.Review extends Popover
-  @for_url: (url, cb) ->
-    fb('resources/%', Links.asFirebasePath(url)).on 'value', (snap) =>
-      v = snap.val()
-      return cb(Review.for_obj(v)) if v
-      Links.info url, (canonical_url, shortname, longname, img) ->
-        obj =
-          url: canonical_url
-          name: shortname
-          image: img
-          type: Links.resourceType(canonical_url)
-        fb('resources').child(Links.asFirebasePath(canonical_url)).set obj
-        cb(Review.for_obj(obj))
+class window.Review extends View
+  inject: (el) ->
+    $(el).html(new Pager(this))
   
-  @open_url: (attach_element, url) ->
-    Review.for_url url, (r) -> Popover.show(attach_element, r)
-
-  @for_obj: (obj) ->
-    obj.db =
-      review: fb('user/%/reviews/%', window.current_user_id, Links.asFirebasePath(obj.url))
-      engagement: fb('engagements/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
-      outcomes: fb('outcomes/%/%', window.current_user_id, Links.asFirebasePath(obj.url))
-      desires: fb('desires/%', window.current_user_id)
-      resource: fb('resources/%', Links.asFirebasePath(obj.url))
-    new Pager(new Review(obj))
-
-  @open: (attach_element, obj) ->
-    Popover.show(attach_element, Review.for_obj(obj))
+  @fromResourceAndUser: (r, uid) ->
+    p = r.firebase_path()
+    new Review
+      url: r.canonUrl,
+      name: r.name,
+      db:
+        review: fb('user/%/reviews/%', uid, p)
+        engagement: fb('engagements/%/%', uid, p)
+        outcomes: fb('outcomes/%/%', uid, p)
+        desires: fb('desires/%', uid)
+        resource: fb('resources/%', p)
 
   @content: (ctx) ->
-    {name, image, engagement, db} = ctx
+    {name, engagement, db} = ctx
     @div class: 'vreview', =>
       @ul class: 'table-view', =>
-        @subview 'search', new Fireahead "What is #{name} about for you?", fb('tags'),
+        @subview 'search', new Fireahead "Why #{name}?", fb('tags'),
           (clicked) ->
             if clicked.name
               obj = {}
@@ -47,51 +34,62 @@ class window.Review extends Popover
               name: "activity: #{typed}"
               new: true
             ,
-              name: "virtue: #{typed}"
+              name: "faculty: #{typed}"
               new: true
             ,
-              name: "state: #{typed}"
+              name: "image: #{typed}"
+              new: true
+            ,
+              name: "asset: #{typed}"
+              new: true
+            ,
+              name: "feeling: #{typed}"
               new: true
             ]
-      @div class: 'outcomes', outlet: 'outcomes'
+        @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
       if engagement
         @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
       else
-        @p class: 'reminder', "This week, you've spent 4 hours"
+        @p class: 'reminder', =>
+          @b "4 hours"
+          @text " this week"
 
   drawFollowups: (myTags, commonTags, db) ->
-    for tag, data of commonTags
-      myTags[tag] = 0 if myTags[tag] == undefined
-
     @outcomes.html $$ ->
-      if myTags
-        @div =>
-          for tag in Object.keys(myTags).sort()
-            data = myTags[tag]
-            data.id = tag
-            if data != false
-              [ type, tagname ] = tag.split(': ')
-              switch type
-                when 'activity'
-                  @div =>
-                    @subview(tag, new ActivityResults(db, tag, tagname, data))
+      return unless myTags
+      for tag in Object.keys(myTags).sort()
+        data = myTags[tag]
+        data.id = tag
+        if data != false
+          [ type, tagname ] = tag.split(': ')
+          @li class: 'table-view-cell signalrow', tag: tag, =>
+            @h3 class: data.going, =>
+                @span Review.binary_text(type, data.going)
+            @subview 'signal', Signal.withOutcome('..', data || { id: tag })
+              
+  @binary_text: (type, going) ->
+    return '...' if !going
+    well = (going == 'well')
+    switch type
+      when 'activity', 'asset', 'image', 'feeling', 'state', 'outcome'
+        if well then 'Lead to' else 'Hasn\'t lead to'
+      when 'faculty', 'virtue', 'ethic'
+        if well then 'Was' else 'Was not'
 
-                when 'outcome', 'state'
-                  @div =>
-                    @subview(tag, new OutcomeResults(db, tag, tagname, data))
-
-                when 'ethic', 'virtue'
-                  @div =>
-                    @subview(tag, new EthicResults(db, tag, tagname, data))
-
-
+    
+  outcomeClicked: (ev) ->
+    tag = $(ev.target).attr('tag') || $(ev.target).parents('[tag]').attr('tag')
+    if tag
+      [ type, tagname ] = tag.split(': ')
+      this.parents('.pager_viewport').view().push(new Outcome(@db, tag, tagname, @tags[ tag ]))
+  
+          
   initialize: (ctx) ->
     { @item, @engagement, @db } = ctx
     @tags = {}
     @common_tags = {}
     @sub @db.outcomes, 'value', (snap) =>
       @tags = snap.val() || {}
-      # @drawRationale @tags
       @drawFollowups @tags, @common_tags, @db
     @sub @db.resource.child('tags'), 'value', (snap) =>
       @common_tags = snap.val() || {}

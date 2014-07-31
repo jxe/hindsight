@@ -1,4 +1,4 @@
-class SmileyView extends View
+class Outcome extends View
   initialize: (@db, @tag, tagname, @data) -> true
 
   # actions
@@ -29,29 +29,29 @@ class SmileyView extends View
     @db.outcomes.child(@tag).set(false)
     @db.resource.fb('tags/%/going_poorly_for', @tag).remove_user()
     @db.resource.fb('tags/%/going_well_for', @tag).remove_user()
+    this.parents('.pager_viewport').view().pop();
+    return false
+  
+  back: ->
+    this.parents('.pager_viewport').view().pop();
+    return false
 
-  toggled: (ev) ->
+  toggleDesired: (ev) ->
     if $(ev.target).is '.active'
-      obj = {}
-      obj[ @tag ] = { intended: true }
-      @db.outcomes.update(obj)
+      @db.desires.child(@tag).update still_desired: true
     else
-      @db.outcomes.child(@tag).remove()
-
+      @db.desires.child(@tag).update still_desired: false
 
   # drawing
 
   @content: (db, tag, tagname, data) ->
-    @ul class: 'table-view', =>
+    [ type, tagname ] = tag.split(': ')
+    @ul class: 'table-view card', =>
       if data
         going = data.going
-        @li class: 'table-view-cell signalrow', =>
-          if !data?.going
-            @span click: 'remove', class: 'icon icon-close pull-right'
-          if data.going == 'well'
-            @h3 class: 'well', click: 'boom', 'Helped with'
-          else
-            @h3 class: 'poorly', 'Didn\'t help with'
+        @li class: 'table-view-cell', click: 'back', 'Back'
+        @li class: 'table-view-cell', click: 'remove', 'Remove'
+        @li class: 'table-view-cell signalrow', tag: tag, =>
           @subview 'signal', Signal.withOutcome('..', data || { id: tag })
         @li class: 'table-view-cell segmentrow', =>
           @div class: 'segmented-control', =>
@@ -62,53 +62,30 @@ class SmileyView extends View
       if data?.going
         switch data.going
           when 'well'
-            @goingWellContent(tagname, data)
+            @goingWellContent(type, tagname, data)
           when 'poorly'
-            @goingPoorlyContent(tagname, data)
+            @goingPoorlyContent(type, tagname, data)
 
 
-  # these are just defaults to be overriden
+  @goingWellContent: (type, tagname, data) ->
+    if type == 'activity'
+      @div =>
+        @li class: 'table-view-cell', =>
+          @p "Product helped me get started"
+          @div class: "toggle", =>
+            @div class: 'toggle-handle'
+        @li class: 'table-view-cell', =>
+          @p =>
+            @text "I do this "
+            @b outlet: 'how_often', "weekly"
+          @input type: 'range'
+    
 
-  boom: (ev) ->
-    this.parents('.pager_viewport').view().push("<div style='background:red'></div>")
-    return false
-  
-  @goingWellContent: (tagname, data) ->
-    # @ul class: 'table-view', =>
-    #   @li class: 'table-view-cell', "Yay!"
-  @goingPoorlyContent: (tagname, data) ->
-    # @ul class: 'table-view', =>
-    #   @li class: 'table-view-cell', "Sorry to hear it"
+  @goingPoorlyContent: (type, tagname, data) ->
+    if type == 'activity'
+      @div =>
+        @li class: 'table-view-cell', =>
+          @p "Still desired?"
+          @div toggle: 'toggleDesired', class: "toggle", =>
+            @div class: 'toggle-handle'
 
-
-
-class window.ActivityResults extends SmileyView
-  @goingWellContent: (tagname, data) ->
-    @div =>
-      @li class: 'table-view-cell', =>
-        @p "Product helped me get started"
-        @div class: "toggle", =>
-          @div class: 'toggle-handle'
-      @li class: 'table-view-cell', =>
-        @p =>
-          @text "I do this "
-          @b outlet: 'how_often', "weekly"
-        @input type: 'range'
-  @goingPoorlyContent: (tagname, data) ->
-    @div =>
-      @li class: 'table-view-cell', =>
-        @p "Still desired?"
-        @div toggle: 'toggleDesired', class: "toggle", =>
-          @div class: 'toggle-handle'
-  toggleDesired: (ev) ->
-    if $(ev.target).is '.active'
-      @db.desires.child(@tag).update still_desired: true
-    else
-      @db.desires.child(@tag).update still_desired: false
-
-
-class window.OutcomeResults extends SmileyView
-
-
-
-class window.EthicResults extends SmileyView
