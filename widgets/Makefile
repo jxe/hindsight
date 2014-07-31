@@ -7,7 +7,7 @@ vendor.js: vendor/jquery.min.js vendor/typeahead.js
 all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css widgets.css
 	cat $^ > $@
 
-compiled.js: */*.coffee
+compiled.js: */*.coffee *.coffee
 	coffee -mj $@ -c $^
 
 watch:
