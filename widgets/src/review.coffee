@@ -22,35 +22,13 @@ class window.Review extends Page
         @header class: 'bar bar-nav', =>
           @a class: 'icon icon-left-nav pull-left', click: 'back'
       @ul class: "table-view #{if ctx.is_child then 'content'}", =>
-        @subview 'search', new Fireahead "Why #{name}?", fb('tags'),
-          (clicked, fireahead) ->
-            if clicked.name
-              obj = {}
-              obj[ clicked.name ] = { intended: true }
-              db.outcomes.update(obj)
-              db.engagement.update type: 'used'
-              db.resource.child('tags').child(clicked.name).child('added').set(true)
-              if clicked.new
-                fb('tags').child(clicked.name).set name: clicked.name
-              fireahead.parentView.editOutcome(clicked.name)
-          ,
-          (typed) ->
-            return [
-              name: "activity: #{typed}"
-              new: true
-            ,
-              name: "faculty: #{typed}"
-              new: true
-            ,
-              name: "image: #{typed}"
-              new: true
-            ,
-              name: "asset: #{typed}"
-              new: true
-            ,
-              name: "feeling: #{typed}"
-              new: true
-            ]
+        @subview 'search', new ReasonInput "Why #{name}?", (opt, el) ->
+          obj = {}
+          obj[ opt.name ] = { intended: true }
+          db.outcomes.update(obj)
+          db.engagement.update type: 'used'
+          db.resource.child('tags').child(opt.name).child('added').set(true)
+          el.parentView.editOutcome(opt.name)
         @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
       if engagement
         @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
