@@ -17,8 +17,17 @@
   "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
   
    "name": "Hindsight",
+   "short_name": "Hindsight",
    "description": "Browse the web with no regrets.",
-   "version": "0.0.0.1",
+   "version": "0.0.0.2",
+   "author": "Joe Edelman",
+   "icons": {
+      "128": "images/eye.128x128.png",
+      "48": "images/eye.48x48.png"
+   },
+
+
+  
    "browser_action": {
       "default_icon": "images/eye.png",
       "default_name": "Hindsight",
@@ -26,11 +35,6 @@
       "default_popup": "popup.html"
    },
   
-   "icons": {
-      "128": "images/icon128.png",
-      "16": "images/icon16.png",
-      "48": "images/icon48.png"
-   },
 
    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtuPTN6CHJe0gq3MQZ+DEAxw4dfmhUgMwMpJc0+/ykxfuJYZbcn86+6RUwI5zkX6+mC/4/j823ED4kTvwk9yixdgYv8EehVQUA/8xQFs0czLzpN9pYEFWLRpRli2Zj0bzt8MaluWBgY8q87MYP5JV1BrOZPnibpWJhRddETUt5dxm6UgAoVlyM6B/T7uczSjHfmOwgND+8m5M5AtSqabayXcB56VeD8fZhXVvsej02occbYsvSDHryR4MjcUU9hWMsZsi9MIojta46VXafFx2DJtW5E9vXZjwDWC//krQymrOaDpBJvLAYHaSF//gQYm25rQhMhNtV99xUkgJZ9C5WwIDAQAB",
 
