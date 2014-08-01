@@ -1,0 +1,50 @@
+
+.dreambox.popover .table-view {
+  max-height: 600px;
+}
+
+.dreambox .map {
+  /*border: solid thin hsl(0, 0%, 50%);
+  background: hsl(0, 0%, 93%);
+  padding: 20px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 13px;*/
+
+  width: 250px;
+/* height: 200px; */
+  max-width: none;
+  max-height: none;
+}
+
+.dreambox.popover {
+  left: 150px;
+}
+
+.dreambox.popover:before {
+  /*left: 50px;*/
+  border-bottom: 15px solid hsla(0, 0%, 97%, 0.98);
+}
+
+
+.dreambox .table-view-divider {
+  font-size: 14px;
+  padding-top: 13px;
+  color: hsl(0, 0%, 14%);
+  background: hsl(0, 0%, 83%);
+}
+
+.dreambox .table-view-cell {
+  font-size: 15px;
+  padding-right: 15px;
+}
+
+.dreambox .table-view-cell p {
+  font-size: 13px;
+}
+
+
+.dreambox .table-view-divider b {
+  font-size: 12px;
+  color: hsl(240, 40%, 33%);
+}

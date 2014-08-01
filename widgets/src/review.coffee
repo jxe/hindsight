@@ -18,10 +18,8 @@ class window.Review extends Page
   @content: (ctx) ->
     {name, engagement, db} = ctx
     @div class: 'vreview', =>
-      if ctx.is_child
-        @header class: 'bar bar-nav', =>
-          @a class: 'icon icon-left-nav pull-left', click: 'back'
-      @ul class: "table-view #{if ctx.is_child then 'content'}", =>
+      @header class: 'bar bar-nav bar-extended', =>
+        @a class: 'icon icon-left-nav pull-left', click: 'back' if ctx.is_child
         @subview 'search', new ReasonInput "Why #{name}?", (opt, el) ->
           obj = {}
           obj[ opt.name ] = { intended: true }
@@ -29,13 +27,14 @@ class window.Review extends Page
           db.engagement.update type: 'used'
           db.resource.child('tags').child(opt.name).child('added').set(true)
           el.parentView.editOutcome(opt.name)
-        @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
-      if engagement
-        @p class: 'reminder', "#{engagement.pasttense} #{engagement.ago} ago"
-      else
         @p class: 'reminder', =>
-          @b "4 hours"
-          @text " this week"
+          if engagement
+             "#{engagement.pasttense} #{engagement.ago} ago"
+          else
+            @b "4 hours"
+            @text " this week"
+      @ul class: "table-view content", =>
+        @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
 
   drawOutcomes: (myTags, commonTags, db) ->
     @outcomes.html $$ ->
