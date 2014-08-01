@@ -46,25 +46,28 @@ class Outcome extends View
 
   @content: (db, tag, tagname, data) ->
     [ type, tagname ] = tag.split(': ')
-    @ul class: 'table-view card', =>
-      if data
-        going = data.going
-        @li class: 'table-view-cell', click: 'back', 'Back'
-        @li class: 'table-view-cell', click: 'remove', 'Remove'
-        @li class: 'table-view-cell signalrow', tag: tag, =>
-          @subview 'signal', Signal.withOutcome('..', data || { id: tag })
-        @li class: 'table-view-cell segmentrow', =>
-          @div class: 'segmented-control', =>
-            @a click: 'goingPoorly', class: "red control-item  #{ if going == 'poorly' then 'active' }", =>
-              @text "Going poorly"
-            @a click: 'goingWell', class: "green control-item  #{ if going == 'well' then 'active' }", =>
-              @text "Going well"
-      if data?.going
-        switch data.going
-          when 'well'
-            @goingWellContent(type, tagname, data)
-          when 'poorly'
-            @goingPoorlyContent(type, tagname, data)
+    @div =>
+      @header class: 'bar bar-nav', =>
+        @a click: 'back', class: 'pull-left', 'Back'
+        @a click: 'remove', class: 'pull-right', 'X'
+      @div class: 'content content-padded', =>
+        @ul class: 'table-view card', =>
+          if data
+            going = data.going
+            @li class: 'table-view-cell signalrow', tag: tag, =>
+              @subview 'signal', Signal.withOutcome('..', data || { id: tag })
+            @li class: 'table-view-cell segmentrow', =>
+              @div class: 'segmented-control', =>
+                @a click: 'goingPoorly', class: "red control-item  #{ if going == 'poorly' then 'active' }", =>
+                  @text "Going poorly"
+                @a click: 'goingWell', class: "green control-item  #{ if going == 'well' then 'active' }", =>
+                  @text "Going well"
+          if data?.going
+            switch data.going
+              when 'well'
+                @goingWellContent(type, tagname, data)
+              when 'poorly'
+                @goingPoorlyContent(type, tagname, data)
 
 
   @goingWellContent: (type, tagname, data) ->
