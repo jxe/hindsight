@@ -33,7 +33,7 @@ class window.Signal extends View
           @raw "&#x25B6;"
 
   @drawLabel: (desire) ->
-    @div class: "hindsight-lozenge #{desire.rating}", click: 'openDreambox', =>
+    @div class: "hindsight-lozenge #{desire.rating}", =>
       @span class: 'gem'
       @span class: 'text', =>
         @b "#{desire.id.split(': ')[1]}"

@@ -1,16 +1,18 @@
-DEFAULT: vendor.js all.css compiled.js
+DEFAULT: ../build ../build/vendor.js ../build/all.css ../build/compiled.js
 	# yay
 
-vendor.js: vendor/jquery.min.js vendor/typeahead.js
+../build:
+	mkdir -p $@
+
+../build/vendor.js: vendor/jquery.min.js vendor/typeahead.js
 	cat $^ > $@
 
-all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css widgets.css
+../build/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css css/*.css
 	cat $^ > $@
 
-compiled.js: */*.coffee
+../build/compiled.js: vendor/*.coffee src/*.coffee
 	coffee -mj $@ -c $^
 
 watch:
 	watchman watch $(shell pwd)
-	watchman -- trigger $(shell pwd) remake '*.js' '*.css' -- sh -c make
-	watchman -- trigger $(shell pwd) coffee '*.coffee' -- sh -c make
+	watchman -- trigger $(shell pwd) remake '*.js' '*.css' '*.coffee' -- sh -c make

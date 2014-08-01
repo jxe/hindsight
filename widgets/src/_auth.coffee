@@ -79,8 +79,8 @@ Firebase.prototype.fb = ->
 
 Firebase.prototype.add_user = ->
   this.child(current_user_id).set
-    name: window.facebook_name,
-    image: "https://graph.facebook.com/#{facebook_id}/picture",
+#    name: window.facebook_name,
+#    image: "https://graph.facebook.com/#{facebook_id}/picture",
     at: Firebase.ServerValue.TIMESTAMP
 
 Firebase.prototype.remove_user = ->

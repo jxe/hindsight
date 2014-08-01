@@ -21,6 +21,7 @@ function withCachedPlusUserID(cb){
 
 window.loadPopup = function (el){
   withCachedPlusUserID(function(userid){
+    window.current_user_id = userid;
     console.log('using userid', userid);
     chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
       Resource.fromChromeTab(tabs[0]).reviewByUser(userid).inject(el);

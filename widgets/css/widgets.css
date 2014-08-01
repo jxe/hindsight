@@ -654,11 +654,16 @@ color: hsl(0, 0%, 27%);
 }
 
 
-.vreview h3 span{
+.vreview h3 b{
   font-weight: normal;
   border-bottom: solid thin hsl(0, 0%, 92%);
   font-family: Optima;
   font-size: 13px;
+}
+
+.vreview h3 .icon{
+  font-size: 14px;
+  margin-right: 5px;
 }
 
 .vreview h3.well {
@@ -679,13 +684,13 @@ color: hsl(0, 0%, 27%);
 .pager_viewport {
   display: flex;
   height:100%;
-  width: 500%;
+  width: 1000%;
   -webkit-transform: translateX(0); /*cubic-bezier(.54,.2,.83,.67)*/
-  transition: -webkit-transform 0.3s cubic-bezier(.88, .12, .34, .89);
+  transition: -webkit-transform 0.2s cubic-bezier(.88, .12, .34, .89);
 }
 
 .pager_viewport > * {
-  width: 20%;
+  width: 320px;
   height: 100%;
   position: relative;
 }
@@ -697,4 +702,13 @@ color: hsl(0, 0%, 27%);
 .vreview .table-view-cell
 {
   padding: 11px 1px 11px 1px;
+}
+
+.pager_viewport > * > .bar {
+  position: absolute;
+}
+
+h4.prompt {
+  padding: 5px 10px 10px 10px;
+  font-weight: normal;
 }
