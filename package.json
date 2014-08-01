@@ -12,5 +12,8 @@
     "cardi": "",
     "request": "",
     "coffee-script": ""
+  },
+  "scripts": {
+    "start": "sh -c 'make; node hindsightd/app.js'"
   }
 }
