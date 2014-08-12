@@ -1,0 +1,46 @@
+.reason_editor .btn-block {
+  font-size: 14px;
+}
+
+.reason_editor .btn-block b {
+  font-size: 18px;
+  font-variant: small-caps;
+  color: hsl(0, 0%, 20%);
+}
+
+.reason_editor a.small {
+  font-size: 12px;
+  margin-left: 6px;
+  color: hsl(211, 52%, 48%);
+  text-decoration: underline;
+}
+
+.reason_editor .hindsight-lozenge span.gem {
+  width: 10px;
+}
+
+.reason_editor p {
+  color: #444;
+}
+
+.reason_editor p .hindsight-lozenge, .reason_editor li .hindsight-lozenge {
+  position: relative;
+  top: 3px;
+  margin-right: 1px;
+  box-shadow: hsla(0, 0%, 0%, 0.18) 0px 1px 1px;
+  background: hsla(0, 3%, 74%, 0.3);
+}
+
+.reason_editor p .hindsight-lozenge .gem, .reason_editor .hindsight-lozenge .gem {
+  background: hsla(0, 0%, 47%, 0.26);
+}
+
+.reason_editor ul {
+  color: hsl(0, 0%, 27%);
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.reason_editor ul li {
+  margin-bottom: 10px;
+}

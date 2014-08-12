@@ -1,4 +1,4 @@
-class window.ResourceField extends View
+class window.ResourcePicker extends View
   @content: (hint, fb_path, onclick) ->
     hint ||= 'Search for apps or urls'
     @form class: 'expando', =>

@@ -1,3 +1,36 @@
+
+## quick extensions to the spacepen ##
+
+View::[k] = v for own k, v of {
+  sub: (ref, ev, fn) ->
+    ref.on(ev, fn)
+    (@offs ||= []).push -> ref.off(ev, fn)
+    
+  watch: (ref, ev, sel, transform) ->
+    @subs ||= {}
+    fn = (data) =>
+      this[sel].call(this, transform(data))
+    ref.on(ev, fn)
+    @subs[sel] = -> ref.off(ev, fn)
+    
+  observe: (ref, subfn, args...) ->
+    sel = subfn
+    if subfn.match(/:/)
+      [subfn, sel] = subfn.split(':')
+    @subs[sel]() if @subs and @subs[sel]
+    ref[subfn].call(ref, this, sel, args...) if ref
+
+  beforeRemove: ->
+    o() for o in @offs if @offs
+    o() for sel, o of @subs if @subs
+  pushPage: (v) ->
+    @parents('.pager_viewport').view().push(v)
+  popPage: ->
+    @parents('.pager_viewport').view().pop()
+}
+
+
+
 class window.Popover extends View
   @content: (attach_element) ->
     @div class: 'popover'
@@ -91,13 +124,16 @@ class window.Typeahead extends View
     { suggestions, onchoose, onadded, renderer, hint } = options
     @sub this, 'submit', (ev) =>
       ev.preventDefault();
-      onadded(@input.val())
-      @input.typeahead('val', '')
+#      onadded(@input.val())
+#      @input.typeahead('val', '')
       false
     @sub @input, 'typeahead:selected', (ev, data) =>
+      console.log 'typeahead:selected'
       if data.adder
+        console.log 'onadded'
         onadded data.name, this
       else
+        console.log 'onchoose'
         onchoose data, this
       @input.typeahead('val', '')
     @input.typeahead({autoselect:true, minLength: 0},
@@ -122,38 +158,9 @@ class window.Firecomplete extends Typeahead
     @options = []
     @sub params.fb, 'value', (snap) =>
       @options = values(snap.val())
+      @options = @options.filter(params.filter) if params.filter
     params.suggestions = (q) =>
       return @options unless q
       return @options.filter (x) ->
         return x.name&&x.name.toLowerCase().indexOf(q) >= 0
-    super(params)
-
-
-class window.Fireahead extends View
-  @content: (hint, fbref, cb) ->
-    @form =>
-      @input outlet: 'input', placeholder: hint, type: 'search', class: 'fireahead'
-      @button type: 'submit', class: 'not_there'
-  initialize: (hint, fbref, cb, add_choices) =>
-    @options = []
-    @sub fbref, 'value', (snap) =>
-      @options = values(snap.val());
-    @sub this, 'submit', (ev) =>
-      ev.preventDefault();
-      cb {typed: @input.val()}, this
-      @input.typeahead('val', '')
-      false
-    @sub @input, 'typeahead:selected', (ev, data) =>
-      cb(data, this)
-      @input.typeahead('val', '')
-    @input.typeahead({autoselect:true, minLength: 0},
-      displayKey: 'name',
-      source: (query, cb) =>
-        q = query?.toLowerCase?()
-        return cb(@options) unless q
-        choices = @options.filter (x) ->
-          return x.name&&x.name.toLowerCase().indexOf(q) >= 0
-        return cb(add_choices(query)) if add_choices and not choices.length
-        return cb(choices)
-    )
-    @input.typeahead('val', '')
+    super params

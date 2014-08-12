@@ -23,7 +23,7 @@
 .vreview form input[type=search] {
   background-color: white;
   border-radius: 30px;
-  box-shadow: inset rgba(0,0,0,0.3) 0px 0px 3px;
+  box-shadow: inset hsla(0, 0%, 0%, 0.7) 0px 0px 3px;
 }
 
 .vreview form input[type=search]:disabled {
@@ -53,9 +53,8 @@
   margin: 0 10px;
   text-align: right;
   font-weight: normal;
-/*  text-decoration: underline;*/
-  display: inline-block;
   min-width: 90px;
+  margin-top: 2px;
 }
 
 
@@ -72,11 +71,11 @@
 }
 
 .vreview h3.well {
-  color: hsl(110, 50%, 59%);
+  color: hsl(110, 80%, 34%);
 }
 
 .vreview h3.poorly {
-  color: hsl(0, 50%, 65%);
+  color: hsl(0, 60%, 57%);
 }
 
 .vreview {
@@ -86,26 +85,11 @@
   background: hsl(228, 13%, 95%)
 }
 
-.table-view-cell .hindsight-signal{
- display: inline-block;
-}
-
 .vreview .table-view-cell
 {
   padding: 11px 1px 11px 1px;
 }
 
-
-p.reminder {
-  color: hsl(0, 0%, 61%);
-  font-size: 10px;
-  text-align: right;
-  text-shadow: hsl(0, 100%, 100%) 0px 1px 1px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin:0;
-  margin-top: -7px;
-}
 
 header form {
   display: flex;
@@ -113,8 +97,21 @@ header form {
 
 .bar-nav.bar-extended {
   height: 54px;
+  background-color: hsla(0, 3%, 86%, 0.98);
 }
 
 .bar-nav.bar-extended ~ .content {
   padding-top: 56px;
+}
+
+.vreview .outcomes .table-view-cell .icon-close {
+  display: none;
+}
+
+.vreview .outcomes .table-view-cell:hover .icon-close {
+  display: block;
+}
+
+.vreview .outcomes .table-view-cell:hover .icon-close:hover {
+  color:black;
 }

@@ -117,3 +117,6 @@ padding-bottom: 2px;
   background: hsl(110, 100%, 39%);
 }
 
+.signalrow {
+  display:flex;
+}

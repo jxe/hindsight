@@ -1,25 +1,25 @@
 {
-   
   "oauth2": {
     "client_id": "597794547855-ch6i876etjf1qphkiuvm1ho4ghsle1gi.apps.googleusercontent.com",
     "scopes": [
         "https://www.googleapis.com/auth/plus.login",      
-        "https://www.googleapis.com/auth/plus.me"
+        "https://www.googleapis.com/auth/plus.me",
+        "https://www.googleapis.com/auth/userinfo.email" 
     ]
   },
-   "externally_connectable": {
+  "externally_connectable": {
       "matches": [
         "*://retroreview.herokuapp.com/*",
         "*://localhost/*"
       ]
-   },
+  },
   "permissions": [ "tabs", "idle", "identity", "webRequest", "activeTab", "http://ajax.googleapis.com/", "http://*/*", "https://*/*" ],
   "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
   
    "name": "Hindsight",
    "short_name": "Hindsight",
    "description": "Browse the web with no regrets.",
-   "version": "0.0.0.3",
+   "version": "0.0.0.5",
    "author": "Joe Edelman",
    "icons": {
       "128": "images/eye.128x128.png",

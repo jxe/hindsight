@@ -1,5 +1,5 @@
 .icon.blue { color:blue; font-size: 16px; }
-.icon.gray { color:#ccc; font-size: 16px; }
+.icon.gray, .btn-link.gray { color:#ccc; font-size: 16px; }
 .icon.small { font-size: 16px; margin-right: 8px; }
 
 .icon.circled {
@@ -76,11 +76,13 @@ h4.prompt {
   font-weight: normal;
 }
 
+.table-view-cell .btn-link {
+  padding-right: 0px;
+  right: 2px;
+}
 
 
 /*  -----------  */
-
-
 
 
 .pager_viewport {
@@ -129,7 +131,7 @@ h4.prompt {
 
 .tt-dropdown-menu {
   z-index: 100000;
-  width: 422px;
+  width: 300px;
   margin-top: 12px;
   padding: 8px 0;
   background-color: #fff;
@@ -166,4 +168,29 @@ h4.prompt {
 input[type=search] {
   margin-bottom: 0px;
   font-size: 14px;
+}
+
+.content-padded .segmented-control {
+  margin-bottom: 20px;
+}
+
+.bar-extended .row {
+  margin-bottom: -7px;
+}
+
+.bar-extended .row :last-child {
+  text-align: right;
+}
+
+.bar-extended .row :first-child {
+  text-align: left;
+}
+
+
+.inset_text {
+  color: hsl(0, 0%, 31%);
+  font-size: 10px;
+  text-shadow: hsl(0, 100%, 100%) 0px 1px 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
