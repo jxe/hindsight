@@ -30,6 +30,12 @@ View::[k] = v for own k, v of {
 }
 
 
+## quick extension to the jquery
+
+$.fn.pattr = (name) ->
+  this.attr(name) || this.parents("[#{name}]").attr(name)
+
+
 
 class window.Popover extends View
   @content: (attach_element) ->

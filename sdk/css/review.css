@@ -115,3 +115,19 @@ header form {
 .vreview .outcomes .table-view-cell:hover .icon-close:hover {
   color:black;
 }
+
+.concern_view .sentence {
+  font-weight: normal;
+  margin-bottom: -1px;
+}
+
+.concern_view .sentence b {
+  border: solid thin gray;
+  padding: 7px 10px;
+  white-space: nowrap;
+  display: inline-block;
+  font-weight: normal;
+  font-size: 12px;
+  color: white;
+  background: rgb(148, 148, 148);
+}

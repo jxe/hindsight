@@ -8,11 +8,14 @@
   color: hsl(0, 0%, 20%);
 }
 
-.reason_editor a.small {
-  font-size: 12px;
-  margin-left: 6px;
+.reason_editor a.small.icon {
+  font-size: 18px;
+  margin-left: 3px;
   color: hsl(211, 52%, 48%);
-  text-decoration: underline;
+  border: solid thin hsl(211, 52%, 78%);
+  border-radius: 50%;
+  
+/*  text-decoration: underline;*/
 }
 
 .reason_editor .hindsight-lozenge span.gem {

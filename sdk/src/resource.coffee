@@ -85,26 +85,24 @@ class window.Resource
   
   # reviewing
   
-  outcomeForUser: (uid, value, outcome) ->
-    p = @firebase_path()
-    resource = fb('resources/%', p)
-    resource.touch()
-    fb('experience/%/resources/%/for', uid, p).child(value.id).update assessment: outcome
+  outcomesForUser: (uid, value, outcomes) ->
+    console.log 'setting: ', outcomes
+    fb('experience/%/resources/%/for/%', uid, @firebase_path(), value.id).set outcomes
 
 
   
   # persistence
   
-  fetchMetadata: (cb) ->
+  fetchMetadata: (cb) =>
     # use a service to get the title; TODO: use chrome xhr directly
     $.ajax
-      url: "http://retroreview.herokuapp.com/url/" + encodeURIComponent(url),
+      url: "http://retroreview.herokuapp.com/url/" + encodeURIComponent(@url),
       dataType: 'json',
-      success: (data) ->
-        r.title = data.title
-        r.image = data.image
-        # @store()
-        cb(r)
+      success: (data) =>
+        @title = data.title
+        @image = data.image
+        @store()
+        cb(this)
 
   firebase_path: =>
     encodeURIComponent(@canonUrl).replace(/\./g, '%2E')

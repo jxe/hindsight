@@ -19,7 +19,7 @@
    "name": "Hindsight",
    "short_name": "Hindsight",
    "description": "Browse the web with no regrets.",
-   "version": "0.0.0.5",
+   "version": "0.0.0.6",
    "author": "Joe Edelman",
    "icons": {
       "128": "images/eye.128x128.png",

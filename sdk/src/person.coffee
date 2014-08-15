@@ -6,17 +6,29 @@ class window.Someone
   @usingThis: ->
     new Someone(current_user_id)
   
-  onOutcomes: (view, cb) ->
-    view.sub fb('experience/%/resources', @uid), 'value', (snap) =>
+  # returns { value_id -> resource_url -> outcomes } 
+  #  or { value_id -> outcomes }     iff options.resource specified
+  #  or { resource_url -> outcomes } iff options.reason specified
+  onResourceOutcomes: (obj, sel, options) ->
+    options ||= {}  # .resource, .reason, .skip_abandoned
+    obj.watch fb('experience/%/resources', @uid), 'value', sel, (snap) =>
       v = snap.val()
       result = {}
-      for resource_key, value_outcomes of v
-        for value, outcome of value_outcomes?.for
-          result[value] ||= {}
-          url = Resource.from_firebase_path(resource_key)
-          result[value][url] = outcome
-      cb(result)
-  
+      for resource_key, resource_data of v
+        url = Resource.from_firebase_path(resource_key)
+        continue if options.resource and options.resource != url
+        for value, outcomes of resource_data?.for || {}
+          continue if (options.reason and options.reason != value) or (options.skip_abandoned and outcomes.abandonedFor)
+          if options.resource
+            result[value] = outcomes
+          else
+            result[value] ||= {}
+            result[value][url] = outcomes
+      if options.reason
+        result[options.reason]
+      else
+        result
+    
   
   # auth
   
@@ -27,6 +39,7 @@ class window.Someone
     else
       @withPossiblyCachedFirebasePerson
     login_fn (p) =>
+      delete p.firebase
       window.current_user_id = p.id
       window.current_user = p
       F.child("users").child(current_user_id).update current_user
@@ -74,7 +87,8 @@ class window.Someone
         id: response.uid,
         facebook_id: response.id,
         name: response.displayName,
-        image: "https://graph.facebook.com/#{response.id}/picture"
+        location: response.location?.name,
+        image: response.picture?.data?.url || "https://graph.facebook.com/#{response.id}/picture"
         # gender: response.gender
         # location: response.currentLocation
         # language: response.language

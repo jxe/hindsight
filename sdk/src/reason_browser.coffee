@@ -6,11 +6,11 @@ class window.ReasonEditor extends Page
   configure: =>
     @full_or_empty 'value', !!@value
     @full_or_empty 'aliases', @aliases?.length
-    
     return unless v = @value
     @hypernymPicker.type = v.type
     @synonymPicker.type  = v.type
-    
+    @find('.requiredAssetPicker').toggle(v.couldRequireCapacities)
+    @find('.forExperiencesPicker').toggle(v.couldHaveKeyExperiences)
     @find('.ancestry').html(
       if v.isRoot()
         "#{v.lozenge()} is a good thing"
@@ -20,13 +20,8 @@ class window.ReasonEditor extends Page
       else 
         v.lozenge()
     )
-    
     @find('.aliases').html @aliases.join(', ') if @aliases
-    
-    @find('.add_requirements').empty()
-    for x in @value.requirementTypes
-      @find('.add_requirements').append \
-        new ReasonPicker(hint: "Add an #{x}", thing: "Requirement", type: x, delegate: this)
+  
   
   @content: (value, cb, name) ->
     @div class: 'reason_editor', =>
@@ -34,53 +29,60 @@ class window.ReasonEditor extends Page
         @a class: 'icon icon-left-nav pull-left', click: 'back'
       @div class: 'content', =>
         @div class: 'no_value content-padded', =>
-          @h4 class: 'prompt', 
-            @raw "What kind of thing is <b>#{name}</b>?"
-          for type, desc of Reason.types()
+          @h4 class: 'prompt', =>
+            @raw "<b>#{name}</b> is something to..."
+          for type in Reason.types
             @button class: 'btn btn-block', set: type, click: 'set_type', =>
-              @raw desc
+              @raw Reason.desc(type)
 
         @div class: 'has_value content-padded', =>
           @p click: 'viewReason', =>
             @span class: 'ancestry'
-            @a class: 'small', show: '.add-hyp', click: 'show', 'change'
+            @a class: 'small gray icon icon-edit', show: '.add-hyp', click: 'show', ''
           @div class: 'add-hyp', =>
             @subview 'hypernymPicker', new ReasonPicker(hint: 'it\'s a type of...', thing: 'Hypernym', type: value?.type)
           @div class: 'has_aliases', =>
             @p =>
-              @text "Other words for this are: "
-              @span class: 'aliases'
-              @a class: 'small', show: '.no_aliases', click: 'show', 'add'
+              @text "It's also called "
+              @i class: 'aliases'
+              @a class: 'small gray icon icon-plus', show: '.no_aliases', click: 'show', ''
           @div class: 'no_aliases', =>
             @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)
-          @ul click: 'viewReason', class: "requirements"
-          @div class: 'add_requirements'
+          @div outlet: "notes", click: 'viewReason', class: "notes"
+          
+          @div class: 'forExperiencesPicker', =>
+            @subview 'experiencePicker', new ReasonPicker(hint: "Are certain experiences key for this?", thing: "ForExperience", type: 'experience')
+          @div class: 'requiredAssetPicker', =>
+            @subview 'assetPicker', new ReasonPicker(hint: "Is this impossible wihtout assets or abilities?", thing: "RequiredCapacity", type: 'capacity')
+          
+  
 
   onChoseAlias: (v) ->
     @value.mergeInto(v)
     @observe(@value = v, 'onReasonChanged')
     
   onAddedAlias: (text) -> @value.addAlias(text)
-  onChoseHypernym: (v) -> @value.setHypernym(v)
-  onChoseRequirement: (v) ->   @value.addRequirement(v)
+  onChoseHypernym: (v) -> @value.kindOf(v)
+  onChoseForExperience: (v) -> @value.hasKeyExperience(v)
+  onChoseRequiredCapacity: (v) -> @value.requiresCapacity(v)
 
   onReasonChanged: (v) ->
     v ||= {}
-    @hypernym = Reason.fromId(v.kind_of) if v.kind_of
+    @hypernym = Reason.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
     @aliases = Object.keys(v.aliases || {})
     @configure()
-    
-    value = @value
-    @find('.requirements').empty()
-    for k, _v of v.requires || {}
-      r = Reason.fromId(k)
-      @find(".requirements").append $$ ->
-        @li reason: r.id, =>
-          @text "You need "
-          @raw r.lozenge()
-          @text " for "
-          @b value.name
-  
+    @notes.empty()
+    for asset_id, _ of v.requiredCapacities || {}
+      @notes.append $$ ->
+        @p =>
+          @text "This takes "
+          @raw Reason.fromId(asset_id).lozenge()
+    for experience_id, _ of v.keyExperiences || {}
+      @notes.append $$ ->
+        @p =>
+          @text "A key experience is "
+          @raw Reason.fromId(experience_id).lozenge()
+
   viewReason: (ev) =>
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
     @pushPage new ReasonEditor Reason.fromId(id) if id
@@ -88,8 +90,7 @@ class window.ReasonEditor extends Page
   set_type: (ev) =>
     type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')
     return unless type
-    v = Reason.fromId("#{type}: #{@name}")
-    @observe(@value = v, 'onReasonChanged')
+    @observe(@value = Reason.create(type, @name), 'onReasonChanged')
     @configure()
  
   back: =>
@@ -101,7 +102,7 @@ class window.ReasonEditor extends Page
   # utils, maybe include in all views?
   
   show: (ev) =>
-    @find($(ev.target).attr('show')).show()
+    @find($(ev.target).attr('show')).toggle()
 
   full_or_empty: (suffix, v) =>
     if v

@@ -7,7 +7,7 @@ class window.ReasonPicker extends Firecomplete
     
     super
       hint: @hint
-      fb: fb('reasons')
+      fb: fb('values')
       filter: (entry) =>
         return true unless @type
         return entry.id.match(///^#{@type}///)        
@@ -20,7 +20,7 @@ class window.ReasonPicker extends Firecomplete
       onadded: (str) =>
         @delegate ||= @parentView
         return @delegate["onAdded#{@thing}"].call(@delegate, str) if @delegate["onAdded#{@thing}"]
-        v = @type && Reason.fromId("#{@type}: #{str}")
+        v = @type && Reason.create(@type, str)
         @pushPage new ReasonEditor(
           v, 
           ((v) => @delegate["onChose#{@thing}"].call(@delegate, v)),
