@@ -5,19 +5,19 @@ class window.PersonExperiencesInspector extends Page
   onResourceOutcomes: (map) ->
     # value / resource / outcome_data
     @find('.values').html $$ ->
-      for value, resources_data of outcomes
+      for value, resources_data of map
         did_draw_divider = false
-        v = Reason.fromId(value)
-        for resource, outcome_summary of resources_data
+        v = Value.fromId(value)
+        for resource, outcomes of resources_data
           r = Resource.fromUrlWithoutMetadata(resource)
           if !did_draw_divider
             @li class: 'table-view-divider', =>
-              @raw v.lozenge(outcome_summary)
+              @raw v.lozenge(outcomes)
             did_draw_divider = true
           @li class: 'table-view-cell', =>
             @b r.name()
             @raw " "
-            @text outcome_summary
+            @text v.headingFor(outcomes)
       
   @content: ->
     @div class: 'concerns_view', =>

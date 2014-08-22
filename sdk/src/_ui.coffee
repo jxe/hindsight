@@ -35,7 +35,13 @@ View::[k] = v for own k, v of {
 $.fn.pattr = (name) ->
   this.attr(name) || this.parents("[#{name}]").attr(name)
 
+$.fn.addClassAmongSiblings = (name) ->
+  this.siblings().removeClass(name)
+  this.addClass(name)
 
+$.fn.showAmongSiblings = (name) ->
+  this.siblings().hide()
+  this.show()
 
 class window.Popover extends View
   @content: (attach_element) ->
@@ -72,7 +78,9 @@ class window.Popover extends View
     setTimeout((=> this.remove()), 1000)
     @back.parentNode.removeChild(@back)
 
-    
+String::titleCase = ->
+  this[0].toUpperCase() + this.slice(1)
+
 class window.Pager extends View
   @content: (root_element) ->
     @div class: 'pager_viewport'

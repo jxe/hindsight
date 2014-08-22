@@ -1,22 +1,8 @@
-# TODO  @fromUrl: (url) ->
-window.gerunds =
-  buy: 'buying'
-  visit: 'visiting'
-  watch: 'watching'
-  listen: 'listening'
-  read: 'reading'
-
-window.pasttense =
-  buy: 'bought'
-  visit: 'visited'
-  watch: 'watched'
-  listen: 'listened'
-  read: 'read'
-
 store_domains =
   'itunes.apple.com': true
   'www.amazon.com': true
   'www.npmjs.org': true
+
 
 class window.Resource
   
@@ -48,7 +34,11 @@ class window.Resource
         callback r
     callback r
 
+  
   # related objects
+  
+  asEngagement: ->
+    Engagement.fromResource(this)
   
   reviewByUser: (uid) ->
     ResourceExperienceEditor.fromResourceAndUser(this, uid)
@@ -81,13 +71,6 @@ class window.Resource
     return 'product' if @canonUrl.match(/amazon|stripe|square|etsy|groupon|npmjs/)
     return 'venue'   if @canonUrl.match(/yelp|foursquare/)
     return 'website'
-
-  
-  # reviewing
-  
-  outcomesForUser: (uid, value, outcomes) ->
-    console.log 'setting: ', outcomes
-    fb('experience/%/resources/%/for/%', uid, @firebase_path(), value.id).set outcomes
 
 
   

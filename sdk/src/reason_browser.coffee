@@ -1,6 +1,6 @@
 class window.ReasonEditor extends Page
   initialize: (v, @cb, @name) ->
-    @observe(@value = v, 'onReasonChanged')
+    @observe(@value = v, 'onValueChanged')
     @configure()
   
   configure: =>
@@ -31,7 +31,7 @@ class window.ReasonEditor extends Page
         @div class: 'no_value content-padded', =>
           @h4 class: 'prompt', =>
             @raw "<b>#{name}</b> is something to..."
-          for type in Reason.types
+          for type in Value.types
             @button class: 'btn btn-block', set: type, click: 'set_type', =>
               @raw Reason.desc(type)
 
@@ -59,16 +59,16 @@ class window.ReasonEditor extends Page
 
   onChoseAlias: (v) ->
     @value.mergeInto(v)
-    @observe(@value = v, 'onReasonChanged')
+    @observe(@value = v, 'onValueChanged')
     
   onAddedAlias: (text) -> @value.addAlias(text)
   onChoseHypernym: (v) -> @value.kindOf(v)
   onChoseForExperience: (v) -> @value.hasKeyExperience(v)
   onChoseRequiredCapacity: (v) -> @value.requiresCapacity(v)
 
-  onReasonChanged: (v) ->
+  onValueChanged: (v) ->
     v ||= {}
-    @hypernym = Reason.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
+    @hypernym = Value.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
     @aliases = Object.keys(v.aliases || {})
     @configure()
     @notes.empty()
@@ -76,12 +76,12 @@ class window.ReasonEditor extends Page
       @notes.append $$ ->
         @p =>
           @text "This takes "
-          @raw Reason.fromId(asset_id).lozenge()
+          @raw Value.fromId(asset_id).lozenge()
     for experience_id, _ of v.keyExperiences || {}
       @notes.append $$ ->
         @p =>
           @text "A key experience is "
-          @raw Reason.fromId(experience_id).lozenge()
+          @raw Value.fromId(experience_id).lozenge()
 
   viewReason: (ev) =>
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
@@ -90,7 +90,7 @@ class window.ReasonEditor extends Page
   set_type: (ev) =>
     type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')
     return unless type
-    @observe(@value = Reason.create(type, @name), 'onReasonChanged')
+    @observe(@value = Value.create(type, @name), 'onValueChanged')
     @configure()
  
   back: =>

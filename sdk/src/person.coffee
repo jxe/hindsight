@@ -28,7 +28,18 @@ class window.Someone
         result[options.reason]
       else
         result
-    
+  
+  
+  onListsFor: (obj, sel, options) ->
+    obj.watch fb('experience/%/%', @uid, options.value.id || options.value), 'value', sel, (snap) =>
+      v = snap.val()
+      console.log 'got: ', v
+      result = {}
+      for subvalue, list of v
+        result[list] ||= []
+        result[list].push subvalue
+      result
+
   
   # auth
   

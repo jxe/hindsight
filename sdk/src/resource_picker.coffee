@@ -15,7 +15,7 @@ class window.ResourcePicker extends Firecomplete
         @delegate["onChose#{@thing}"].call(@delegate, Resource.fromFirebaseObject(data))
       renderer: (obj) ->
         return "Add #{obj.name}" if obj.adder
-        return Reason.fromId(obj.id).lozenge('well')
+        return Value.fromId(obj.id).lozenge('well')
       onadded: (str) =>
         @delegate ||= @parentView
         return @delegate["onAdded#{@thing}"].call(@delegate, str) if @delegate["onAdded#{@thing}"]

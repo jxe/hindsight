@@ -59,12 +59,12 @@ class window.ReasonExperiencesEditor extends Page
             @b outlet: 'currentExperienceSlot', 'is under review'
           @div outlet: 'experienceOptions', class: 'segmented-control'
         @div outlet: 'outcomes', class: 'table-view'
-        @subview 'resourcePicker', new ResourcePicker hint: 'Type a URL or search'
+        @subview 'resourcePicker', new ResourcePicker hint: 'What\'s good for this?'
   
   onChoseResource: (r) =>
     return alert('unrecognized url') if r == 'error'
-    r.outcomesForUser(current_user_id, @value, @value.experienceOptions.key)
-#    @pushPage (ResourceExperienceEditor.fromResourceAndUser(r, window.current_user_id, true))
+    alert 'todo'
+#    r.outcomesForUser(current_user_id, @value, @value.experienceOptions.key)
     
   editReason: ->
     @pushPage new ReasonEditor(@value)
