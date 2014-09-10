@@ -1,8 +1,3 @@
-# COFFEE = $(wildcard src/*.coffee)
-# COMPILED = $(SRC:src/%.coffee=_build/js/%.js)
-# _build/js/%.js: src/%.coffee
-
-
 DEFAULT: _build _build/vendor.js _build/all.css _build/compiled.js
 	# yay
 
@@ -15,7 +10,7 @@ _build/vendor.js: vendor/jquery.min.js vendor/typeahead.js
 _build/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css css/*.css
 	cat $^ > $@
 
-_build/js/.built: vendor/*.coffee src/*.coffee
+_build/js/.built: vendor/*.coffee src/*/*.coffee
 	coffee -o _build/js -m -c $^
 	touch $@
 

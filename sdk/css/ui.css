@@ -11,6 +11,7 @@
   padding: 5px;
 }
 
+.column { display: -webkit-flex; display: flex; flex-direction: column; }
 .row{ display: -webkit-flex; display: flex; position: relative; }
 .row > * { -webkit-align-self: center; align-self: center; }
 input  { width: 100%; padding: 5px; font-size: 18px; }
@@ -23,6 +24,8 @@ input  { width: 100%; padding: 5px; font-size: 18px; }
 }
 .expando {
   -webkit-flex: 1 1 auto; flex: 1 1 auto;
+    flex-grow: 1.0;
+  
 }
 
 .table-view-divider {
@@ -67,13 +70,11 @@ h5 {
   margin-top: 30px;
 }
 
-.expando {
-  flex-grow: 1.0;
-}
 
 h4.prompt {
-  padding: 5px 10px 10px 10px;
+  padding: 5px 10px;
   font-weight: normal;
+  margin-bottom: 0px;
 }
 
 .table-view-cell .btn-link {
@@ -193,4 +194,26 @@ input[type=search] {
   text-shadow: hsl(0, 100%, 100%) 0px 1px 1px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.bubble {
+  border: solid thin rgb(184, 184, 184);
+  border-radius: 10px;
+  padding: 4px 5px;
+  margin-top: 10px;
+  margin-right: -50px;
+  font-size: 15px;
+}
+
+.bubble h4 {
+  font-size: 14px;
+  text-decoration: underline;
+  color: #444;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+
+.bubble ul {
+  padding-left: 20px;
+  margin-top: 0;
 }

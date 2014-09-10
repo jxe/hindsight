@@ -28,7 +28,8 @@ class window.ResourceExperienceEditor extends Page
       @ul class: "table-view content", =>
         @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
 
-  onChoseReason: (r) =>
+  onChoseValue: (r) =>
+    new Experiment(Engagement.fromResource(@resource), r).claimedBy(current_user_id)
     @pushPage new ListsEditor r, @resource
     
   yourGoals: =>
@@ -40,9 +41,8 @@ class window.ResourceExperienceEditor extends Page
   outcomeClicked: (ev) =>
     tag = $(ev.target).pattr 'reason'
     if $(ev.target).hasClass('icon-close')
-      alert 'todo'
-#      return unless confirm('Sure?')
-#      @resource.outcomesForUser(current_user_id, tag, null)
+      return unless confirm('Sure?')
+      Wisdom.destroy(current_user_id, Engagement.fromResource(@resource), Value.fromId(tag))
     else
       @editOutcome(tag) if tag
   
@@ -52,16 +52,16 @@ class window.ResourceExperienceEditor extends Page
     
   onListsFor: (lists) ->
     @outcomes.html $$ ->
-      for list, subvalues of lists
-        for subvalue in subvalues
+      for backLabel, entries of lists
+        for subvalue in entries
           v = Value.fromId(subvalue)
-          positive = (list != 'distractionFor')
+          positive = (backLabel != 'isDistractionFor')
           @li class: 'table-view-cell signalrow', reason: subvalue, =>
             @a class: 'icon icon-close btn btn-link gray'
             @h3 class: ( if positive then 'well' else 'poorly' ), =>
               @raw  '<span class="icon icon-check"></span>' if positive
-              @b list
-            @raw v.lozenge(list)
+              @b backLabel
+            @raw v.lozenge(backLabel)
 
 #  @sort_tags: (tags) ->
 #    keys = Object.keys(tags).sort()

@@ -5,11 +5,17 @@ class window.Value
   @types: ->
     accomplishment: Accomplishment
     experience: Experience
-    capacity: Capacity
+    asset: Asset
     engagement: Engagement  # created from URLs only
+  @descs: ->
+    accomplishment: Accomplishment.desc
+    experience: Experience.desc
+    asset: Asset.desc
   constructor: (@id, data) ->
     for k, v of data
       this[k] = v
+    @load()
+  load: ->
   @fromId: (id, data = {}) =>  
     [ data.type, data.name ] = id.split(': ')
     klass = @types()[data.type]
@@ -26,7 +32,7 @@ class window.Value
     fb('values').child(@id).update
       type: @type
       name: @name
-      url: @url
+      url: @url || null
   
   # persistence and data model
   
@@ -42,8 +48,8 @@ class window.Value
     fb('values/%/aliases/%', @id, text).set true
   hasKeyExperience: (v) ->
     fb('values/%/keyExperiences/%', @id, v.id).set true
-  requiresCapacity: (v) ->
-    fb('values/%/requiredCapacities/%', @id, v.id).set true
+  requiresAsset: (v) ->
+    fb('values/%/requiredAssets/%', @id, v.id).set true
   mergeInto: (otherValue) =>
     fb('values/%', @id).once 'value', (snap) =>
       v = snap.val()
@@ -51,25 +57,24 @@ class window.Value
       v.aliases[@name] = true
       fb('values/%/aliases', otherValue.id).update(v.aliases)
       fb('values/%/keyExperiences', otherValue.id).update(v.keyExperiences)
-      fb('values/%/requiredCapacities', otherValue.id).update(v.requiredCapacities)
+      fb('values/%/requiredAssets', otherValue.id).update(v.requiredAssets)
       fb('values/%', @id).remove()  # todo, wait for the above to commit first!
 
-  # reviewing
-  
-  experiencedAs: (what, options) ->
-    fb('experience/%/%/%', options.by, @id, options.for.id).set "#{what}For"
-    fb('experience/%/%/%', options.by, options.for.id, @id).set what
-  
   # outcomesForUser: (uid, value, outcomes) ->
     
   # text and display!
 
   asListEntry: (notes) =>
-    @lozenge(notes)
+    count = if notes.count
+      "#{notes.count}. "
+    else
+      ''
+    "<li subvalue='#{@id}' class='table-view-cell'>#{count} #{@lozenge(notes)}</li>"
   
   lozenge: (outcomes) =>
     outcomes ||= {}
-    [ id, name ] = [ @id, @name ]
+    id = @id
+    title = @lozengeTitle()
     if outcomes.abandonedFor
       color = 'poorly'
     else if outcomes.leadTo or outcomes.usedFor
@@ -80,8 +85,10 @@ class window.Value
       @span reason: id, class: "hindsight-lozenge #{color}", =>
         @span class: 'gem'
         @span class: 'text', =>
-          @b name
-          
+          @b title
+
+  lozengeTitle: ->
+    @name
 
 
 class window.Experience extends Value
@@ -90,18 +97,23 @@ class window.Experience extends Value
 
 class window.Accomplishment extends Value
   hasKeyExperiences: true
-  hasRequiredCapacities: true
-  @desc: "<b>Do</b><br>A thing to do <i>daily</i> or <i>weekly</i>"
+  hasRequiredAssets: true
+  @desc: "<b>Do</b><br>A goal, a lifestyle component, or a code of ethics"
   @root: 'accomplishment: good thing to do'
 
 
 
-class window.Capacity extends Experience
+class window.Asset extends Experience
   canEnableAccomplishment: true
-  @desc: "<b>Have</b><br>A capability you'd like to <i>have</i> available",
-  @root: 'capacity: thing you can have'
+  @desc: "<b>Have</b><br>An aspect of yourself or environment that would give you new capabilities",
+  @root: 'asset: thing you can have'
 
 
 class window.Engagement extends Accomplishment
   @fromResource: (r) ->
     Value.fromId("engagement: using #{r.firebase_path()}", url: r.canonUrl)
+  load: ->
+    [ @verb, @fbpath ] = @name.split ' '
+    @resource = Resource.fromFirebasePath(@fbpath)
+  lozengeTitle: ->
+    "#{@verb} #{@resource.name()}"

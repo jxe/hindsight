@@ -5,12 +5,11 @@ class window.ReasonEditor extends Page
   
   configure: =>
     @full_or_empty 'value', !!@value
-    @full_or_empty 'aliases', @aliases?.length
     return unless v = @value
     @hypernymPicker.type = v.type
     @synonymPicker.type  = v.type
-    @find('.requiredAssetPicker').toggle(v.couldRequireCapacities)
-    @find('.forExperiencesPicker').toggle(v.couldHaveKeyExperiences)
+    @find('.requiredAssetPicker').toggle(v.hasRequiredAssets || false)
+    @find('.forExperiencesPicker').toggle(v.hasKeyExperiences || false)
     @find('.ancestry').html(
       if v.isRoot()
         "#{v.lozenge()} is a good thing"
@@ -20,20 +19,18 @@ class window.ReasonEditor extends Page
       else 
         v.lozenge()
     )
-    @find('.aliases').html @aliases.join(', ') if @aliases
-  
   
   @content: (value, cb, name) ->
-    @div class: 'reason_editor', =>
+    @div class: 'reason_editor chilllozenges', =>
       @header class: 'bar bar-nav', =>
         @a class: 'icon icon-left-nav pull-left', click: 'back'
       @div class: 'content', =>
         @div class: 'no_value content-padded', =>
           @h4 class: 'prompt', =>
             @raw "<b>#{name}</b> is something to..."
-          for type in Value.types
+          for type, desc of Value.descs()
             @button class: 'btn btn-block', set: type, click: 'set_type', =>
-              @raw Reason.desc(type)
+              @raw desc
 
         @div class: 'has_value content-padded', =>
           @p click: 'viewReason', =>
@@ -41,20 +38,22 @@ class window.ReasonEditor extends Page
             @a class: 'small gray icon icon-edit', show: '.add-hyp', click: 'show', ''
           @div class: 'add-hyp', =>
             @subview 'hypernymPicker', new ReasonPicker(hint: 'it\'s a type of...', thing: 'Hypernym', type: value?.type)
-          @div class: 'has_aliases', =>
-            @p =>
-              @text "It's also called "
-              @i class: 'aliases'
-              @a class: 'small gray icon icon-plus', show: '.no_aliases', click: 'show', ''
-          @div class: 'no_aliases', =>
+          
+          @section class: 'aliasSection', =>
+            @h4 'Also known as'
+            @div class: 'aliases'
             @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)
-          @div outlet: "notes", click: 'viewReason', class: "notes"
           
-          @div class: 'forExperiencesPicker', =>
-            @subview 'experiencePicker', new ReasonPicker(hint: "Are certain experiences key for this?", thing: "ForExperience", type: 'experience')
-          @div class: 'requiredAssetPicker', =>
-            @subview 'assetPicker', new ReasonPicker(hint: "Is this impossible wihtout assets or abilities?", thing: "RequiredCapacity", type: 'capacity')
+          @section class: 'forExperiencesPicker', =>
+            @h4 'Key aspects of the experience'
+            @div click: 'viewReason', class: 'keyExperiences'
+            @subview 'experiencePicker', new ReasonPicker(hint: "Add a feeling that defines this", thing: "ForExperience", type: 'experience')
           
+          @section class: 'requiredAssetPicker', =>
+            @h4 'Required assets'
+            @div click: 'viewReason', class: 'requiredAssets'
+            @subview 'assetPicker', new ReasonPicker(hint: "Add an asset its impossible without", thing: "RequiredAsset", type: 'asset')
+
   
 
   onChoseAlias: (v) ->
@@ -64,28 +63,30 @@ class window.ReasonEditor extends Page
   onAddedAlias: (text) -> @value.addAlias(text)
   onChoseHypernym: (v) -> @value.kindOf(v)
   onChoseForExperience: (v) -> @value.hasKeyExperience(v)
-  onChoseRequiredCapacity: (v) -> @value.requiresCapacity(v)
+  onChoseRequiredAsset: (v) -> @value.requiresAsset(v)
 
   onValueChanged: (v) ->
     v ||= {}
     @hypernym = Value.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
-    @aliases = Object.keys(v.aliases || {})
     @configure()
-    @notes.empty()
-    for asset_id, _ of v.requiredCapacities || {}
-      @notes.append $$ ->
-        @p =>
-          @text "This takes "
-          @raw Value.fromId(asset_id).lozenge()
-    for experience_id, _ of v.keyExperiences || {}
-      @notes.append $$ ->
-        @p =>
-          @text "A key experience is "
-          @raw Value.fromId(experience_id).lozenge()
-
+    
+    @find('.aliases').html Object.keys(v.aliases || {}).join(', ')
+    
+    requiredAssetIds = Object.keys(v.requiredAssets || {})
+    requiredAssetHTML = requiredAssetIds.map (x) ->
+      Value.fromId(x).lozenge()
+    .join ', '
+    @find('.requiredAssets').html requiredAssetHTML
+    
+    keyExperienceIds = Object.keys(v.keyExperiences || {})
+    keyExperienceHTML = keyExperienceIds.map (x) ->
+      Value.fromId(x).lozenge()
+    .join ', '
+    @find('.keyExperiences').html keyExperienceHTML
+    
   viewReason: (ev) =>
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
-    @pushPage new ReasonEditor Reason.fromId(id) if id
+    @pushPage new ReasonEditor Value.fromId(id) if id
 
   set_type: (ev) =>
     type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')

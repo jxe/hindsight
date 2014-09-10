@@ -20,8 +20,15 @@ class window.Resource
     r = new Resource(obj.url, obj.title || obj.name)
     r
   
+  @fromFirebasePath: (path) ->
+    @fromUrlWithoutMetadata(@from_firebase_path(path))
+  
   @fromUrlWithoutMetadata: (url) ->
     new Resource(url)
+    
+  @isUrl: (str) ->
+    str = "http://#{str}" unless str.match(/^http/)
+    str.match(/^(https?|ftp|file):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|‌​]$/)
 
   @fromUrl: (url, callback) ->
     url = "http://#{url}" unless url.match(/^http/)

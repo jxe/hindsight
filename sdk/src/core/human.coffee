@@ -11,7 +11,7 @@ class window.Someone
   #  or { resource_url -> outcomes } iff options.reason specified
   onResourceOutcomes: (obj, sel, options) ->
     options ||= {}  # .resource, .reason, .skip_abandoned
-    obj.watch fb('experience/%/resources', @uid), 'value', sel, (snap) =>
+    obj.watch fb('wisdom/%/resources', @uid), 'value', sel, (snap) =>
       v = snap.val()
       result = {}
       for resource_key, resource_data of v
@@ -31,15 +31,18 @@ class window.Someone
   
   
   onListsFor: (obj, sel, options) ->
-    obj.watch fb('experience/%/%', @uid, options.value.id || options.value), 'value', sel, (snap) =>
+    obj.watch fb('wisdom/%/%', @uid, options.value.id || options.value), 'value', sel, (snap) =>
       v = snap.val()
-      console.log 'got: ', v
       result = {}
-      for subvalue, list of v
-        result[list] ||= []
-        result[list].push subvalue
+      for list, values of v
+        for subvalue, _ of values
+          result[list] ||= []
+          result[list].push subvalue
       result
-
+  
+  onFavorites: (obj, sel) ->
+    obj.watch fb('wisdom/%', @uid), 'value', sel, (snap) =>
+      snap.val()
   
   # auth
   
