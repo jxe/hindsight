@@ -14,12 +14,8 @@ class window.ListsEditor extends Page
       n = 0
       for value_id in entries
         v = Value.fromId(value_id)
-        $v = $( v.asListEntry count: ++n )
-        console.log 'urls: ', v.resource.canonUrl, @resource.canonUrl
-        if @resource and !@bubbleOpened and v.resource.canonUrl == @resource.canonUrl
-          @bubble = new Bubble(this, list_type, v).appendTo($v)
-          @bubbleOpened = true
-        $(".#{list_type}.list").append $v
+        $v = $( v.asListEntry count: ++n, link: (if list_type == 'Experiment' then 'refile') )
+        @find(".#{list_type}.list").append $v
   
   # note: add facebook to your "value" lists
   # segmented: useFor, priors, distractions
@@ -52,8 +48,12 @@ class window.ListsEditor extends Page
     return if $(ev.target).parents('.bubble').length
     list = $(ev.target).pattr('list')
     subvalue = $(ev.target).pattr('subvalue')
-    @bubble.remove() if @bubble
-    @bubble = new Bubble(this, list, Value.fromId(subvalue)).appendTo($(ev.target).parents('li'))
+    if @bubble
+      @bubble.remove()
+      @bubble = null
+      return
+    if list and subvalue
+      @bubble = new Bubble(this, list, Value.fromId(subvalue)).appendTo($(ev.target).parents('li'))
   
   editReason: ->
     @pushPage new ReasonEditor(@value)

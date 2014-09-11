@@ -28,7 +28,7 @@ class window.Resource
     
   @isUrl: (str) ->
     str = "http://#{str}" unless str.match(/^http/)
-    str.match(/^(https?|ftp|file):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|‌​]$/)
+    str.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)
 
   @fromUrl: (url, callback) ->
     url = "http://#{url}" unless url.match(/^http/)

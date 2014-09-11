@@ -4,6 +4,8 @@ class window.Wisdom
     fb('wisdom/%/%/%/%', guy, @subject.id, @constructor.forwardLabel, @object.id).set true
     fb('wisdom/%/%/%/%', guy, @object.id, @constructor.backLabel, @subject.id).set true
     @incompatibleExperiences().map (x) -> x.repudiatedBy(guy)
+    if @constructor.name == 'Experiment'
+      fb('common/hopes/%/%/%', @subject.id, @object.id, guy).set true
   repudiatedBy: (guy) ->
     fb('wisdom/%/%/%/%', guy, @subject.id, @constructor.forwardLabel, @object.id).remove()
     fb('wisdom/%/%/%/%', guy, @object.id, @constructor.backLabel, @subject.id).remove()
@@ -66,3 +68,10 @@ window.experiencesByBackLabel =
   hasLeadIns: 'LeadIn'
   hasExperiments: 'Experiment'
   hasDistractions: 'Distraction'
+
+window.experiencesByForwardLabel =
+  isWayOfDoing: 'WayOfDoing'
+  isBetterThanFor: 'BetterThan'
+  isLeadIn: 'LeadIn'
+  isExperimentFor: 'Experiment'
+  isDistractionFor: 'Distraction'

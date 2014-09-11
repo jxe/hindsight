@@ -60,7 +60,7 @@ class window.ResourceExperienceEditor extends Page
             @a class: 'icon icon-close btn btn-link gray'
             @h3 class: ( if positive then 'well' else 'poorly' ), =>
               @raw  '<span class="icon icon-check"></span>' if positive
-              @b backLabel
+              @b v.resultLabel(backLabel)
             @raw v.lozenge(backLabel)
 
 #  @sort_tags: (tags) ->

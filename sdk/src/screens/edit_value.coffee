@@ -95,7 +95,6 @@ class window.ReasonEditor extends Page
     @configure()
  
   back: =>
-    @value.store() if @value
     @popPage()
     @cb(@value) if @cb and @value
 

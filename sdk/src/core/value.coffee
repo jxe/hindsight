@@ -23,11 +23,27 @@ class window.Value
   @create: (type, name) =>
     r = Value.fromId("#{type}: #{name}")
     r.kindOf(r.constructor.root)
+    r.store()
     r
   @desc: (type) ->
     @types()[type].desc
   isRoot: ->
     @constructor.root == @id
+  resultLabel: (x) ->
+    switch experiencesByForwardLabel[x]
+      when 'Experiment' then 'trying for'
+      when 'WayOfDoing' then 'good for'
+      when 'LeadIn' then 'lead to'
+      when 'Distraction'
+        if @type == 'accomplishment' then "wasn't good for"
+        else "didn't lead to"
+      else
+        "#{x} #{experiencesByForwardLabel[x]}"
+  favoriteLabel: (x) ->
+    switch experiencesByBackLabel[x]
+      when 'WayOfDoing' then 'try'
+      when 'LeadIn' then 'start by'
+
   store: ->
     fb('values').child(@id).update
       type: @type
@@ -65,11 +81,10 @@ class window.Value
   # text and display!
 
   asListEntry: (notes) =>
-    count = if notes.count
-      "#{notes.count}. "
-    else
-      ''
-    "<li subvalue='#{@id}' class='table-view-cell'>#{count} #{@lozenge(notes)}</li>"
+    count = link = ''
+    count = "#{notes.count}. " if notes.count
+    link = "<span class='pull-right list-item-hint'>#{notes.link}</span>" if notes.link
+    "<li subvalue='#{@id}' class='table-view-cell'>#{count} #{@lozenge(notes)} #{link}</li>"
   
   lozenge: (outcomes) =>
     outcomes ||= {}

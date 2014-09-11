@@ -17,12 +17,12 @@ class window.PersonExperiencesInspector extends Page
                   @raw v.lozenge(attr)
                 did_draw_divider = true
               @li class: 'table-view-cell', =>
-                @text attr
+                @text v.favoriteLabel(attr)
                 @raw " "
                 @raw sv.lozenge()
   
   @content: ->
-    @div class: 'concerns_view', =>
+    @div class: 'concerns_view chilllozenges', =>
       @header class: 'bar bar-nav', =>
         @a class: 'icon icon-left-nav pull-left', click: 'back'
         @h1 class: 'title', "My Wisdom"

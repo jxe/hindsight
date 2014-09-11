@@ -217,3 +217,11 @@ input[type=search] {
   padding-left: 20px;
   margin-top: 0;
 }
+
+.list-item-hint {
+  margin-right: -40px;
+  font-size: 10px;
+  color: hsl(223, 44%, 70%);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
