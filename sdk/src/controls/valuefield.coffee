@@ -6,24 +6,25 @@ values = (obj) ->
 
 class window.ReasonPicker extends Typeahead
   @content: (options) ->
-    super(hint:options.hint)
+    super(hint:options.hint, style: options.style)
   initialize: (options) ->
     { @type, @delegate, @hint, @thing } = options
     @thing ||= 'Value'
     @options = []
-    
+
     @sub fb('values'), 'value', (snap) =>
       @options = values(snap.val()).filter (entry) =>
         return true unless @type
         return entry.id.match(///^#{@type}///)
-    
+
     super
       hint: @hint
+      style: options.style,
       suggestions: (q) =>
         return @options unless q
         return @options.filter (x) ->
           return x.name && x.name.toLowerCase().indexOf(q) >= 0
-      onchoose: (data) => 
+      onchoose: (data) =>
         @delegate ||= @parentView
         @delegate["onChose#{@thing}"].call(@delegate, Value.fromId(data.id))
       renderer: (obj) ->
@@ -32,14 +33,14 @@ class window.ReasonPicker extends Typeahead
       onadded: (str) =>
         @delegate ||= @parentView
         return @delegate["onAdded#{@thing}"].call(@delegate, str) if @delegate["onAdded#{@thing}"]
-        
+
         if Resource.isUrl(str)
           Resource.fromUrl str, (r) =>
             @delegate["onChose#{@thing}"].call(@delegate, r.asEngagement())
         else
           v = @type && Value.create(@type, str)
           @pushPage new ReasonEditor(
-            v, 
+            v,
             ((v) => @delegate["onChose#{@thing}"].call(@delegate, v)),
             str
           )

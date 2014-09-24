@@ -25,7 +25,7 @@ input  { width: 100%; padding: 5px; font-size: 18px; }
 .expando {
   -webkit-flex: 1 1 auto; flex: 1 1 auto;
     flex-grow: 1.0;
-  
+
 }
 
 .table-view-divider {
@@ -224,4 +224,99 @@ input[type=search] {
   color: hsl(223, 44%, 70%);
   margin-top: 2px;
   text-transform: uppercase;
+}
+
+.hovermodal {
+  position: absolute;
+  z-index: 1000;
+  top: 20px;
+  left: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: hsl(0, 0%, 93%);
+  box-shadow: hsl(0, 0%, 0%) 0px 0px 10px;
+}
+
+.hovermodalbackdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: hsla(0, 0%, 0%, 0.43);
+  z-index: 99;
+}
+
+.hovermodal .btn-block {
+  font-size: 15px;
+  text-align: left;
+  padding-left: 10px;
+}
+.hovermodal .btn-block .icon {
+  margin-right: 10px;
+  font-size: 20px;
+  line-height: 0px;
+  position: relative;
+  top: 1px;
+}
+
+.hovermodal h4 {
+  font-weight: normal;
+  padding: 0px 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 25px;
+  color: hsl(0, 0%, 20%);
+  text-shadow: hsl(0, 100%, 100%) 0px 1px 0px;
+}
+
+.table-view-cell.checked > a:after  {
+  position: absolute;
+  top: 50%;
+  display: inline-block;
+  font-family: Ratchicons;
+  font-size: inherit;
+  line-height: 1;
+  color: #bbb;
+  text-decoration: none;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+
+  -webkit-font-smoothing: antialiased;
+  right: 15px;
+  content: '\e810';
+}
+
+.hovermodal .card .table-view-cell > a {
+  margin-left: 5px;
+}
+
+.hovermodal .table-view .media-object.pull-left {
+  margin-right: 10px;
+  color: hsl(7, 46%, 52%);
+  border: solid thin hsl(0, 66%, 74%);
+  border-radius: 50%;
+  padding: 2px;
+  top: -4px;
+  position: relative;
+  margin-bottom: -9px;
+}
+
+.promptBox {
+  padding: 10px;
+  text-align: center;
+  background: hsl(0, 0%, 89%);
+  font-size: 14px;
+  color: hsl(0, 0%, 20%);
+}
+
+.column .table-view {
+  margin-bottom: 0;
+  margin-top: -1px;
+}
+
+.column > .table-view:first-child {
+  margin-top: -1px; 
 }

@@ -2,9 +2,15 @@ window.firebase_auth = undefined
 
 
 class window.Someone
-  constructor: (@uid) ->
+  constructor: (@uid, data) ->
+    for k, v of data
+      this[k] = v
+  learned: (x, rel, y, val) ->
+    Learnings.set(@uid, x, rel, y, val)
+    
   @usingThis: ->
     new Someone(current_user_id)
+
   
   # returns { value_id -> resource_url -> outcomes } 
   #  or { value_id -> outcomes }     iff options.resource specified
@@ -39,6 +45,15 @@ class window.Someone
           result[list] ||= []
           result[list].push subvalue
       result
+
+  'learnings': (obj, sel, value) ->
+    obj.watch fb('learnings/%/%', @uid, value.id), 'value', 'learningsChanged', (snap) =>
+      result = []
+      v = snap.val()
+      for rel, entries of v
+        for subvalue, num of entries
+          result.push [ value, rel, subvalue, num ]
+      result
   
   onFavorites: (obj, sel) ->
     obj.watch fb('wisdom/%', @uid), 'value', sel, (snap) =>
@@ -55,8 +70,8 @@ class window.Someone
     login_fn (p) =>
       delete p.firebase
       window.current_user_id = p.id
-      window.current_user = p
-      F.child("users").child(current_user_id).update current_user
+      window.current_user = new Someone(p.id, p)
+      F.child("users").child(current_user_id).update p
       cb() if cb
 
 
@@ -123,3 +138,5 @@ class window.Someone
     alert "Please login with facebook to complete this action!"
     window.firebase_auth.login "facebook",
       rememberMe: true
+
+window.Human = window.Someone

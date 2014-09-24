@@ -1,8 +1,21 @@
 class window.ReasonEditor extends Page
   initialize: (v, @cb, @name) ->
     @observe(@value = v, 'onValueChanged')
+    @observe current_user, 'learnings', v if v
     @configure()
   
+  set_type: (ev) =>
+    type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')
+    return unless type
+    @observe(@value = Value.create(type, @name), 'onValueChanged')
+    @observe current_user, 'learnings', @value
+    @configure()
+ 
+  onChoseAlias: (v) ->
+    @value.mergeInto(v)
+    @observe(@value = v, 'onValueChanged')
+    @observe current_user, 'learnings', v
+   
   configure: =>
     @full_or_empty 'value', !!@value
     return unless v = @value
@@ -43,6 +56,15 @@ class window.ReasonEditor extends Page
             @h4 'Also known as'
             @div class: 'aliases'
             @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)
+
+          @section class: 'wisdom', =>
+            @subview 'resourcePicker', new ReasonPicker hint: 'Add something...', style: 'margin: 5px; z-index: 10000; position: relative;', type: 'accomplishment'
+            for x in ['whatleadsto', 'whatsatisfies']
+              @h3 class: "#{x} header", =>
+                @text x
+                # @raw ' '
+                # @raw value.lozenge()
+              @ul click: 'listClicked', list: x, class: "table-view list #{x} expando"
           
           @section class: 'forExperiencesPicker', =>
             @h4 'Key aspects of the experience'
@@ -55,15 +77,32 @@ class window.ReasonEditor extends Page
             @subview 'assetPicker', new ReasonPicker(hint: "Add an asset its impossible without", thing: "RequiredAsset", type: 'asset')
 
   
-
-  onChoseAlias: (v) ->
-    @value.mergeInto(v)
-    @observe(@value = v, 'onValueChanged')
-    
+ 
   onAddedAlias: (text) -> @value.addAlias(text)
   onChoseHypernym: (v) -> @value.kindOf(v)
   onChoseForExperience: (v) -> @value.hasKeyExperience(v)
   onChoseRequiredAsset: (v) -> @value.requiresAsset(v)
+
+  learningsChanged: (ary) ->
+    @find(".list").empty()
+    @find("h3.header").hide()
+
+    for e in ary
+      [ value1, rel, value2, num ] = e
+      @find("h3.header.#{rel}").show()
+      v = Value.fromId(value2)
+      $v = $( v.asListEntry link: (if rel == 'Experiment' then 'refile') )
+      @find(".#{rel}.list").append $v
+
+  onChoseValue: (r) =>
+    new Experiment(r, @value).claimedBy(current_user_id)
+
+  listClicked: (ev) =>
+    return if $(ev.target).parents('.bubble').length
+    list = $(ev.target).pattr('list')
+    subvalue = $(ev.target).pattr('subvalue')
+    if list and subvalue
+      new OutcomeChooser(Value.fromId(subvalue), @value, this)
 
   onValueChanged: (v) ->
     v ||= {}
@@ -88,12 +127,6 @@ class window.ReasonEditor extends Page
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
     @pushPage new ReasonEditor Value.fromId(id) if id
 
-  set_type: (ev) =>
-    type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')
-    return unless type
-    @observe(@value = Value.create(type, @name), 'onValueChanged')
-    @configure()
- 
   back: =>
     @popPage()
     @cb(@value) if @cb and @value
@@ -111,5 +144,4 @@ class window.ReasonEditor extends Page
     else
       @find(".has_#{suffix}").hide()
       @find(".no_#{suffix}").show()
-  
   
