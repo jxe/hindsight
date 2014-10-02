@@ -48,7 +48,7 @@ class window.Resource
     Engagement.fromResource(this)
   
   reviewByUser: (uid) ->
-    ResourceExperienceEditor.fromResourceAndUser(this, uid)
+    ObservationsEditor.fromResourceAndUser(this, uid)
     
     
   # key algorithms

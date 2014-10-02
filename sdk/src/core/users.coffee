@@ -1,51 +1,20 @@
 window.firebase_auth = undefined
 
-
-class window.Someone
+class window.User
   constructor: (@uid, data) ->
     for k, v of data
       this[k] = v
 
-
   observes: (x, rel, y, val) ->
     Observations.set(@uid, x, rel, y, val)
+  unobserves: (x, rel, y) ->
+    Observations.unset(@uid, x, rel, y)
+
   claims: (x, rel, y) ->
     inverse_rel = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    fb('values/%/%/%', x.id, rel, y.id).set true
-    fb('values/%/%/%', y.id, inverse_rel, x.id).set true
+    fb('goods/%/%/%', x.id, rel, y.id).set true
+    fb('goods/%/%/%', y.id, inverse_rel, x.id).set true
 
-  hasKeyExperience: (v) ->
-  requiresAsset: (v) ->
-
-
-
-  @usingThis: ->
-    new Someone(current_user_id)
-
-  
-  # returns { value_id -> resource_url -> outcomes } 
-  #  or { value_id -> outcomes }     iff options.resource specified
-  #  or { resource_url -> outcomes } iff options.reason specified
-  onResourceOutcomes: (obj, sel, options) ->
-    options ||= {}  # .resource, .reason, .skip_abandoned
-    obj.watch fb('wisdom/%/resources', @uid), 'value', sel, (snap) =>
-      v = snap.val()
-      result = {}
-      for resource_key, resource_data of v
-        url = Resource.from_firebase_path(resource_key)
-        continue if options.resource and options.resource != url
-        for value, outcomes of resource_data?.for || {}
-          continue if (options.reason and options.reason != value) or (options.skip_abandoned and outcomes.abandonedFor)
-          if options.resource
-            result[value] = outcomes
-          else
-            result[value] ||= {}
-            result[value][url] = outcomes
-      if options.reason
-        result[options.reason]
-      else
-        result
-  
   observations: (obj, sel, value) ->
     obj.watch fb('observations/%/%', @uid, value.id), 'value', 'observationsChanged', (snap) =>
       result = []
@@ -55,7 +24,6 @@ class window.Someone
           result.push [ value, rel, subvalue, num ]
       result
   
-
 
   # auth
   
@@ -68,7 +36,7 @@ class window.Someone
     login_fn (p) =>
       delete p.firebase
       window.current_user_id = p.id
-      window.current_user = new Someone(p.id, p)
+      window.current_user = new User(p.id, p)
       F.child("users").child(current_user_id).update p
       cb() if cb
 
@@ -136,5 +104,3 @@ class window.Someone
     alert "Please login with facebook to complete this action!"
     window.firebase_auth.login "facebook",
       rememberMe: true
-
-window.Human = window.Someone

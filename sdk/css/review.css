@@ -131,3 +131,11 @@ header form {
   color: white;
   background: rgb(148, 148, 148);
 }
+
+
+.vreview .hints {
+  color: hsl(0, 0%, 40%);
+  font-size: 12px;
+  text-align: center;
+  padding-top: 30px;
+}

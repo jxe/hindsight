@@ -5,8 +5,6 @@ class window.Observations
     fb('observations/%/%/%/%', guy, y.id, @inverse(rel), x.id).set val
     for relationToRemove in @incompatible(rel)
       @unset(guy, x, relationToRemove, y)
-    if rel == 'evaluatingfor'
-      fb('common/evaluatingfor/%/%/%', x.id, y.id, guy).set true
   @unset: (guy, x, rel, y) ->
     fb('observations/%/%/%/%', guy, x.id, rel, y.id).remove()
     fb('observations/%/%/%/%', guy, y.id, @inverse(rel), x.id).remove()
@@ -26,20 +24,9 @@ class window.Observations
     return 'sucks for' if val < 0.5
     switch rel
       when 'leadsto'       then 'led to'
-      when 'satisfies'     then 'always good for'
+      when 'satisfies'     then 'works for'
       when 'evaluatingfor' then 'trying for'
   @suffixPhrase: (rel, val) ->
     switch rel
       when 'whatleadsto'   then 'delivered'
-      when 'whatsatisfies' then 'is always good'
-
-
-
-# class window.Experiment extends Wisdom
-#   @pluralPrefix: 'evaluating for'
-
-# class window.WayOfDoing extends Wisdom
-#   @pluralPrefix: 'ways of'
-
-# class window.LeadIn extends Wisdom
-#   @pluralPrefix: 'leads to'
+      when 'whatsatisfies' then 'worked'

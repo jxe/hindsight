@@ -1,7 +1,4 @@
-# class window.Choice extends Accomplishment
-# class window.Activity extends Accomplishment
-
-class window.Value
+class window.Good
 
   constructor: (@id, data) ->
     for k, v of data
@@ -12,12 +9,12 @@ class window.Value
     klass = @types()[data.type]
     new klass id, data
   @create: (type, name) =>
-    r = Value.fromId("#{type}: #{name}")
+    r = Good.fromId("#{type}: #{name}")
     r.kindOf(r.constructor.root)
     r.store()
     r
   store: ->
-    fb('values').child(@id).update
+    fb('goods').child(@id).update
       type: @type
       name: @name
       url: @url || null
@@ -37,24 +34,24 @@ class window.Value
   # persistence and data model
   
   onValueChanged: (obj, sel) =>
-    obj.watch fb('values').child(@id), 'value', sel, (snap) -> snap.val()
+    obj.watch fb('goods').child(@id), 'value', sel, (snap) -> snap.val()
   
   kindOf: (v) ->
-    fb('values/%/kindOf/%', @id, v.id || v).set(true)
-    fb('values/%/kindOf/%', @id, v.constructor.root).remove()
+    fb('goods/%/kindOf/%', @id, v.id || v).set(true)
+    fb('goods/%/kindOf/%', @id, v.constructor.root).remove()
     v
   addAlias: (text) ->
-    fb('values/%/aliases/%', @id, text).set true
+    fb('goods/%/aliases/%', @id, text).set true
 
   mergeInto: (otherValue) =>
-    fb('values/%', @id).once 'value', (snap) =>
+    fb('goods/%', @id).once 'value', (snap) =>
       v = snap.val()
       v.aliases ||= {}
       v.aliases[@name] = true
-      fb('values/%/aliases', otherValue.id).update(v.aliases)
-      fb('values/%/keyExperiences', otherValue.id).update(v.keyExperiences)
-      fb('values/%/requiredAssets', otherValue.id).update(v.requiredAssets)
-      fb('values/%', @id).remove()  # todo, wait for the above to commit first!
+      fb('goods/%/aliases', otherValue.id).update(v.aliases)
+      # fb('goods/%/keyExperiences', otherValue.id).update(v.keyExperiences)
+      # fb('goods/%/requiredAssets', otherValue.id).update(v.requiredAssets)
+      fb('goods/%', @id).remove()  # todo, wait for the above to commit first!
 
     
   # text and display!
@@ -84,44 +81,37 @@ class window.Value
   lozengeTitle: ->
     @name
 
-
-# claims:
-# - canDefine     -- defines
-# - canBeDefined  -- whatdefines
-# - canBeAcquiredOrRequired -- whatrequires
-# - canRequire -- requires
-
 # changes to followups
 # - canGenerate
 
 
-class window.Impression extends Value
+class window.Impression extends Good
   @root: 'impression: good feeling'
   @canOccur: true
   @canDefine: true
 
-class window.Recognition extends Value
+class window.Recognition extends Good
   @root: 'recognition: being who and where I want to be'
   @rootOccuranceLabel: 'being who and where I want to be'
   @rootAssetLabel: 'personal or environmental alignment'
   @canOccur: true
   @canBeAcquiredOrRequired: true
 
-class window.Activity extends Value
+class window.Activity extends Good
   @root: 'activity: doing what I value'
   @canOccur: true
   @canBeDefined: true
   @canGenerate: true
   @canRequire: true
 
-class window.Equipment extends Value
+class window.Equipment extends Good
   @root: 'equipment: thing that supports me'
   @canBeAcquiredOrRequired: true
 
 
 class window.Engagement extends Activity
   @fromResource: (r) ->
-    Value.fromId("engagement: using #{r.firebase_path()}", url: r.canonUrl)
+    Good.fromId("engagement: using #{r.firebase_path()}", url: r.canonUrl)
   load: ->
     [ @verb, @fbpath ] = @name.split ' '
     @resource = Resource.fromFirebasePath(@fbpath)

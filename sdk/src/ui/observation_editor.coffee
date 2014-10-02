@@ -1,4 +1,4 @@
-class window.OutcomeChooser extends Modal
+class window.ObservationEditor extends Modal
   initialize: (@subvalue, @value, @delegate) ->
     @openIn(@delegate)
     @observe current_user, 'observations', @subvalue

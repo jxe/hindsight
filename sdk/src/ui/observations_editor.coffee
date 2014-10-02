@@ -1,10 +1,25 @@
-class window.ResourceExperienceEditor extends Page
+class window.ObservationsEditor extends Page
   inject: (el) ->
     $(el).html(new Pager(this))
 
+  initialize: (ctx) ->
+    { @item, @engagement, @name, @resource } = ctx
+    @engagement ||= @resource.asEngagement()
+    @observe current_user, 'observations', @engagement
+    fb('common/evaluatingfor/%', @engagement.id).once 'value', (snap) =>
+      @showHints Object.keys snap.val()
+
+  showHints: (ids) =>
+    @hints.html $$ ->
+      @div =>
+        @p "Others said:"
+        for id in ids
+          @a reason: id, Good.fromId(id).name
+          @raw " &nbsp; "
+
   @fromResourceAndUser: (r, uid, is_child) ->
     p = r.firebase_path()
-    new ResourceExperienceEditor
+    new ObservationsEditor
       url: r.canonUrl,
       resource: r,
       name: r.name(),
@@ -26,8 +41,9 @@ class window.ResourceExperienceEditor extends Page
           #   @text "Favorites"
         @subview 'search', new ReasonPicker(hint: "Why #{name}?")
       @div class: 'content column', =>
-        @ul class: "table-view expando", =>
+        @ul class: "table-view", =>
           @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
+        @div class: 'hints expando', outlet: 'hints', click: 'hintClicked', "Hints here"
         @div class: 'promptBox', outlet: 'promptBox', style: "display:none"
 
   prompt: (text, cb) =>
@@ -37,38 +53,43 @@ class window.ResourceExperienceEditor extends Page
     @promptBox.html("Thanks")
     setTimeout((=> @promptBox.hide()), 1000)
 
+
+
   onChoseValue: (r) =>
-    new OutcomeChooser(Engagement.fromResource(@resource), r, this)
-    # @pushPage new ListsEditor r, @resource
+    new ObservationEditor(@engagement, r, this)
+    fb('common/evaluatingfor/%/%/%', @engagement.id, r.id, current_user_id).set true
+
+  editOutcome: (tag) =>
+    new ObservationEditor(@engagement, Good.fromId(tag), this)
+
+  hintClicked: (ev) =>
+    id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
+    new ObservationEditor(@engagement, Good.fromId(id), this)
+
 
   yourGoals: =>
     @pushPage new PersonExperiencesInspector()
 
-  editOutcome: (tag) =>
-    new OutcomeChooser(Engagement.fromResource(@resource), Value.fromId(tag), this)
-    # @pushPage(new ListsEditor(Value.fromId(tag), @resource))
 
   didChooseOutcome: ->
 
   outcomeClicked: (ev) =>
     tag = $(ev.target).pattr 'reason'
-    # if $(ev.target).hasClass('icon-close')
-    #   return unless confirm('Sure?')
-    #   Wisdom.destroy(current_user_id, Engagement.fromResource(@resource), Value.fromId(tag))
-    # else
-    @editOutcome(tag) if tag
-
-  initialize: (ctx) ->
-    { @item, @engagement, @name, @resource } = ctx
-    @observe current_user, 'observations', @resource.asEngagement()
+    relation = $(ev.target).pattr 'relation'
+    if $(ev.target).hasClass('icon-close')
+      return unless confirm('Sure?')
+      current_user.unobserves @engagement, relation, Good.fromId(tag)
+    else
+      @editOutcome(tag) if tag
 
   observationsChanged: (ary) ->
+    if ary.length > 1 then @hints.hide() else @hints.show() 
     @outcomes.html $$ ->
       for e in ary
-        v = Value.fromId(e[2])
+        v = Good.fromId(e[2])
         positive = (e[3] > 0.5)
         @li class: 'table-view-cell signalrow', reason: e[2], =>
-          @a class: 'icon icon-close btn btn-link gray'
+          @a relation: e[1], class: 'icon icon-close btn btn-link gray'
           @h3 class: ( if positive then 'well' else 'poorly' ), =>
             @raw  '<span class="icon icon-check"></span>' if positive
             @b Observations.infixPhrase(e[1], e[3])
@@ -88,12 +109,12 @@ class window.ResourceExperienceEditor extends Page
 #
 
 
-class window.MoreImportantValueCollector extends Modal
+class window.MoreImportantGoodCollector extends Modal
   initialize: (@justifier, @options) ->
     @justifier.prompt "What is more important to you now than #{@options.value.lozenge()}?", =>
       @openIn(@justifier)
   @content: (justifier, options) ->
-    @div class: 'hovermodal chilllozenges MoreImportantValueCollector', =>
+    @div class: 'hovermodal chilllozenges MoreImportantGoodCollector', =>
       @div class: 'content-padded', =>
         @h4 =>
           @raw "Add a goal that trumps #{options.value.lozenge()}"

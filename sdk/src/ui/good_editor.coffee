@@ -4,6 +4,14 @@ class window.ReasonEditor extends Page
     @observe current_user, 'observations', v if v
     @configure()
   
+
+  # claims:
+  # - canDefine     -- defines
+  # - canBeDefined  -- whatdefines
+  # - canBeAcquiredOrRequired -- whatrequires
+  # - canRequire -- requires
+
+
   onChoseAlias: (v) ->
     @value.mergeInto(v)
     @observe(@value = v, 'onValueChanged')
@@ -65,8 +73,8 @@ class window.ReasonEditor extends Page
  
   onAddedAlias: (text) -> @value.addAlias(text)
   onChoseHypernym: (v) -> @value.kindOf(v)
-  onChoseForExperience: (v) -> @value.hasKeyExperience(v)
-  onChoseRequiredAsset: (v) -> @value.requiresAsset(v)
+  onChoseForExperience: (v) -> current_user.claims v, 'defines', @value
+  onChoseRequiredAsset: (v) -> current_user.claims @value, 'requires', v
 
   observationsChanged: (ary) ->
     @find(".list").empty()
@@ -75,7 +83,7 @@ class window.ReasonEditor extends Page
     for e in ary
       [ value1, rel, value2, num ] = e
       @find("h3.header.#{rel}").show()
-      v = Value.fromId(value2)
+      v = Good.fromId(value2)
       $v = $( v.asListEntry link: (if rel == 'Experiment' then 'refile') )
       @find(".#{rel}.list").append $v
 
@@ -87,30 +95,30 @@ class window.ReasonEditor extends Page
     list = $(ev.target).pattr('list')
     subvalue = $(ev.target).pattr('subvalue')
     if list and subvalue
-      new OutcomeChooser(Value.fromId(subvalue), @value, this)
+      new ObservationEditor(Good.fromId(subvalue), @value, this)
 
   onValueChanged: (v) ->
     v ||= {}
-    @hypernym = Value.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
+    @hypernym = Good.fromId(Object.keys(v.kindOf)[0]) if v.kindOf
     @configure()
     
     @find('.aliases').html Object.keys(v.aliases || {}).join(', ')
     
     requiredAssetIds = Object.keys(v.requiredAssets || {})
     requiredAssetHTML = requiredAssetIds.map (x) ->
-      Value.fromId(x).lozenge()
+      Good.fromId(x).lozenge()
     .join ', '
     @find('.requiredAssets').html requiredAssetHTML
     
     keyExperienceIds = Object.keys(v.keyExperiences || {})
     keyExperienceHTML = keyExperienceIds.map (x) ->
-      Value.fromId(x).lozenge()
+      Good.fromId(x).lozenge()
     .join ', '
     @find('.keyExperiences').html keyExperienceHTML
     
   viewReason: (ev) =>
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
-    @pushPage new ReasonEditor Value.fromId(id) if id
+    @pushPage new ReasonEditor Good.fromId(id) if id
 
   back: =>
     @popPage()

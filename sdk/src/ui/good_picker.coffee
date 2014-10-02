@@ -12,7 +12,7 @@ class window.ReasonPicker extends Typeahead
     @thing ||= 'Value'
     @options = []
 
-    @sub fb('values'), 'value', (snap) =>
+    @sub fb('goods'), 'value', (snap) =>
       @options = values(snap.val()).filter (entry) =>
         return true unless @type
         return entry.id.match(///^#{@type}///)
@@ -26,10 +26,10 @@ class window.ReasonPicker extends Typeahead
           return x.name && x.name.toLowerCase().indexOf(q) >= 0
       onchoose: (data) =>
         @delegate ||= @parentView
-        @delegate["onChose#{@thing}"].call(@delegate, Value.fromId(data.id))
+        @delegate["onChose#{@thing}"].call(@delegate, Good.fromId(data.id))
       renderer: (obj) ->
         return "Add #{obj.name}" if obj.adder
-        return Value.fromId(obj.id).lozenge('well')
+        return Good.fromId(obj.id).lozenge('well')
       onadded: (str) =>
         @delegate ||= @parentView
         return @delegate["onAdded#{@thing}"].call(@delegate, str) if @delegate["onAdded#{@thing}"]
@@ -39,7 +39,7 @@ class window.ReasonPicker extends Typeahead
             @delegate["onChose#{@thing}"].call(@delegate, r.asEngagement())
         else
           cb = ((v) => @delegate["onChose#{@thing}"].call(@delegate, v))
-          if v = @type && Value.create(@type, str)
+          if v = @type && Good.create(@type, str)
             @pushPage new ReasonEditor v, cb
           else
             @pushPage new NewValueScreen @delegate, str, cb

@@ -31,7 +31,7 @@ class window.NewValueScreen extends Modal
   pick: (ev) =>
     @close()
     type = $(ev.target).pattr('chose')
-    new_value = Value.create(type, @name)
+    new_value = Good.create(type, @name)
     @parent.pushPage new ReasonEditor new_value, @cb
  
   # inputChanged: (ev) =>

@@ -1,17 +1,17 @@
 class window.PersonExperiencesInspector extends Page
   initialize: ->
-    @observe Someone.usingThis(), 'onFavorites'
+    @observe current_user, 'onFavorites'
   
   onFavorites: (map) ->
     # value / attributes / subvalue / true
     @find('.values').html $$ ->
       for value, attributes of map
         did_draw_divider = false
-        v = Value.fromId(value)
+        v = Good.fromId(value)
         for attr, subvalues of attributes
           if attr in [ 'hasLeadIns', 'hasWaysOfDoing' ]
             for subvalue, _ of subvalues
-              sv = Value.fromId(subvalue)
+              sv = Good.fromId(subvalue)
               if !did_draw_divider
                 @li class: 'table-view-divider', =>
                   @raw v.lozenge(attr)
