@@ -1,24 +1,16 @@
 class window.ReasonEditor extends Page
   initialize: (v, @cb, @name) ->
     @observe(@value = v, 'onValueChanged')
-    @observe current_user, 'learnings', v if v
+    @observe current_user, 'observations', v if v
     @configure()
   
-  set_type: (ev) =>
-    type = $(ev.target).attr('set') || $(ev.target).parents('[set]').attr('set')
-    return unless type
-    @observe(@value = Value.create(type, @name), 'onValueChanged')
-    @observe current_user, 'learnings', @value
-    @configure()
- 
   onChoseAlias: (v) ->
     @value.mergeInto(v)
     @observe(@value = v, 'onValueChanged')
-    @observe current_user, 'learnings', v
+    @observe current_user, 'observations', v
    
   configure: =>
-    @full_or_empty 'value', !!@value
-    return unless v = @value
+    v = @value
     @hypernymPicker.type = v.type
     @synonymPicker.type  = v.type
     @find('.requiredAssetPicker').toggle(v.hasRequiredAssets || false)
@@ -38,14 +30,7 @@ class window.ReasonEditor extends Page
       @header class: 'bar bar-nav', =>
         @a class: 'icon icon-left-nav pull-left', click: 'back'
       @div class: 'content', =>
-        @div class: 'no_value content-padded', =>
-          @h4 class: 'prompt', =>
-            @raw "<b>#{name}</b> is something to..."
-          for type, desc of Value.descs()
-            @button class: 'btn btn-block', set: type, click: 'set_type', =>
-              @raw desc
-
-        @div class: 'has_value content-padded', =>
+        @div class: 'content-padded', =>
           @p click: 'viewReason', =>
             @span class: 'ancestry'
             @a class: 'small gray icon icon-edit', show: '.add-hyp', click: 'show', ''
@@ -83,7 +68,7 @@ class window.ReasonEditor extends Page
   onChoseForExperience: (v) -> @value.hasKeyExperience(v)
   onChoseRequiredAsset: (v) -> @value.requiresAsset(v)
 
-  learningsChanged: (ary) ->
+  observationsChanged: (ary) ->
     @find(".list").empty()
     @find("h3.header").hide()
 

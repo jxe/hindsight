@@ -1,7 +1,7 @@
 class window.OutcomeChooser extends Modal
   initialize: (@subvalue, @value, @delegate) ->
     @openIn(@delegate)
-    @observe current_user, 'learnings', @subvalue
+    @observe current_user, 'observations', @subvalue
 
   @options: [
     { icon: 'forward', exp: 'leadsto,1',       label: 'good for getting started' },
@@ -30,7 +30,7 @@ class window.OutcomeChooser extends Modal
   buttonClicked: (ev) =>
     exp = $(ev.target).pattr('exp')
     [ rel, val ] = exp.split(',')
-    current_user.learned @subvalue, rel, @value, Number(val)
+    current_user.observes @subvalue, rel, @value, Number(val)
     @close()
     # setTimeout( (=> @close()), 100)
     switch
@@ -42,7 +42,7 @@ class window.OutcomeChooser extends Modal
     @parent.pushPage new ReasonEditor(@value)
     @close()
 
-  learningsChanged: (ary) ->
+  observationsChanged: (ary) ->
     for e in ary
       if e[2] == @value.id
         switch e[1]

@@ -1,15 +1,15 @@
-class window.Learnings
+class window.Observations
   @types: ['satisfies', 'leadsto', 'trumps', 'evaluatingfor']
   @set: (guy, x, rel, y, val) ->
-    fb('learnings/%/%/%/%', guy, x.id, rel, y.id).set val
-    fb('learnings/%/%/%/%', guy, y.id, @inverse(rel), x.id).set val
+    fb('observations/%/%/%/%', guy, x.id, rel, y.id).set val
+    fb('observations/%/%/%/%', guy, y.id, @inverse(rel), x.id).set val
     for relationToRemove in @incompatible(rel)
       @unset(guy, x, relationToRemove, y)
     if rel == 'evaluatingfor'
-      fb('common/hopes/%/%/%', x.id, y.id, guy).set true
+      fb('common/evaluatingfor/%/%/%', x.id, y.id, guy).set true
   @unset: (guy, x, rel, y) ->
-    fb('learnings/%/%/%/%', guy, x.id, rel, y.id).remove()
-    fb('learnings/%/%/%/%', guy, y.id, @inverse(rel), x.id).remove()
+    fb('observations/%/%/%/%', guy, x.id, rel, y.id).remove()
+    fb('observations/%/%/%/%', guy, y.id, @inverse(rel), x.id).remove()
   @inverse: (rel) ->
     if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
   @incompatible: (rel) ->

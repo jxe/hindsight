@@ -38,9 +38,8 @@ class window.ReasonPicker extends Typeahead
           Resource.fromUrl str, (r) =>
             @delegate["onChose#{@thing}"].call(@delegate, r.asEngagement())
         else
-          v = @type && Value.create(@type, str)
-          @pushPage new ReasonEditor(
-            v,
-            ((v) => @delegate["onChose#{@thing}"].call(@delegate, v)),
-            str
-          )
+          cb = ((v) => @delegate["onChose#{@thing}"].call(@delegate, v))
+          if v = @type && Value.create(@type, str)
+            @pushPage new ReasonEditor v, cb
+          else
+            @pushPage new NewValueScreen @delegate, str, cb

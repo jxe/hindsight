@@ -60,10 +60,9 @@ class window.ResourceExperienceEditor extends Page
 
   initialize: (ctx) ->
     { @item, @engagement, @name, @resource } = ctx
-    @observe current_user, 'learnings', @resource.asEngagement()
-    # @prompt "Please click me", => @thanks()
+    @observe current_user, 'observations', @resource.asEngagement()
 
-  learningsChanged: (ary) ->
+  observationsChanged: (ary) ->
     @outcomes.html $$ ->
       for e in ary
         v = Value.fromId(e[2])
@@ -72,7 +71,7 @@ class window.ResourceExperienceEditor extends Page
           @a class: 'icon icon-close btn btn-link gray'
           @h3 class: ( if positive then 'well' else 'poorly' ), =>
             @raw  '<span class="icon icon-check"></span>' if positive
-            @b Learnings.infixPhrase(e[1], e[3])
+            @b Observations.infixPhrase(e[1], e[3])
           @raw v.lozenge(e[1], e[3])
 
 #  @sort_tags: (tags) ->
@@ -100,7 +99,7 @@ class window.MoreImportantValueCollector extends Modal
           @raw "Add a goal that trumps #{options.value.lozenge()}"
       @subview 'search', new ReasonPicker(hint: "add a goal...")
   onChoseValue: (v) =>
-    # do some stuff...
+    current_user.observes v, "trumps", @options.value, 1.0
     @close()
     @justifier.thanks()
 
@@ -114,22 +113,33 @@ class window.BetterActivityCollector extends Modal
         @h4 =>
           @raw "Add a better activity for #{options.value.lozenge()}"
       @subview 'search', new ReasonPicker(hint: "add an activity...")
+      @div outlet: 'pickedValue'
+      @button click: 'leadTo', class: 'btn btn-block', "lead to"
+      @button click: 'satisfied', class: 'btn btn-block', "immediately satisfied"
   onChoseValue: (v) =>
-    # do some stuff...
+    @chosenValue = v
+    @pickedValue.html v.lozenge()
+  leadTo: (v) =>
+    current_user.observes @chosenValue, "leadsto", @options.value, 1.0
+    @close()
+    @justifier.thanks()
+  satisfied: (v) =>
+    current_user.observes @chosenValue, "satisfies", @options.value, 1.0
     @close()
     @justifier.thanks()
 
 class window.KeyAssetCollector extends Modal
   initialize: (@justifier, @options) ->
-    @justifier.prompt "What is more important to you now than #{@options.value.lozenge()}?", =>
+    @justifier.prompt "What did #{@options.provider.lozenge()} give you that's good for #{@options.value.lozenge()}?", =>
       @openIn(@justifier)
   @content: (justifier, options) ->
     @div class: 'hovermodal chilllozenges KeyAssetCollector', =>
       @div class: 'content-padded', =>
         @h4 =>
-          @raw "Add a goal that trumps #{@options.value.lozenge()}"
+          @raw "What did #{options.provider.lozenge()} give you that's good for #{options.value.lozenge()}"
       @subview 'search', new ReasonPicker(hint: "add a goal...")
   onChoseValue: (v) =>
-    # do some stuff...
+    current_user.observes @options.provider, 'satisfies', v, 1.0
+    current_user.claims @options.value, 'requires', v
     @close()
     @justifier.thanks()

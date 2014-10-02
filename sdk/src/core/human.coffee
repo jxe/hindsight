@@ -5,9 +5,20 @@ class window.Someone
   constructor: (@uid, data) ->
     for k, v of data
       this[k] = v
-  learned: (x, rel, y, val) ->
-    Learnings.set(@uid, x, rel, y, val)
-    
+
+
+  observes: (x, rel, y, val) ->
+    Observations.set(@uid, x, rel, y, val)
+  claims: (x, rel, y) ->
+    inverse_rel = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
+    fb('values/%/%/%', x.id, rel, y.id).set true
+    fb('values/%/%/%', y.id, inverse_rel, x.id).set true
+
+  hasKeyExperience: (v) ->
+  requiresAsset: (v) ->
+
+
+
   @usingThis: ->
     new Someone(current_user_id)
 
@@ -35,19 +46,8 @@ class window.Someone
       else
         result
   
-  
-  onListsFor: (obj, sel, options) ->
-    obj.watch fb('wisdom/%/%', @uid, options.value.id || options.value), 'value', sel, (snap) =>
-      v = snap.val()
-      result = {}
-      for list, values of v
-        for subvalue, _ of values
-          result[list] ||= []
-          result[list].push subvalue
-      result
-
-  'learnings': (obj, sel, value) ->
-    obj.watch fb('learnings/%/%', @uid, value.id), 'value', 'learningsChanged', (snap) =>
+  observations: (obj, sel, value) ->
+    obj.watch fb('observations/%/%', @uid, value.id), 'value', 'observationsChanged', (snap) =>
       result = []
       v = snap.val()
       for rel, entries of v
@@ -55,10 +55,8 @@ class window.Someone
           result.push [ value, rel, subvalue, num ]
       result
   
-  onFavorites: (obj, sel) ->
-    obj.watch fb('wisdom/%', @uid), 'value', sel, (snap) =>
-      snap.val()
-  
+
+
   # auth
   
   @loggedIn: (cb) =>

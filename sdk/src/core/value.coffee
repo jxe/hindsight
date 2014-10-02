@@ -2,20 +2,11 @@
 # class window.Activity extends Accomplishment
 
 class window.Value
-  @types: ->
-    accomplishment: Accomplishment
-    experience: Experience
-    asset: Asset
-    engagement: Engagement  # created from URLs only
-  @descs: ->
-    accomplishment: Accomplishment.desc
-    experience: Experience.desc
-    asset: Asset.desc
+
   constructor: (@id, data) ->
     for k, v of data
       this[k] = v
     @load()
-  load: ->
   @fromId: (id, data = {}) =>  
     [ data.type, data.name ] = id.split(': ')
     klass = @types()[data.type]
@@ -25,33 +16,25 @@ class window.Value
     r.kindOf(r.constructor.root)
     r.store()
     r
-  @desc: (type) ->
-    @types()[type].desc
-  isRoot: ->
-    @constructor.root == @id
-  resultLabel: (x) ->
-    switch experiencesByForwardLabel[x]
-      when 'Experiment' then 'trying for'
-      when 'WayOfDoing' then 'good for'
-      when 'LeadIn' then 'lead to'
-      when 'Distraction'
-        if @type == 'accomplishment' then "wasn't good for"
-        else "didn't lead to"
-      else
-        "#{x} #{experiencesByForwardLabel[x]}"
-  favoriteLabel: (x) ->
-    switch experiencesByBackLabel[x]
-      when 'WayOfDoing' then 'try'
-      when 'LeadIn' then 'start by'
-
   store: ->
     fb('values').child(@id).update
       type: @type
       name: @name
       url: @url || null
   
+  @types: ->
+    impression: Impression
+    activity: Activity
+    recognition: Recognition
+    equipment: Equipment
+    engagement: Engagement  # created from URLs only
+
+  load: ->
+  isRoot: ->
+    @constructor.root == @id
+
+
   # persistence and data model
-  
   
   onValueChanged: (obj, sel) =>
     obj.watch fb('values').child(@id), 'value', sel, (snap) -> snap.val()
@@ -62,10 +45,7 @@ class window.Value
     v
   addAlias: (text) ->
     fb('values/%/aliases/%', @id, text).set true
-  hasKeyExperience: (v) ->
-    fb('values/%/keyExperiences/%', @id, v.id).set true
-  requiresAsset: (v) ->
-    fb('values/%/requiredAssets/%', @id, v.id).set true
+
   mergeInto: (otherValue) =>
     fb('values/%', @id).once 'value', (snap) =>
       v = snap.val()
@@ -76,7 +56,6 @@ class window.Value
       fb('values/%/requiredAssets', otherValue.id).update(v.requiredAssets)
       fb('values/%', @id).remove()  # todo, wait for the above to commit first!
 
-  # outcomesForUser: (uid, value, outcomes) ->
     
   # text and display!
 
@@ -106,25 +85,41 @@ class window.Value
     @name
 
 
-class window.Experience extends Value
-  @desc: "<b>Feel</b><br>something you like to experience"
-  @root: 'experience: good experience'
+# claims:
+# - canDefine     -- defines
+# - canBeDefined  -- whatdefines
+# - canBeAcquiredOrRequired -- whatrequires
+# - canRequire -- requires
 
-class window.Accomplishment extends Value
-  hasKeyExperiences: true
-  hasRequiredAssets: true
-  @desc: "<b>Do</b><br>A goal, a lifestyle component, or a code of ethics"
-  @root: 'accomplishment: good thing to do'
-
+# changes to followups
+# - canGenerate
 
 
-class window.Asset extends Experience
-  canEnableAccomplishment: true
-  @desc: "<b>Have</b><br>An aspect of yourself or environment that would give you new capabilities",
-  @root: 'asset: thing you can have'
+class window.Impression extends Value
+  @root: 'impression: good feeling'
+  @canOccur: true
+  @canDefine: true
+
+class window.Recognition extends Value
+  @root: 'recognition: being who and where I want to be'
+  @rootOccuranceLabel: 'being who and where I want to be'
+  @rootAssetLabel: 'personal or environmental alignment'
+  @canOccur: true
+  @canBeAcquiredOrRequired: true
+
+class window.Activity extends Value
+  @root: 'activity: doing what I value'
+  @canOccur: true
+  @canBeDefined: true
+  @canGenerate: true
+  @canRequire: true
+
+class window.Equipment extends Value
+  @root: 'equipment: thing that supports me'
+  @canBeAcquiredOrRequired: true
 
 
-class window.Engagement extends Accomplishment
+class window.Engagement extends Activity
   @fromResource: (r) ->
     Value.fromId("engagement: using #{r.firebase_path()}", url: r.canonUrl)
   load: ->

@@ -27,8 +27,25 @@ View::[k] = v for own k, v of {
     @parents('.pager_viewport').view().push(v)
   popPage: ->
     @parents('.pager_viewport').view().pop()
+  setTab: (ev) ->
+    $(ev.target).addClassAmongSiblings('active')
+    name = $(ev.target).attr('tabname')
+    console.log 'seeking tab: ', name, $(".tab-content.#{name}")
+    @find(".tab-content.#{name}").showAmongSiblings()
 }
 
+View.tabs = (tabnames, options, eachTab) ->
+  options.class = 'segmented-control'
+  options.selectedTab ||= tabnames[0]
+  @div options, =>
+    for tabname in tabnames
+      selected = options.selectedTab == tabname
+      @div tabname: tabname, class: "control-item #{if selected then 'active'}", click: 'setTab', tabname
+  @div class: 'tab-contents',  =>
+    for tabname in tabnames
+      selected = options.selectedTab == tabname
+      @div class: "#{tabname} tab-content #{options.tabClass}", style: (if !selected then "display:none"), ->
+        eachTab(tabname)
 
 ## quick extension to the jquery
 
