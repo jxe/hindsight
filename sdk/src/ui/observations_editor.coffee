@@ -6,7 +6,7 @@ class window.ObservationsEditor extends Page
     { @item, @engagement, @name, @resource } = ctx
     @engagement ||= @resource.asEngagement()
     @observe current_user, 'observations', @engagement
-    fb('common/evaluatingfor/%', @engagement.id).once 'value', (snap) =>
+    fb('common/whatdrives/%', @engagement.id).once 'value', (snap) =>
       @showHints Object.keys snap.val()
 
   showHints: (ids) =>
@@ -57,7 +57,7 @@ class window.ObservationsEditor extends Page
 
   onChoseValue: (r) =>
     new ObservationEditor(@engagement, r, this)
-    fb('common/evaluatingfor/%/%/%', @engagement.id, r.id, current_user_id).set true
+    # fb('common/whatdrives/%/%/%', @engagement.id, r.id, current_user_id).set true
 
   editOutcome: (tag) =>
     new ObservationEditor(@engagement, Good.fromId(tag), this)

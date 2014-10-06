@@ -7,7 +7,7 @@ class window.ObservationEditor extends Modal
     { icon: 'forward', exp: 'leadsto,1',       label: 'good for getting started' },
     { icon: 'check',   exp: 'satisfies,1',     label: 'good for every time'      },
     { icon: 'close',   exp: 'leadsto,0',       label: 'a distraction'            },
-    { icon: 'more',    exp: 'evaluatingfor,1', label: 'don\'t know yet'          },
+    { icon: 'more',    exp: 'whatdrives,1', label: 'don\'t know yet'          },
   ]
     
   @content: (subvalue, value, delegate) ->
@@ -53,5 +53,5 @@ class window.ObservationEditor extends Modal
               @find('[exp="leadsto,0"]').addClassAmongSiblings('checked')
           when 'satisfies'
             @find('[exp="satisfies,1"]').addClassAmongSiblings('checked') if e[3] > 0.5
-          when 'evaluatingfor'
-            @find('[exp="evaluatingfor,1"]').addClassAmongSiblings('checked') if e[3] > 0.5
+          when 'whatdrives'
+            @find('[exp="whatdrives,1"]').addClassAmongSiblings('checked') if e[3] > 0.5

@@ -1,5 +1,5 @@
 class window.Observations
-  @types: ['satisfies', 'leadsto', 'trumps', 'evaluatingfor']
+  @types: ['satisfies', 'leadsto', 'trumps', 'drives']
   @set: (guy, x, rel, y, val) ->
     fb('observations/%/%/%/%', guy, x.id, rel, y.id).set val
     fb('observations/%/%/%/%', guy, y.id, @inverse(rel), x.id).set val
@@ -13,19 +13,19 @@ class window.Observations
   @incompatible: (rel) ->
     switch rel
       when 'satisfies'
-        [ 'leadsto', 'trumps', 'whatsatisfies', 'evaluatingfor' ]
+        [ 'leadsto', 'trumps', 'whatsatisfies', 'whatdrives' ]
       when 'leadsto'
-        [ 'satisfies', 'whatleadsto', 'evaluatingfor' ]
+        [ 'satisfies', 'whatleadsto', 'whatdrives' ]
       when 'trumps'
-        [ 'satisfies', 'whattrumps', 'evaluatingfor' ]
-      when 'evaluatingfor'
-        [  'satisfies', 'leadsto', 'trumps']
+        [ 'satisfies', 'whattrumps', 'whatdrives' ]
+      when 'drives'
+        [  'whatsatisfies', 'whatleadsto', 'trumps']
   @infixPhrase: (rel, val) ->
     return 'sucks for' if val < 0.5
     switch rel
       when 'leadsto'       then 'led to'
       when 'satisfies'     then 'works for'
-      when 'evaluatingfor' then 'trying for'
+      when 'whatdrives'    then 'trying for'
   @suffixPhrase: (rel, val) ->
     switch rel
       when 'whatleadsto'   then 'delivered'
