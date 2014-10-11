@@ -1,4 +1,5 @@
 window.F = undefined
+window.owning_view = null
 
 window.batshit =
   meta: (attr) ->
@@ -36,6 +37,12 @@ Firebase::[k] = v for own k, v of {
     this.child(current_user_id).remove()
   touch: ->
     this.setPriority(Date.now())
+  delegate: (ev, fname, preprocess) ->
+    del = window.owning_view
+    preprocess ||= (snap) -> [snap.val()]
+    cb = (snap) -> del[fname].apply(del, preprocess)
+    this.on ev, cb
+    del.offs.push => this.off(ev, cb)
 }
 
 

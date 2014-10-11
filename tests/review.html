@@ -1,22 +1,16 @@
 <meta name="firebase" content="https://lifestyles.firebaseio.com">
 <script src='https://cdn.firebase.com/v0/firebase.js'></script>
 <script src='https://cdn.firebase.com/js/simple-login/1.2.3/firebase-simple-login.js'></script>
+
 <script type="text/javascript" src="../_build/vendor.js"></script>
 <script type="text/javascript" src="../_build/compiled.js"></script>
-<link href="../_build/all.css" rel="stylesheet">
+<link        rel="stylesheet" href="../_build/all.css" >
+<link        rel="stylesheet" href="../lib/vendor/ratchet/css/ratchet.css">
 
 <body></body>
 <script>
-batshit.setup_firebase();
-
-Someone.loggedIn(function(){
+User.loggedIn(function(){
   var r = new Resource('https://facebook.com', 'Facebook');
-  r.reviewByUser(window.current_user_id).inject(document.body);
+  r.reviewByUser(current_user_id).inject(document.body);
 });
-
-</script>
-
-
-<script>
-   // Someone.please_login();
 </script>

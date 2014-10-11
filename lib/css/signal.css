@@ -101,19 +101,19 @@ padding-bottom: 2px;
 
 /* lozenge colors!!!! */
 
-.hindsight-lozenge.mixed, .hindsight-lozenge.poorly {
+.hindsight-lozenge.mixed, .hindsight-lozenge.negative {
   color: hsl(0, 100%, 29%);
 }
 
-.hindsight-lozenge.well, .hindsight-lozenge.good {
+.hindsight-lozenge.well, .hindsight-lozenge.positive {
   color: hsl(110, 100%, 29%);
 }
 
-.hindsight-lozenge.mixed span.gem, .hindsight-lozenge.poorly span.gem {
+.hindsight-lozenge.mixed span.gem, .hindsight-lozenge.negative span.gem {
   background: hsl(0, 100%, 39%);
 }
 
-.hindsight-lozenge.well span.gem, .hindsight-lozenge.good span.gem {
+.hindsight-lozenge.well span.gem, .hindsight-lozenge.positive span.gem {
   background: hsl(110, 100%, 39%);
 }
 

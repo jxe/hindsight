@@ -70,11 +70,11 @@
   margin-right: 5px;
 }
 
-.vreview h3.well {
+.vreview h3.positive {
   color: hsl(110, 80%, 34%);
 }
 
-.vreview h3.poorly {
+.vreview h3.negative {
   color: hsl(0, 60%, 57%);
 }
 

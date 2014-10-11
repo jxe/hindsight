@@ -32,10 +32,7 @@ class window.Good
 
 
   # persistence and data model
-  
-  onValueChanged: (obj, sel) =>
-    obj.watch fb('goods').child(@id), 'value', sel, (snap) -> snap.val()
-  
+    
   kindOf: (v) ->
     fb('goods/%/kindOf/%', @id, v.id || v).set(true)
     fb('goods/%/kindOf/%', @id, v.constructor.root).remove()
@@ -62,18 +59,13 @@ class window.Good
     link = "<span class='pull-right list-item-hint'>#{notes.link}</span>" if notes.link
     "<li subvalue='#{@id}' class='table-view-cell'>#{count} #{@lozenge(notes)} #{link}</li>"
   
-  lozenge: (outcomes) =>
-    outcomes ||= {}
+  lozenge: (params) =>
+    params ||= {}
+    params = { valence: params } if params.length
     id = @id
     title = @lozengeTitle()
-    if outcomes.abandonedFor
-      color = 'poorly'
-    else if outcomes.leadTo or outcomes.usedFor
-      color = 'well'
-    else
-      color = 'pending'
     $$$ ->
-      @span reason: id, class: "hindsight-lozenge #{color}", =>
+      @span reason: id, class: "hindsight-lozenge #{params.valence || 'neutral'}", =>
         @span class: 'gem'
         @span class: 'text', =>
           @b title

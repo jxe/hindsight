@@ -5,9 +5,10 @@ class window.ObservationsEditor extends Page
   initialize: (ctx) ->
     { @item, @engagement, @name, @resource } = ctx
     @engagement ||= @resource.asEngagement()
-    @observe current_user, 'observations', @engagement
+    @bind observationsChanged: Observations.live(current_user_id, @engagement)
     fb('common/whatdrives/%', @engagement.id).once 'value', (snap) =>
-      @showHints Object.keys snap.val()
+      v = snap.val()
+      @showHints Object.keys(v) if v
 
   showHints: (ids) =>
     @hints.html $$ ->
@@ -70,30 +71,30 @@ class window.ObservationsEditor extends Page
   yourGoals: =>
     @pushPage new PersonExperiencesInspector()
 
-
-  didChooseOutcome: ->
-
   outcomeClicked: (ev) =>
     tag = $(ev.target).pattr 'reason'
-    relation = $(ev.target).pattr 'relation'
     if $(ev.target).hasClass('icon-close')
       return unless confirm('Sure?')
-      current_user.unobserves @engagement, relation, Good.fromId(tag)
+      @currentObservations.remove(tag)
     else
       @editOutcome(tag) if tag
 
-  observationsChanged: (ary) ->
-    if ary.length > 1 then @hints.hide() else @hints.show() 
+  observationsChanged: (o) ->
+    console.log 'observationsChanged', o
+    @currentObservations = o
+    arr = o.directObservations()
+    console.log 'directObservations', arr
+    @hints.toggle( arr.length < 2 )
+    
     @outcomes.html $$ ->
-      for e in ary
-        v = Good.fromId(e[2])
-        positive = (e[3] > 0.5)
-        @li class: 'table-view-cell signalrow', reason: e[2], =>
-          @a relation: e[1], class: 'icon icon-close btn btn-link gray'
-          @h3 class: ( if positive then 'well' else 'poorly' ), =>
-            @raw  '<span class="icon icon-check"></span>' if positive
-            @b Observations.infixPhrase(e[1], e[3])
-          @raw v.lozenge(e[1], e[3])
+      for related_value_id in arr
+        valence = o.valence(related_value_id)
+        @li class: 'table-view-cell signalrow', reason: related_value_id, =>
+          @a class: 'icon icon-close btn btn-link gray'
+          @h3 class: valence, =>
+            @raw  '<span class="icon icon-check"></span>' if valence == 'positive'
+            @b o.infixPhrase(related_value_id)
+          @raw Good.fromId(related_value_id).lozenge(valence)
 
 #  @sort_tags: (tags) ->
 #    keys = Object.keys(tags).sort()

@@ -14,15 +14,6 @@ class window.User
     inverse_rel = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
     fb('goods/%/%/%', x.id, rel, y.id).set true
     fb('goods/%/%/%', y.id, inverse_rel, x.id).set true
-
-  observations: (obj, sel, value) ->
-    obj.watch fb('observations/%/%', @uid, value.id), 'value', 'observationsChanged', (snap) =>
-      result = []
-      v = snap.val()
-      for rel, entries of v
-        for subvalue, num of entries
-          result.push [ value, rel, subvalue, num ]
-      result
   
 
   # auth
