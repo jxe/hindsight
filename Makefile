@@ -1,4 +1,4 @@
-DEFAULT: _build _build/vendor.js _build/all.css _build/compiled.js
+DEFAULT: _build _build/vendor.js _build/css/all.css _build/compiled.js _build/fonts
 	# yay
 
 _build:
@@ -7,7 +7,11 @@ _build:
 _build/vendor.js: lib/vendor/jquery.min.js lib/vendor/typeahead.js
 	cat $^ > $@
 
-_build/all.css: lib/vendor/ratchet/css/ratchet.css lib/vendor/ratchet/css/ratchet-theme-ios.css lib/css/*.css
+_build/fonts: lib/vendor/ratchet/fonts
+	(cd _build; ln -s ../$^)
+
+_build/css/all.css: lib/vendor/ratchet/css/ratchet.css lib/vendor/ratchet/css/ratchet-theme-ios.css lib/css/*.css
+	mkdir -p $@
 	cat $^ > $@
 
 _build/js/.built: lib/vendor/*.coffee src/*.coffee src/*/*.coffee

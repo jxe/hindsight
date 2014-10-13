@@ -30,44 +30,57 @@ class window.Observations
     item for item in Object.keys(@relatives) when @isHowObservation(item)
   isDirectObservation: (x) ->
     it = @relatives[x]
-    it.whatdrives? or it.satisfies? or it.leadsto?
+    it.whatdrives? or it.quenches? or it.leadsto?
   isWhyObservation: (x) ->
     it = @relatives[x]
     it.whatrequires? or it.whatincludes? or it.whatdrives?
   isHowObservation: (x) ->
     it = @relatives[x]
-    it.requires? or it.includes? or it.whatleadsto? or it.whatsatisfies?
+    it.requires? or it.includes? or it.whatleadsto? or it.whatquenches?
 
   infixPhrase: (x) ->
     it = @relatives[x]
     switch
       when it.leadsto? && it.leadsto < 0.5
         return 'sucks for'
-      when it.satisfies
+      when it.quenches
         return 'works for'
       when it.leadsto
         return 'led to'
       when it.whatdrives
         return 'trying for'
-  
+  whyPrefix: (x) ->
+    it = @relatives[x]
+    switch
+      when it.whatrequires? then "it's required for"
+      when it.quenches? then "it quenches"
+      when it.leadsto? then "it leads to"
+  howSuffix: (x) ->
+    it = @relatives[x]
+    switch
+      when it.requires? then "is necessary"
+      when it.quenches? then "works for you"
+      when it.leadsto? then "leads to this"
+
+
   valence: (x) ->
     it = @relatives[x]
     switch
       when it.leadsto? && it.leadsto < 0.5
         return 'negative'
-      when it.satisfies or it.leadsto
+      when it.quenches or it.leadsto
         return 'positive'
       else
         return 'neutral'
 
   remove: (x) ->
-    rel = ['satisfies', 'leadsto', 'whatdrives'].filter((rel) -> @relatives[x][rel])[0]
+    rel = ['quenches', 'leadsto', 'whatdrives'].filter((rel) -> @relatives[x][rel])[0]
     current_user.unobserves x, rel, @value
 
   @suffixPhrase: (rel, val) ->
     switch rel
       when 'whatleadsto'   then 'delivered'
-      when 'whatsatisfies' then 'worked'
+      when 'whatquenches' then 'worked'
 
   @set: (guy, x, rel, y, val) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
@@ -88,12 +101,12 @@ class window.Observations
     @unset(guy, x, @down[rel], y) if @down[rel]
 
   @up: {
-    includes:      'satisfies',
-    whatincludes:  'whatsatisfies',
+    includes:      'quenches',
+    whatincludes:  'whatquenches',
     requires:      'whatleadsto',
     whatrequires:  'leadsto',
-    satisfies:     'leadsto',
-    whatsatisfies: 'whatleadsto',
+    quenches:     'leadsto',
+    whatquenches: 'whatleadsto',
     leadsto:       'whatdrives',
     whatleadsto:   'drives'
   }
@@ -101,6 +114,6 @@ class window.Observations
   @down: {
     drives:      'whatleadsto',
     whatdrives:  'leadsto',
-    whatleadsto: 'whatsatisfies',
-    leadsto:     'satisfies'
+    whatleadsto: 'whatquenches',
+    leadsto:     'quenches'
   }

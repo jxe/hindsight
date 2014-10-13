@@ -7,7 +7,9 @@ class window.Stream
   bind: (@obj, @meth) =>
     @obj.streams[@meth].close() if @obj.streams[@meth]
     @obj.streams[@meth] = this
-  close: => x() for x in @unsubs
+  close: =>
+    console.log 'closing!', @unsubs
+    x() for x in @unsubs if @unsubs
 
 
 ## quick extensions to the spacepen ##
@@ -20,7 +22,8 @@ View::[k] = v for own k, v of {
     ref.on(ev, fn)
     (@offs ||= []).push -> ref.off(ev, fn)    
   beforeRemove: ->
-    s.close() for s in @streams if @streams
+    console.log 'beforeRemove called', @streams
+    s.close() for name, s of @streams if @streams
     o() for o in @offs if @offs
   pushPage: (v) ->
     @parents('.pager_viewport').view().push(v)

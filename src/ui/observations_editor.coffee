@@ -54,24 +54,23 @@ class window.ObservationsEditor extends Page
     @promptBox.html("Thanks")
     setTimeout((=> @promptBox.hide()), 1000)
 
-
-
   onChoseValue: (r) =>
-    new ObservationEditor(@engagement, r, this)
+    new EngagementObservationMenu(@engagement, r, this)
     # fb('common/whatdrives/%/%/%', @engagement.id, r.id, current_user_id).set true
 
   editOutcome: (tag) =>
-    new ObservationEditor(@engagement, Good.fromId(tag), this)
+    console.log 'editOutcome'
+    new EngagementObservationMenu(@engagement, Good.fromId(tag), this)
 
   hintClicked: (ev) =>
     id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
-    new ObservationEditor(@engagement, Good.fromId(id), this)
-
+    new EngagementObservationMenu(@engagement, Good.fromId(id), this)
 
   yourGoals: =>
     @pushPage new PersonExperiencesInspector()
 
   outcomeClicked: (ev) =>
+    console.log 'outcomeClicked'
     tag = $(ev.target).pattr 'reason'
     if $(ev.target).hasClass('icon-close')
       return unless confirm('Sure?')
@@ -146,7 +145,7 @@ class window.BetterActivityCollector extends Modal
     @close()
     @justifier.thanks()
   satisfied: (v) =>
-    current_user.observes @chosenValue, "satisfies", @options.value, 1.0
+    current_user.observes @chosenValue, "quenches", @options.value, 1.0
     @close()
     @justifier.thanks()
 
@@ -161,7 +160,7 @@ class window.KeyAssetCollector extends Modal
           @raw "What did #{options.provider.lozenge()} give you that's good for #{options.value.lozenge()}"
       @subview 'search', new ReasonPicker(hint: "add a goal...")
   onChoseValue: (v) =>
-    current_user.observes @options.provider, 'satisfies', v, 1.0
+    current_user.observes @options.provider, 'quenches', v, 1.0
     current_user.claims @options.value, 'requires', v
     @close()
     @justifier.thanks()

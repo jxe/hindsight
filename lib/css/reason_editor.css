@@ -1,13 +1,3 @@
-.reason_editor .btn-block {
-  font-size: 14px;
-}
-
-.reason_editor .btn-block b {
-  font-size: 18px;
-  font-variant: small-caps;
-  color: hsl(0, 0%, 20%);
-}
-
 .reason_editor a.small.icon {
   font-size: 18px;
   margin-left: 3px;
@@ -41,28 +31,4 @@
 .chilllozenges .hindsight-lozenge {
   position: relative;
   top: 3px;
-}
-
-.reason_editor ul {
-  color: hsl(0, 0%, 27%);
-  padding-left: 15px;
-  font-size: 14px;
-}
-
-.reason_editor ul li {
-  margin-bottom: 10px;
-}
-
-.reason_editor h4 {
-  font-size: 12px;
-  margin-top: 30px;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  color: #C34646;
-  border-bottom: solid thin gray;
-  padding-left: 3px;
-}
-
-.reason_editor form {
-  margin-top: 2px;
 }

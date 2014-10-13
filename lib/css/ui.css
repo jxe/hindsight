@@ -232,7 +232,6 @@ input[type=search] {
   top: 20px;
   left: 10px;
   right: 10px;
-  padding: 10px;
   border-radius: 10px;
   background: hsl(0, 0%, 93%);
   box-shadow: hsl(0, 0%, 0%) 0px 0px 10px;
@@ -265,10 +264,10 @@ input[type=search] {
   font-weight: normal;
   padding: 0px 10px;
   text-align: center;
-  margin-bottom: 20px;
   line-height: 25px;
   color: hsl(0, 0%, 20%);
   text-shadow: hsl(0, 100%, 100%) 0px 1px 0px;
+  margin: 10px 0px 10px;
 }
 
 .table-view-cell.checked > a:after  {
@@ -289,9 +288,10 @@ input[type=search] {
   content: '\e810';
 }
 
+/*
 .hovermodal .card .table-view-cell > a {
   margin-left: 5px;
-}
+}*/
 
 .hovermodal .table-view .media-object.pull-left {
   margin-right: 10px;
@@ -319,4 +319,17 @@ input[type=search] {
 
 .column > .table-view:first-child {
   margin-top: -1px; 
+}
+
+.card .table-view-cell {
+  padding: 5px 0px;
+}
+
+
+.card .table-view-cell > a:not(.btn) {
+  margin: 0px 5px;
+}
+
+.hovermodal .table-view-cell {
+  font-size: 14px;
 }

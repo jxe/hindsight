@@ -1,8 +1,6 @@
 class window.Good
-
   constructor: (@id, data) ->
-    for k, v of data
-      this[k] = v
+    this[k] = v for k, v of data
     @load()
   @fromId: (id, data = {}) =>  
     [ data.type, data.name ] = id.split(': ')
@@ -17,26 +15,19 @@ class window.Good
     fb('goods').child(@id).update
       type: @type
       name: @name
-      url: @url || null
-  
+      url: @url || null  
   @types: ->
     impression: Impression
     activity: Activity
     recognition: Recognition
     equipment: Equipment
     engagement: Engagement  # created from URLs only
-
   load: ->
   isRoot: ->
     @constructor.root == @id
 
-
   # persistence and data model
     
-  kindOf: (v) ->
-    fb('goods/%/kindOf/%', @id, v.id || v).set(true)
-    fb('goods/%/kindOf/%', @id, v.constructor.root).remove()
-    v
   addAlias: (text) ->
     fb('goods/%/aliases/%', @id, text).set true
 
@@ -54,10 +45,12 @@ class window.Good
   # text and display!
 
   asListEntry: (notes) =>
-    count = link = ''
-    count = "#{notes.count}. " if notes.count
-    link = "<span class='pull-right list-item-hint'>#{notes.link}</span>" if notes.link
-    "<li subvalue='#{@id}' class='table-view-cell'>#{count} #{@lozenge(notes)} #{link}</li>"
+    notes ||= {}
+    link = if notes.link
+      "<span class='pull-right list-item-hint'>#{notes.link}</span>" 
+    else 
+      ''
+    "<li subvalue='#{@id}' class='table-view-cell'>#{notes.prefix||''} #{@lozenge(notes)} #{notes.suffix||''}#{link}</li>"
   
   lozenge: (params) =>
     params ||= {}
