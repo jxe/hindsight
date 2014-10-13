@@ -4,17 +4,17 @@ DEFAULT: _build _build/vendor.js _build/css/all.css _build/compiled.js _build/fo
 _build:
 	mkdir -p $@
 
-_build/vendor.js: lib/vendor/jquery.min.js lib/vendor/typeahead.js
+_build/vendor.js: vendor/jquery.min.js vendor/typeahead.js
 	cat $^ > $@
 
-_build/fonts: lib/vendor/ratchet/fonts
+_build/fonts: vendor/ratchet/fonts
 	(cd _build; ln -s ../$^)
 
-_build/css/all.css: lib/vendor/ratchet/css/ratchet.css lib/vendor/ratchet/css/ratchet-theme-ios.css lib/css/*.css
+_build/css/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
 	mkdir -p $@
 	cat $^ > $@
 
-_build/js/.built: lib/vendor/*.coffee src/*.coffee src/*/*.coffee
+_build/js/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
 	coffee -o _build/js -m -c $^
 	touch $@
 
@@ -26,4 +26,4 @@ watch:
 	watchman -- trigger $(shell pwd) remake '*.js' '*.css' '*.coffee' -- sh -c make
 
 zip: _build
-	(cd platforms/crx; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js css sdk/lib/fonts images inject js manifest.json popup.html sdk/_build/all.css sdk/_build/compiled.js sdk/_build/compiled.map sdk/_build/vendor.js)
+	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js css sdk/fonts images inject js manifest.json popup.html sdk/css/all.css sdk/compiled.js sdk/compiled.map sdk/vendor.js)
