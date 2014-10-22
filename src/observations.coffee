@@ -1,24 +1,27 @@
 class window.Observations
   @live: (guy, value) ->
     goods = observations = null
-    console.log 'live running'
     new Stream (s) ->
-      s.listen 'value', fb('goods/%', value.id), (snap) ->
+      s.listen 'value', fb('gifts/%', value.id), (snap) ->
         goods = snap.val() || {}
-        console.log 'got goods', goods
         s.emit new Observations(value, goods, observations) if observations
-      s.listen 'value', fb('observations/%/%', guy, value.id), (snap) ->
+      s.listen 'value', fb('discoveries/%', guy), (snap) ->
         observations = snap.val() || {}
-        console.log 'got observations', observations
         s.emit new Observations(value, goods, observations) if goods
 
-  constructor: (@value, goods, observations) ->
+  # joe/asset:car/
+  #   whattrumps/activity:creative projects/1.0
+  #   desired/'on 1023980123'
+
+  constructor: (@value, @connections, @observations) ->
     @relatives = {}
-    @aliases = (if goods.aliases then Object.keys goods.aliases else [])
-    delete goods.aliases
-    for obj in [goods, observations]
+    @aliases = (if @connections.aliases then Object.keys @connections.aliases else [])
+    delete @connections.aliases
+    related_observations = observations[value.id] || {}
+    for obj in [@connections, related_observations]
       for rel, v of obj
-        (@relatives[x] ||= {})[rel] = num for x, num of v
+        if pojo(v)
+          (@relatives[x] ||= {})[rel] = num for x, num of v
 
   # types of observations
 
@@ -30,90 +33,90 @@ class window.Observations
     item for item in Object.keys(@relatives) when @isHowObservation(item)
   isDirectObservation: (x) ->
     it = @relatives[x]
-    it.whatdrives? or it.quenches? or it.leadsto?
+    it.whatdrives? or it.delivers?
   isWhyObservation: (x) ->
     it = @relatives[x]
-    it.whatrequires? or it.whatincludes? or it.whatdrives?
+    it.whatincorporates? or it.delivers?
   isHowObservation: (x) ->
     it = @relatives[x]
-    it.requires? or it.includes? or it.whatleadsto? or it.whatquenches?
+    it.incorporates? or it.whatdelivers?
+
+  pursualState: (x) ->
+    switch
+      when @isSought(x) then 'sought'
+      when @isHandled(x) then 'handled'
+      else 'abandoned'
+
+  isSought: (x) ->
+    new Timeframe(@observations[x.id||x]?.sought).isActive()
+  isHandled: (x) ->
+    !@isSought(x) and new Timeframe(@observations[x.id||x]?.valued).isActive()
+  isAbandoned: (x) ->
+    !(new Timeframe(@observations[x.id||x]?.valued).isActive())
 
   infixPhrase: (x) ->
     it = @relatives[x]
     switch
-      when it.leadsto? && it.leadsto < 0.5
+      when it.delivers? && it.delivers < 0.5
         return 'sucks for'
-      when it.quenches
-        return 'works for'
-      when it.leadsto
+      when @isAbandoned(x)
+        return 'abandoned for'
+      when it.delivers
         return 'led to'
       when it.whatdrives
         return 'trying for'
   whyPrefix: (x) ->
     it = @relatives[x]
     switch
-      when it.whatrequires? then "it's required for"
-      when it.quenches? then "it quenches"
-      when it.leadsto? then "it leads to"
+      when it.whatincorporates? then "it's part of"
+      when it.delivers? then "it leads to"
   howSuffix: (x) ->
     it = @relatives[x]
     switch
-      when it.requires? then "is necessary"
-      when it.quenches? then "works for you"
-      when it.leadsto? then "leads to this"
-
+      when it.whatdelivers? then "leads to this"
+      when it.incorporates? then "is part of this"
 
   valence: (x) ->
     it = @relatives[x]
     switch
-      when it.leadsto? && it.leadsto < 0.5
+      when it.delivers? && it.delivers < 0.5
         return 'negative'
-      when it.quenches or it.leadsto
+      when it.delivers
         return 'positive'
       else
         return 'neutral'
 
   remove: (x) ->
-    rel = ['quenches', 'leadsto', 'whatdrives'].filter((rel) -> @relatives[x][rel])[0]
+    rel = ['delivers', 'whatdrives', 'whatdelivers', 'drives'].filter((rel) => @relatives[x][rel])[0]
     current_user.unobserves x, rel, @value
 
   @suffixPhrase: (rel, val) ->
     switch rel
-      when 'whatleadsto'   then 'delivered'
-      when 'whatquenches' then 'worked'
+      when 'whatdelivers'   then 'delivered'
 
   @set: (guy, x, rel, y, val) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    if rel.match(/requires|includes/)
-      fb('goods/%/%/%', x.id, rel, y.id).set true
-      fb('goods/%/%/%', y.id, inv, x.id).set true
-      return @set(guy, x, @up[rel], y, val)
+    if rel == 'incorporates'
+      fb('gifts/%/%/%', x.id, rel, y.id).set true
+      fb('gifts/%/%/%', y.id, inv, x.id).set true
     @_set(guy, x, rel, y, val, true)
     @_set(guy, y, inv, x, val, true)
 
   @_set: (guy, x, rel, y, val, starting) ->
     @_set(guy, x, @up[rel], y, val, false) if @up[rel]
     @unset(guy, x, @down[rel], y) if @down[rel] and starting
-    fb('observations/%/%/%/%', guy, x.id, rel, y.id).set val
+    fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).set val
 
   @unset: (guy, x, rel, y) ->
-    fb('observations/%/%/%/%', guy, x.id, rel, y.id).remove()
+    fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).remove()
     @unset(guy, x, @down[rel], y) if @down[rel]
 
   @up: {
-    includes:      'quenches',
-    whatincludes:  'whatquenches',
-    requires:      'whatleadsto',
-    whatrequires:  'leadsto',
-    quenches:     'leadsto',
-    whatquenches: 'whatleadsto',
-    leadsto:       'whatdrives',
-    whatleadsto:   'drives'
+    delivers:       'whatdrives',
+    whatdelivers:   'drives'
   }
 
   @down: {
-    drives:      'whatleadsto',
-    whatdrives:  'leadsto',
-    whatleadsto: 'whatquenches',
-    leadsto:     'quenches'
+    drives:      'whatdelivers',
+    whatdrives:  'delivers',
   }

@@ -8,11 +8,11 @@ class window.Good
     new klass id, data
   @create: (type, name) =>
     r = Good.fromId("#{type}: #{name}")
-    r.kindOf(r.constructor.root)
+    # r.kindOf(r.constructor.root)
     r.store()
     r
   store: ->
-    fb('goods').child(@id).update
+    fb('gifts').child(@id).update
       type: @type
       name: @name
       url: @url || null  
@@ -25,32 +25,37 @@ class window.Good
   load: ->
   isRoot: ->
     @constructor.root == @id
-
+  couldInclude: (subvalue) ->
+    @type == subvalue.type
+  couldLeadTo: (parentValue) ->
+    false
+  
   # persistence and data model
     
   addAlias: (text) ->
-    fb('goods/%/aliases/%', @id, text).set true
+    fb('gifts/%/aliases/%', @id, text).set true
 
   mergeInto: (otherValue) =>
-    fb('goods/%', @id).once 'value', (snap) =>
+    fb('gifts/%', @id).once 'value', (snap) =>
       v = snap.val()
       v.aliases ||= {}
       v.aliases[@name] = true
-      fb('goods/%/aliases', otherValue.id).update(v.aliases)
-      # fb('goods/%/keyExperiences', otherValue.id).update(v.keyExperiences)
-      # fb('goods/%/requiredAssets', otherValue.id).update(v.requiredAssets)
-      fb('goods/%', @id).remove()  # todo, wait for the above to commit first!
+      fb('gifts/%/aliases', otherValue.id).update(v.aliases)
+      fb('gifts/%', @id).remove()  # todo, wait for the above to commit first!
 
     
   # text and display!
 
   asListEntry: (notes) =>
     notes ||= {}
+    closeicon = ''
+    if notes.closable
+      closeicon = "<a class='icon icon-close btn btn-link gray'></a>"
     link = if notes.link
       "<span class='pull-right list-item-hint'>#{notes.link}</span>" 
     else 
       ''
-    "<li subvalue='#{@id}' class='table-view-cell'>#{notes.prefix||''} #{@lozenge(notes)} #{notes.suffix||''}#{link}</li>"
+    "<li subvalue='#{@id}' class='table-view-cell'>#{closeicon} #{notes.prefix||''} #{@lozenge(notes)} #{notes.suffix||''}#{link}</li>"
   
   lozenge: (params) =>
     params ||= {}
@@ -66,33 +71,30 @@ class window.Good
   lozengeTitle: ->
     @name
 
-# changes to followups
-# - canGenerate
-
 
 class window.Impression extends Good
   @root: 'impression: good feeling'
   @canOccur: true
-  @canDefine: true
 
 class window.Recognition extends Good
   @root: 'recognition: being who and where I want to be'
   @rootOccuranceLabel: 'being who and where I want to be'
   @rootAssetLabel: 'personal or environmental alignment'
   @canOccur: true
-  @canBeAcquiredOrRequired: true
+  @canBeAcquired: true
 
 class window.Activity extends Good
   @root: 'activity: doing what I value'
   @canOccur: true
-  @canBeDefined: true
-  @canGenerate: true
-  @canRequire: true
+  isActivity: true
+  couldInclude: (subvalue) ->
+    subvalue.type == 'equipment' or super(subvalue)
+  couldLeadTo: (parentValue) ->
+    not parentValue.isActivity
 
 class window.Equipment extends Good
   @root: 'equipment: thing that supports me'
-  @canBeAcquiredOrRequired: true
-
+  @canBeAcquired: true
 
 class window.Engagement extends Activity
   @fromResource: (r) ->

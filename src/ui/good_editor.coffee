@@ -10,29 +10,55 @@ class window.ReasonEditor extends Page
     return alert 'uhoh'
     @value.mergeInto(v)
     # TODO, switch up bindings/observations
-  onAddedAlias: (text) -> @value.addAlias(text)
 
   viewReason: (ev) =>
     id = $(ev.target).pattr('reason')
     @pushPage new ReasonEditor Good.fromId(id) if id
   
   onChoseWhy: (v) ->
-    new GoodObservationMenu(@value, v).openIn(this)
+    @establishRelation(@value, v)
   onChoseHow: (v) ->
-    new GoodObservationMenu(v, @value).openIn(this)
+    @establishRelation(v, @value)
   whyClicked: (ev) =>
-    onChoseWhy $(ev.target).pattr('[subvalue]')
+    v = Good.fromId($(ev.target).pattr('subvalue'))
+    if $(ev.target).hasClass('icon-close')
+      return unless confirm('Sure?')
+      @currentObservations.remove(v.id)
+    @establishRelation(@value, v)
   howClicked: (ev) =>
-    onChoseHow $(ev.target).pattr('[subvalue]')
+    v = Good.fromId($(ev.target).pattr('subvalue'))
+    if $(ev.target).hasClass('icon-close')
+      return unless confirm('Sure?')
+      @currentObservations.remove(v.id)
+    @establishRelation(v, @value)
+
+  establishRelation: (value, parentValue) ->
+    couldBeIncluded = parentValue.couldInclude(value)
+    couldLeadTo     = value.couldLeadTo(parentValue)
+    if couldBeIncluded and couldLeadTo
+      return new GoodObservationMenu(value, parentValue).openIn(this)
+    if couldBeIncluded
+      return current_user.observes parentValue, 'incorporates', value, 1.0
+    if couldLeadTo
+      return current_user.observes value, 'delivers', parentValue, 1.0
+
+  onChoseParent: (v) ->
+    current_user.observes v, 'incorporates', @value
+
+  onAddedAlias: (text) -> @value.addAlias(text)
 
   observationsChanged: (o) ->
+    @currentObservations = o
     @find('.aliases').html o.aliases.join(', ')
     whylist = @find('.whylist').empty()
     for x in o.whyObservations()
-      whylist.append Good.fromId(x).asListEntry(prefix: o.whyPrefix(x))
+      whylist.append Good.fromId(x).asListEntry(prefix: o.whyPrefix(x), closable: true)
     howlist = @find('.howlist').empty()
     for x in o.howObservations()
-      howlist.append Good.fromId(x).asListEntry(suffix: o.howSuffix(x))
+      howlist.append Good.fromId(x).asListEntry(suffix: o.howSuffix(x), closable: true)
+    @find('.parents').html $$ ->
+      for x, _ of o.connections.whatincorporates
+        @raw Good.fromId(x).asListEntry()
 
   @content: (value, cb, name) ->
     @div class: 'reason_editor chilllozenges', =>
@@ -42,10 +68,6 @@ class window.ReasonEditor extends Page
         @div class: 'content-padded', =>
           @p click: 'viewReason', =>
             @raw value.lozenge()
-          @section class: 'aliasSection', =>
-            @h4 'Also known as'
-            @div class: 'aliases'
-            @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)
           @section class: 'why', =>
             @h3 class: "why header", "Why"
             @subview 'resourcePicker', new ReasonPicker hint: 'Add something...', thing: 'Why'
@@ -54,3 +76,7 @@ class window.ReasonEditor extends Page
             @h3 class: "how header", "How"
             @subview 'resourcePicker', new ReasonPicker hint: 'Add something...', thing: 'How'
             @ul click: 'howClicked', list: 'how', class: "table-view list howlist expando"
+          @section class: 'aliasSection', =>
+            @h4 'Also known as'
+            @div class: 'aliases'
+            @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)

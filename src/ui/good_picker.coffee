@@ -12,7 +12,7 @@ class window.ReasonPicker extends Typeahead
     @thing ||= 'Value'
     @options = []
 
-    @sub fb('goods'), 'value', (snap) =>
+    @sub fb('gifts'), 'value', (snap) =>
       @options = values(snap.val()).filter (entry) =>
         return true unless @type
         return entry.id.match(///^#{@type}///)

@@ -20,7 +20,7 @@ class window.MenuModal extends Modal
     options = @options()
     @find('.options').html $$ ->
       for x in options
-        @li id: x[0], click: 'clicked', class: 'table-view-cell media', =>
+        @li id: x[0], class: 'table-view-cell media', =>
           @a =>
             @span class: "media-object pull-left icon icon-#{x[2]}"
             @div class: 'media-body', =>
@@ -29,7 +29,7 @@ class window.MenuModal extends Modal
     @div class: 'hovermodal chilllozenges', =>
       @div class: 'content-padded', =>
         @h4 outlet: 'prompt', click: 'promptClicked'
-      @ul class: 'table-view card options'
+      @ul class: 'table-view card options', click: 'clicked'
       @div outlet: 'footerView', click: "footerClicked"
   clicked: (ev) =>
     @cb($(ev.target).pattr('id'))

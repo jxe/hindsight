@@ -6,7 +6,7 @@ common = {}
 
 
 main = ->	
-	F.child('observations').on 'value', (snap) ->
+	F.child('discoveries').on 'value', (snap) ->
 		for user, wisdom of snap.val()
 			for value, learnings of wisdom
 				common[value] ||= { users: 0 }
@@ -27,7 +27,7 @@ main = ->
 					delete learnings[relatedValue] if (counts.users / learnings.users) < 0.1
 
 		prune common
-		F.child('commonalities').set common
+		F.child('conclusions').set common
 		process.exit()
 
 prune = (parent, key, subtree) ->

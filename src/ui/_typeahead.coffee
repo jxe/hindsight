@@ -9,7 +9,6 @@ class window.Typeahead extends View
       ev.preventDefault()
       false
     @sub @input, 'typeahead:selected', (ev, data) =>
-      console.log 'typeahead:selected'
       if data.adder
         onadded data.name
       else

@@ -6,10 +6,8 @@ class window.Pager extends View
     @adjust_viewport()
 
   adjust_viewport: (el) ->
-    console.log('adjusting viewport')
     el = this.children().last() unless el
     left = el[0].offsetLeft
-    console.log('setting css', '-webkit-transform', "translateX(-#{left}px)")
     this.css('-webkit-transform', "translateX(-#{left}px)")
     
   push: (el) ->

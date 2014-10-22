@@ -6,7 +6,7 @@ class window.ObservationsEditor extends Page
     { @item, @engagement, @name, @resource } = ctx
     @engagement ||= @resource.asEngagement()
     @bind observationsChanged: Observations.live(current_user_id, @engagement)
-    fb('common/whatdrives/%', @engagement.id).once 'value', (snap) =>
+    fb('conclusions/whatdrives/%', @engagement.id).once 'value', (snap) =>
       v = snap.val()
       @showHints Object.keys(v) if v
 
@@ -56,10 +56,8 @@ class window.ObservationsEditor extends Page
 
   onChoseValue: (r) =>
     new EngagementObservationMenu(@engagement, r, this)
-    # fb('common/whatdrives/%/%/%', @engagement.id, r.id, current_user_id).set true
 
   editOutcome: (tag) =>
-    console.log 'editOutcome'
     new EngagementObservationMenu(@engagement, Good.fromId(tag), this)
 
   hintClicked: (ev) =>
@@ -70,7 +68,6 @@ class window.ObservationsEditor extends Page
     @pushPage new PersonExperiencesInspector()
 
   outcomeClicked: (ev) =>
-    console.log 'outcomeClicked'
     tag = $(ev.target).pattr 'reason'
     if $(ev.target).hasClass('icon-close')
       return unless confirm('Sure?')
@@ -79,10 +76,8 @@ class window.ObservationsEditor extends Page
       @editOutcome(tag) if tag
 
   observationsChanged: (o) ->
-    console.log 'observationsChanged', o
     @currentObservations = o
     arr = o.directObservations()
-    console.log 'directObservations', arr
     @hints.toggle( arr.length < 2 )
     
     @outcomes.html $$ ->
@@ -134,33 +129,7 @@ class window.BetterActivityCollector extends Modal
         @h4 =>
           @raw "Add a better activity for #{options.value.lozenge()}"
       @subview 'search', new ReasonPicker(hint: "add an activity...")
-      @div outlet: 'pickedValue'
-      @button click: 'leadTo', class: 'btn btn-block', "lead to"
-      @button click: 'satisfied', class: 'btn btn-block', "immediately satisfied"
   onChoseValue: (v) =>
-    @chosenValue = v
-    @pickedValue.html v.lozenge()
-  leadTo: (v) =>
-    current_user.observes @chosenValue, "leadsto", @options.value, 1.0
-    @close()
-    @justifier.thanks()
-  satisfied: (v) =>
-    current_user.observes @chosenValue, "quenches", @options.value, 1.0
-    @close()
-    @justifier.thanks()
-
-class window.KeyAssetCollector extends Modal
-  initialize: (@justifier, @options) ->
-    @justifier.prompt "What did #{@options.provider.lozenge()} give you that's good for #{@options.value.lozenge()}?", =>
-      @openIn(@justifier)
-  @content: (justifier, options) ->
-    @div class: 'hovermodal chilllozenges KeyAssetCollector', =>
-      @div class: 'content-padded', =>
-        @h4 =>
-          @raw "What did #{options.provider.lozenge()} give you that's good for #{options.value.lozenge()}"
-      @subview 'search', new ReasonPicker(hint: "add a goal...")
-  onChoseValue: (v) =>
-    current_user.observes @options.provider, 'quenches', v, 1.0
-    current_user.claims @options.value, 'requires', v
+    current_user.observes v, "delivers", @options.value, 1.0
     @close()
     @justifier.thanks()

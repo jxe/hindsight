@@ -10,10 +10,21 @@ class window.User
   unobserves: (x, rel, y) ->
     Observations.unset(@uid, x, rel, y)
 
-  claims: (x, rel, y) ->
-    inverse_rel = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    fb('goods/%/%/%', x.id, rel, y.id).set true
-    fb('goods/%/%/%', y.id, inverse_rel, x.id).set true
+  setPerusalState: (x, which) ->
+    switch which
+      when 'sought'
+        @values(x, true)
+        @seeks(x, true)
+      when 'handled'
+        @values(x, true)
+        @seeks(x, false)
+      when 'abandoned'
+        @values(x, false)
+        @seeks(x, false)
+  values: (x, val) ->
+    Timeframe.set(fb('discoveries/%/%/%', @uid, x.id || x, 'valued'), val)
+  seeks: (x, val) ->
+    Timeframe.set(fb('discoveries/%/%/%', @uid, x.id || x, 'sought'), val)
   
 
   # auth

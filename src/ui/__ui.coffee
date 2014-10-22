@@ -1,15 +1,26 @@
 class window.Stream
-  constructor: (cb) -> cb(this)
+  constructor: (cb) ->
+    @listeners ||= []
+    cb(this)
   listen: (ev, ref, process) =>
-    ref.on ev, process
-    (@unsubs||=[]).push -> ref.off(ev, process)
+    @listeners.push [ref, ev, process]
+    ref.on ev, process if @obj and @meth
   emit: (x) => @obj[@meth].apply(@obj, [x])
-  bind: (@obj, @meth) =>
-    @obj.streams[@meth].close() if @obj.streams[@meth]
-    @obj.streams[@meth] = this
+  bind: (obj, meth) =>
+    throw 'Bind called with nonobject' unless obj
+    throw { message: 'Bind object has no such method', obj: obj, meth: meth } unless obj[meth]
+    was_unbound = !@obj or !@meth
+    obj.streams[meth].close() if obj.streams[meth]
+    obj.streams[meth] = this
+    [@obj, @meth] = [obj, meth]
+    e[0].on e[1], e[2] for e in @listeners if was_unbound
   close: =>
-    console.log 'closing!', @unsubs
-    x() for x in @unsubs if @unsubs
+    e[0].off e[1], e[2] for e in @listeners
+    @listeners = @obj = @meth = null
+
+
+window.pojo = (o) ->
+  typeof o == 'object' and o.constructor == Object
 
 
 ## quick extensions to the spacepen ##
@@ -22,7 +33,6 @@ View::[k] = v for own k, v of {
     ref.on(ev, fn)
     (@offs ||= []).push -> ref.off(ev, fn)    
   beforeRemove: ->
-    console.log 'beforeRemove called', @streams
     s.close() for name, s of @streams if @streams
     o() for o in @offs if @offs
   pushPage: (v) ->
@@ -32,7 +42,6 @@ View::[k] = v for own k, v of {
   setTab: (ev) ->
     $(ev.target).addClassAmongSiblings('active')
     name = $(ev.target).attr('tabname')
-    console.log 'seeking tab: ', name, $(".tab-content.#{name}")
     @find(".tab-content.#{name}").showAmongSiblings()
 }
 
