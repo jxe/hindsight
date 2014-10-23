@@ -28,7 +28,7 @@ main = ->
 
 		prune common
 		F.child('conclusions').set common
-		process.exit()
+		# process.exit()
 
 prune = (parent, key, subtree) ->
 	if !key

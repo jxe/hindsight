@@ -36,21 +36,31 @@ class window.Observations
     it.whatdrives? or it.delivers?
   isWhyObservation: (x) ->
     it = @relatives[x]
-    it.whatincorporates? or it.delivers?
+    it.whatcomprisedof? or it.delivers?
   isHowObservation: (x) ->
     it = @relatives[x]
-    it.incorporates? or it.whatdelivers?
+    it.comprisedof? or it.whatdelivers?
 
   pursualState: (x) ->
+    sought = @isSought(x)
+    handled = @isHandled(x)
+    console.log 'pursualState', (x.id||x), sought, handled
     switch
-      when @isSought(x) then 'sought'
-      when @isHandled(x) then 'handled'
-      else 'abandoned'
+      when sought then 'seeking'
+      when handled then 'happy with'
+      else 'done with'
 
   isSought: (x) ->
-    new Timeframe(@observations[x.id||x]?.sought).isActive()
+    sought = @observations[x.id||x]?.sought
+    t = new Timeframe(sought)
+    console.log 'isSought', sought, t
+    t.isActive()
   isHandled: (x) ->
-    !@isSought(x) and new Timeframe(@observations[x.id||x]?.valued).isActive()
+    valued = @observations[x.id||x]?.valued
+    return false if @isSought(x)
+    t = new Timeframe(valued)
+    console.log 'isHandled::valued', valued, t
+    t.isActive()
   isAbandoned: (x) ->
     !(new Timeframe(@observations[x.id||x]?.valued).isActive())
 
@@ -68,13 +78,13 @@ class window.Observations
   whyPrefix: (x) ->
     it = @relatives[x]
     switch
-      when it.whatincorporates? then "it's part of"
+      when it.whatcomprisedof? then "it's part of"
       when it.delivers? then "it leads to"
   howSuffix: (x) ->
     it = @relatives[x]
     switch
       when it.whatdelivers? then "leads to this"
-      when it.incorporates? then "is part of this"
+      when it.comprisedof? then "is part of this"
 
   valence: (x) ->
     it = @relatives[x]
@@ -96,7 +106,7 @@ class window.Observations
 
   @set: (guy, x, rel, y, val) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    if rel == 'incorporates'
+    if rel == 'comprisedof'
       fb('gifts/%/%/%', x.id, rel, y.id).set true
       fb('gifts/%/%/%', y.id, inv, x.id).set true
     @_set(guy, x, rel, y, val, true)
@@ -108,7 +118,9 @@ class window.Observations
     fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).set val
 
   @unset: (guy, x, rel, y) ->
+    inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
     fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).remove()
+    fb('discoveries/%/%/%/%', guy, y.id, inv, x.id).remove()
     @unset(guy, x, @down[rel], y) if @down[rel]
 
   @up: {

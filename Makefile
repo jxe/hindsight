@@ -15,7 +15,7 @@ _build/fonts: vendor/ratchet/fonts
 	(cd _build; ln -s ../$^)
 
 _build/css/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
-	mkdir -p $@
+	mkdir -p _build/css
 	cat $^ > $@
 
 _build/js/.built: vendor/*.coffee src/*.coffee src/*/*.coffee

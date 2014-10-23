@@ -1,122 +1,71 @@
-
-.hindsight-signal {
-  vertical-align: middle;
-}
-
-.hindsight-signal span.trailer {
-  position: relative;
-  /*top: -7px;*/
-  font-size: 13px;
-  color: hsl(0, 0%, 27%);
-  /*margin-left: 5px;*/
-
-  font-size: 10px;
-  border-radius: 3px;
-  /*background: #ffd;*/
-  padding: 2px 4px;
-  display: inline-block;
-  box-shadow: inset black 0px 0px 1px;
-
-}
-
-
-
-
-.hindsight-lozenge {
+.-hsloz {
   font-size: 11px;
   border-radius: 8px;
   display: inline-block;
-  box-shadow: hsla(0, 0%, 0%, 0.6) 0px 1px 1px;
   line-height: 1.2;
   text-transform: uppercase;
   display: inline-flex;
-  background: hsla(0, 3%, 74%, 0.68);
   text-shadow: hsla(0, 100%, 100%, 0.61) 0px 0px 1px;
   margin-right: 5px;
+  box-shadow: hsla(0, 0%, 0%, 0.18) 0px 1px 1px;
+  background: hsla(0, 3%, 74%, 0.3);
+  position: relative;
+  top: 3px;
+  margin-right: 1px;
 }
 
-.hindsight-lozenge.trailer {
-  padding: 3px 4px;
-  font-size: 11px;
-  vertical-align: top;
-  width: 18px;
-  padding-left: 5px;
-  padding-top: 4px;
-  padding-bottom: 2px;
-}
-
-.vreview .outcomes .hindsight-lozenge span.gem {
-  width: 10px;
-}
-
-.hindsight-lozenge span.gem {
-  width: 25px;
+.-hsloz span {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   box-shadow: inset hsla(0, 0%, 0%, 0.29) -1px 0px 5px -1px;
+  width: 10px;
+  background: hsla(0, 0%, 47%, 0.26);
 }
 
-
-.hindsight-lozenge span.text {
+.-hsloz b {
   padding: 2px 8px;
-}
-
-.hindsight-lozenge span.text b {
   color: hsl(0, 0%, 20%);
 }
 
 
-.hindsight-label img {
-  max-height: 12px;
-  opacity: 0.5;
-  position: relative;
-  top: 2px;
+
+
+/* bright variant */
+
+.-hsloz.bright span, .brightLozenges .-hsloz span {
+  width: 20px;
 }
 
-.hindsight-label .fraction {
-  display: inline-block;
+.-hsloz.bright, .brightLozenges .-hsloz {
+  box-shadow: hsla(0, 0%, 0%, 0.5) 0px 1px 1px;
+  background: hsla(0, 3%, 74%, 0.4);
 }
 
-.hindsight-label .numerator, .hindsight-label .denominator {
-  /*text-align: center;*/
-  text-transform: uppercase;
-  line-height: 1.2em;
-  display: inline-block;
-}
-
-.hindsight-label .numerator i {
-  color: #888;
-  text-transform: lowercase;
-  font-weight: bold;
-  font-style: normal;
-  margin-right: 3px;
-}
-
-.hindsight-label .denominator {
-  font-weight: bold;
-  text-shadow: hsl(0, 100%, 100%) 0px 0px 0px;
-}
 
 
 
 /* lozenge colors!!!! */
 
-.hindsight-lozenge.mixed, .hindsight-lozenge.negative {
+.-hsloz.mixed, .-hsloz.negative {
   color: hsl(0, 100%, 29%);
 }
 
-.hindsight-lozenge.well, .hindsight-lozenge.positive {
+.-hsloz.well, .-hsloz.positive {
   color: hsl(110, 100%, 29%);
 }
 
-.hindsight-lozenge.mixed span.gem, .hindsight-lozenge.negative span.gem {
+.-hsloz.mixed span, .-hsloz.negative span {
   background: hsl(0, 100%, 39%);
 }
 
-.hindsight-lozenge.well span.gem, .hindsight-lozenge.positive span.gem {
+.-hsloz.well span, .-hsloz.positive span {
   background: hsl(110, 100%, 39%);
 }
 
 .signalrow {
   display:flex;
+}
+
+.signalrow .-hsloz {
+  top: 0px;
 }

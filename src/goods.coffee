@@ -63,10 +63,9 @@ class window.Good
     id = @id
     title = @lozengeTitle()
     $$$ ->
-      @span reason: id, class: "hindsight-lozenge #{params.valence || 'neutral'}", =>
-        @span class: 'gem'
-        @span class: 'text', =>
-          @b title
+      @span reason: id, class: "-hsloz #{params.valence || 'neutral'}", =>
+        @span ''
+        @b title
 
   lozengeTitle: ->
     @name

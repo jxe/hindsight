@@ -38,12 +38,12 @@ class window.ReasonEditor extends Page
     if couldBeIncluded and couldLeadTo
       return new GoodObservationMenu(value, parentValue).openIn(this)
     if couldBeIncluded
-      return current_user.observes parentValue, 'incorporates', value, 1.0
+      return current_user.observes parentValue, 'comprisedof', value, 1.0
     if couldLeadTo
       return current_user.observes value, 'delivers', parentValue, 1.0
 
   onChoseParent: (v) ->
-    current_user.observes v, 'incorporates', @value
+    current_user.observes v, 'comprisedof', @value
 
   onAddedAlias: (text) -> @value.addAlias(text)
 
@@ -57,7 +57,7 @@ class window.ReasonEditor extends Page
     for x in o.howObservations()
       howlist.append Good.fromId(x).asListEntry(suffix: o.howSuffix(x), closable: true)
     @find('.parents').html $$ ->
-      for x, _ of o.connections.whatincorporates
+      for x, _ of o.connections.whatcomprisedof
         @raw Good.fromId(x).asListEntry()
 
   @content: (value, cb, name) ->
@@ -69,14 +69,14 @@ class window.ReasonEditor extends Page
           @p click: 'viewReason', =>
             @raw value.lozenge()
           @section class: 'why', =>
-            @h3 class: "why header", "Why"
-            @subview 'resourcePicker', new ReasonPicker hint: 'Add something...', thing: 'Why'
+            @h4 class: "why header distinctive", "Why do people value this?"
+            @subview 'resourcePicker', new ReasonPicker hint: 'Add a reason...', thing: 'Why'
             @ul click: 'whyClicked', list: 'why', class: "table-view list whylist expando"
           @section class: 'how', =>
-            @h3 class: "how header", "How"
-            @subview 'resourcePicker', new ReasonPicker hint: 'Add something...', thing: 'How'
+            @h4 class: "how header distinctive", "How do people pursue this?"
+            @subview 'resourcePicker', new ReasonPicker hint: 'Add a method...', thing: 'How'
             @ul click: 'howClicked', list: 'how', class: "table-view list howlist expando"
           @section class: 'aliasSection', =>
-            @h4 'Also known as'
+            @h4 class: 'distinctive', 'What else would you call it?'
             @div class: 'aliases'
-            @subview 'synonymPicker', new ReasonPicker(hint: 'Add a synonym', thing: 'Alias', type: value?.type)
+            @subview 'synonymPicker', new ReasonPicker(hint: 'Add an alias', thing: 'Alias', type: value?.type)

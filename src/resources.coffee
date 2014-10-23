@@ -100,7 +100,7 @@ class window.Resource
     decodeURIComponent(x)
   
   store: =>
-    fb('resources').child(@firebase_path()).update
+    fb('urls').child(@firebase_path()).update
       url: @canonUrl,
       title: @title,
       name: @name(),

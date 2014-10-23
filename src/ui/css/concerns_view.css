@@ -1,28 +1,8 @@
-.concerns_view .table-view-divider, .edit_value_view .table-view-divider {
+.concerns_view .table-view-divider {
   background-color: rgb(234, 237, 241);
   padding-top: 26px;
   color: rgb(44, 44, 44);
   font-weight: normal;
   text-transform: uppercase;
   font-size: 13px;
-}
-
-.concern_view h4.prompt {
-  text-align: center;
-  line-height: 2em;
-  color: #777;
-  font-size: 15px;
-}
-
-.concern_view h3 {
-  font-size: 14px;
-  color: #423D3D;
-  background: rgb(224, 224, 224);
-  margin: 0;
-  padding: 5px 10px;
-  padding-bottom: 8px;
-  text-transform: uppercase;
-  box-shadow: rgb(85, 82, 82) 0px 1px 2px;
-  z-index: 2;
-  position: relative;
 }

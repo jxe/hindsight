@@ -19,7 +19,7 @@ class window.GoodObservationMenu extends ObservationMenu
   options: => 
     [
       ['delivers,1', "<b>It works.</b>. I've found #{@bloz} works for #{@aloz}.", 'check'],
-      ['whatincorporates,1', "<b>It's part of it.</b> #{@bloz} is part of #{@aloz}.", 'list']
+      ['whatcomprisedof,1', "<b>It's part of it.</b> #{@bloz} is part of #{@aloz}.", 'list']
     ]
 
 
@@ -27,26 +27,28 @@ class window.GoodObservationMenu extends ObservationMenu
 class window.EngagementObservationMenu extends ObservationMenu
   initialize: (@b, @a, @delegate) ->
     super()
-    @prompt.html "
-      <div class='loz'>#{@aloz}</div>
-      <div class='disposition'></div>
-      <div style='display:none' class='menu'>
-        <div which='sought'>I want this</div>
-        <div which='handled'>I'm all set with this</div>
-        <div which='abandoned'>I've moved on to more important things</div>
+    @prepend "
+      <div class='editableStatement'>
+        You're
+        <span class='disposition'></span>
+        <span class='loz'>#{@aloz}</span>
       </div>
-      <p>How was #{@bloz} for this?</p>
     "
-    @prompt.find('.disposition').click => @prompt.find('.menu').toggle()
-    @prompt.find('.loz').click => 
+    @prompt.html "<p>How was #{@bloz} for this?</p>"
+    @pstate = new WordChoice(null, ['seeking', 'happy with', 'done with'], this, 'pursualState')
+    @find('.disposition').append @pstate
+    @find('.loz').click => 
       @parent.pushPage new ReasonEditor(@a)
       @close()
-    @prompt.find('.menu').click (e) =>
-      @which = $(e.target).pattr('which')
-      current_user.setPerusalState(@a, @which)
     @openIn(delegate)
     @bind observationsChanged: Observations.live(current_user_id, @a)
-  
+
+  pursualStateChanged: (state) =>
+    current_user.setPerusalState(@a, state)
+
+  observationsChanged: (o) ->
+    @pstate.setWord(o.pursualState(@a))
+
   options: => [
     ['delivers,1', 'good for this', 'check'],
     ['delivers,0', 'a distraction', 'close'],
@@ -61,10 +63,3 @@ class window.EngagementObservationMenu extends ObservationMenu
 
   promptClicked: (ev) =>
     true
-
-  observationsChanged: (o) ->
-    state = o.pursualState(@a)
-    @prompt.find('.disposition').html switch state
-      when 'sought' then 'I want this'
-      when 'handled' then 'I\'m all set with this'
-      when 'abandoned' then 'I\'ve moved on'

@@ -1,24 +1,8 @@
 
 .vreview form {
-/*
-  background: #efeff4;
-  padding: 3px 2px;
-  position: absolute;
-*/
   z-index: 10000;
   overflow: visible;
-/*  width: 100%;*/
 }
-
-.vreview .table-view {
-/*
-  flex: 1.0;
-  overflow-y: auto;
-  margin-bottom: 0px;
-  margin-top: 0px;
-*/
-}
-
 
 .vreview form input[type=search] {
   background-color: white;
@@ -30,8 +14,6 @@
   opacity: 1.0;
 }
 
-
-
 .vreview .toggle {
   margin-top: -2px;
   height: 18px;
@@ -40,7 +22,6 @@
 .vreview .toggle .toggle-handle {
   top: -7px;
 }
-
 
 .vreview .content {
   background: white;
@@ -90,7 +71,6 @@
   padding: 11px 1px 11px 1px;
 }
 
-
 header form {
   display: flex;
 }
@@ -115,23 +95,6 @@ header form {
 .vreview .outcomes .table-view-cell:hover .icon-close:hover {
   color:black;
 }
-
-.concern_view .sentence {
-  font-weight: normal;
-  margin-bottom: -1px;
-}
-
-.concern_view .sentence b {
-  border: solid thin gray;
-  padding: 7px 10px;
-  white-space: nowrap;
-  display: inline-block;
-  font-weight: normal;
-  font-size: 12px;
-  color: white;
-  background: rgb(148, 148, 148);
-}
-
 
 .vreview .hints {
   color: hsl(0, 0%, 40%);

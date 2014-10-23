@@ -6,7 +6,7 @@ class window.ObservationsEditor extends Page
     { @item, @engagement, @name, @resource } = ctx
     @engagement ||= @resource.asEngagement()
     @bind observationsChanged: Observations.live(current_user_id, @engagement)
-    fb('conclusions/whatdrives/%', @engagement.id).once 'value', (snap) =>
+    fb('conclusions/%/whatdrives', @engagement.id).once 'value', (snap) =>
       v = snap.val()
       @showHints Object.keys(v) if v
 
@@ -42,7 +42,7 @@ class window.ObservationsEditor extends Page
           #   @text "Favorites"
         @subview 'search', new ReasonPicker(hint: "Why #{name}?")
       @div class: 'content column', =>
-        @ul class: "table-view", =>
+        @ul class: "table-view brightLozenges", =>
           @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
         @div class: 'hints expando', outlet: 'hints', click: 'hintClicked', "Hints here"
         @div class: 'promptBox', outlet: 'promptBox', style: "display:none"
@@ -61,8 +61,8 @@ class window.ObservationsEditor extends Page
     new EngagementObservationMenu(@engagement, Good.fromId(tag), this)
 
   hintClicked: (ev) =>
-    id = $(ev.target).attr('reason') || $(ev.target).parents('[reason]').attr('reason')
-    new EngagementObservationMenu(@engagement, Good.fromId(id), this)
+    id = $(ev.target).pattr('reason')
+    new EngagementObservationMenu(@engagement, Good.fromId(id), this) if id
 
   yourGoals: =>
     @pushPage new PersonExperiencesInspector()

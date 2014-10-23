@@ -12,13 +12,13 @@ class window.User
 
   setPerusalState: (x, which) ->
     switch which
-      when 'sought'
+      when 'seeking'
         @values(x, true)
         @seeks(x, true)
-      when 'handled'
+      when 'happy with'
         @values(x, true)
         @seeks(x, false)
-      when 'abandoned'
+      when 'done with'
         @values(x, false)
         @seeks(x, false)
   values: (x, val) ->

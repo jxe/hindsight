@@ -42,7 +42,8 @@ View::[k] = v for own k, v of {
   setTab: (ev) ->
     $(ev.target).addClassAmongSiblings('active')
     name = $(ev.target).attr('tabname')
-    @find(".tab-content.#{name}").showAmongSiblings()
+    className = name.replace(' ', '_')
+    @find(".tab-content.#{className}").showAmongSiblings()
 }
 
 View.tabs = (tabnames, options, eachTab) ->
@@ -55,7 +56,8 @@ View.tabs = (tabnames, options, eachTab) ->
   @div class: 'tab-contents',  =>
     for tabname in tabnames
       selected = options.selectedTab == tabname
-      @div class: "#{tabname} tab-content #{options.tabClass}", style: (if !selected then "display:none"), ->
+      className = tabname.replace(' ', '_')
+      @div class: "#{className} tab-content #{options.tabClass}", style: (if !selected then "display:none"), ->
         eachTab(tabname)
 
 ## quick extension to the jquery
@@ -73,3 +75,4 @@ $.fn.showAmongSiblings = (name) ->
 
 String::titleCase = ->
   this[0].toUpperCase() + this.slice(1)
+

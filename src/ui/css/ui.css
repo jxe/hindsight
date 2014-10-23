@@ -196,28 +196,6 @@ input[type=search] {
   letter-spacing: 0.05em;
 }
 
-.bubble {
-  border: solid thin rgb(184, 184, 184);
-  border-radius: 10px;
-  padding: 4px 5px;
-  margin-top: 10px;
-  margin-right: -50px;
-  font-size: 15px;
-}
-
-.bubble h4 {
-  font-size: 14px;
-  text-decoration: underline;
-  color: #444;
-  margin-bottom: 0;
-  font-weight: normal;
-}
-
-.bubble ul {
-  padding-left: 20px;
-  margin-top: 0;
-}
-
 .list-item-hint {
   margin-right: -40px;
   font-size: 10px;
@@ -325,11 +303,73 @@ input[type=search] {
   padding: 5px 0px;
 }
 
-
 .card .table-view-cell > a:not(.btn) {
   margin: 0px 5px;
 }
 
 .hovermodal .table-view-cell {
   font-size: 14px;
+}
+
+
+h4.distinctive {
+  padding-top: 26px;
+  color: hsl(0, 83%, 41%);
+  font-weight: normal;
+  border-bottom: solid thin hsl(0, 0%, 50%);
+  padding-bottom: 4px;
+  padding-left: 5px;
+}
+
+section.question {
+  border-bottom: solid thin hsl(0, 10%, 84%);;
+  background: hsl(0, 100%, 100%);
+  padding: 10px;
+}
+
+section.question .btn .icon {
+  font-size: 15px;
+  margin-right: 3px;
+}
+
+section.question .prompt {
+  padding-bottom: 5px;
+}
+
+.WordChoice .choices {
+  display:none;
+}
+
+.WordChoice.open .choices {
+  display:block;
+}
+
+.WordChoice .word {
+  border-bottom: thin dashed hsl(0, 0%, 50%);
+  color: hsl(194, 40%, 31%);
+  font-weight: bold;
+  padding: 0px 3px;
+}
+
+.WordChoice.open .word {
+  opacity: 0.4;
+}
+
+.editableStatement {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+
+.hovermodal > .editableStatement:first-child {
+  background: hsl(0, 100%, 100%);
+  text-align: center;
+  overflow: hidden;
+  border-radius: 10px 10px 0px 0px;
+  padding: 4px 0px;
+  box-shadow: inset hsl(0, 0%, 0%) 0px 0px 1px;
+}
+
+.editableStatement + h4 {
+  padding-top: 10px;
 }
