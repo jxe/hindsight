@@ -6,10 +6,16 @@
 <script type="text/javascript" src="../_build/compiled.js"></script>
 <link        rel="stylesheet" href="../_build/css/all.css" >
 
-<body></body>
+<body>
+
+<a href="javascript:login()">login</a>
+</body>
 <script>
 User.loggedIn(function(){
   var r = new Resource('https://facebook.com', 'Facebook');
   r.reviewByUser(current_user_id).inject(document.body);
 });
+function login(){
+  if (!window.current_user) User.please_login();
+}
 </script>

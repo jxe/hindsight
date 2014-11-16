@@ -27,4 +27,4 @@ _build/compiled.js: _build/js/.built
 
 
 zip: _build
-	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js css sdk/fonts images inject js manifest.json popup.html sdk/css/all.css sdk/compiled.js sdk/compiled.map sdk/vendor.js)
+	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js sdk/fonts images js manifest.json popup.html sdk/css/all.css sdk/compiled.js sdk/compiled.map sdk/vendor.js)
