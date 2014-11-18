@@ -55,14 +55,14 @@ class window.ObservationsEditor extends Page
     setTimeout((=> @promptBox.hide()), 1000)
 
   onChoseValue: (r) =>
-    new EngagementObservationMenu(@engagement, r, this)
+    new ActivityClaimModal(@engagement, r, this)
 
   editOutcome: (tag) =>
-    new EngagementObservationMenu(@engagement, Good.fromId(tag), this)
+    new ActivityClaimModal(@engagement, Good.fromId(tag), this)
 
   hintClicked: (ev) =>
     id = $(ev.target).pattr('reason')
-    new EngagementObservationMenu(@engagement, Good.fromId(id), this) if id
+    new ActivityClaimModal(@engagement, Good.fromId(id), this) if id
 
   yourGoals: =>
     @pushPage new PersonExperiencesInspector()
@@ -104,32 +104,3 @@ class window.ObservationsEditor extends Page
 #
 
 
-class window.MoreImportantGoodCollector extends Modal
-  initialize: (@justifier, @options) ->
-    @justifier.prompt "What is more important to you now than #{@options.value.lozenge()}?", =>
-      @openIn(@justifier)
-  @content: (justifier, options) ->
-    @div class: 'hovermodal chilllozenges MoreImportantGoodCollector', =>
-      @div class: 'content-padded', =>
-        @h4 =>
-          @raw "Add a goal that trumps #{options.value.lozenge()}"
-      @subview 'search', new ReasonPicker(hint: "add a goal...")
-  onChoseValue: (v) =>
-    current_user.observes v, "trumps", @options.value, 1.0
-    @close()
-    @justifier.thanks()
-
-class window.BetterActivityCollector extends Modal
-  initialize: (@justifier, @options) ->
-    @justifier.prompt "What does help, with #{@options.value.lozenge()}?", =>
-      @openIn(@justifier)
-  @content: (justifier, options) ->
-    @div class: 'hovermodal chilllozenges BetterActivityCollector', =>
-      @div class: 'content-padded', =>
-        @h4 =>
-          @raw "Add a better activity for #{options.value.lozenge()}"
-      @subview 'search', new ReasonPicker(hint: "add an activity...")
-  onChoseValue: (v) =>
-    current_user.observes v, "delivers", @options.value, 1.0
-    @close()
-    @justifier.thanks()

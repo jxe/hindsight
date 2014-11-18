@@ -5,6 +5,15 @@ class window.User
     for k, v of data
       this[k] = v
 
+  thinksIsGoodFor: (x, y, yes_no_maybe) ->
+    switch yes_no_maybe
+       when 'yes'
+          Observations.set(@uid, x, "delivers", y, 1.0)
+       when 'no'
+          Observations.set(@uid, x, "delivers", y, 0.0)
+       when 'unknown'
+          Observations.set(@uid, y, "drives", x, 1.0)
+
   observes: (x, rel, y, val) ->
     Observations.set(@uid, x, rel, y, val)
   unobserves: (x, rel, y) ->
@@ -15,16 +24,16 @@ class window.User
       when 'seeking'
         @values(x, true)
         @seeks(x, true)
-      when 'happy with'
+      when 'enjoying'
         @values(x, true)
         @seeks(x, false)
-      when 'done with'
+      when 'abandoned'
         @values(x, false)
         @seeks(x, false)
   values: (x, val) ->
-    Timeframe.set(fb('discoveries/%/%/%', @uid, x.id || x, 'valued'), val)
+    Timeframe.set(fb('claims/%/%/%', @uid, x.id || x, 'valued'), val)
   seeks: (x, val) ->
-    Timeframe.set(fb('discoveries/%/%/%', @uid, x.id || x, 'sought'), val)
+    Timeframe.set(fb('claims/%/%/%', @uid, x.id || x, 'sought'), val)
   
 
   # auth

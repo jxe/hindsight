@@ -12,7 +12,7 @@ class window.Good
     r.store()
     r
   store: ->
-    fb('gifts').child(@id).update
+    fb('terms').child(@id).update
       type: @type
       name: @name
       url: @url || null  
@@ -33,15 +33,15 @@ class window.Good
   # persistence and data model
     
   addAlias: (text) ->
-    fb('gifts/%/aliases/%', @id, text).set true
+    fb('terms/%/aliases/%', @id, text).set true
 
   mergeInto: (otherValue) =>
-    fb('gifts/%', @id).once 'value', (snap) =>
+    fb('terms/%', @id).once 'value', (snap) =>
       v = snap.val()
       v.aliases ||= {}
       v.aliases[@name] = true
-      fb('gifts/%/aliases', otherValue.id).update(v.aliases)
-      fb('gifts/%', @id).remove()  # todo, wait for the above to commit first!
+      fb('terms/%/aliases', otherValue.id).update(v.aliases)
+      fb('terms/%', @id).remove()  # todo, wait for the above to commit first!
 
     
   # text and display!

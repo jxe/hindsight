@@ -44,7 +44,19 @@ View::[k] = v for own k, v of {
     name = $(ev.target).attr('tabname')
     className = name.replace(' ', '_')
     @find(".tab-content.#{className}").showAmongSiblings()
+  setSegment: (ev) ->
+    $(ev.target).addClassAmongSiblings('active')
+    kind = $(ev.target).attr('segmentKind')
+    name = $(ev.target).attr('tabname')
+    this[kind + "Changed"](name)
 }
+
+View.segment = (kind, tabnames, selectedTab) ->
+  @div class: 'segmented-control', =>
+    for tabname, tabtext of tabnames
+      selectedTab ||= tabname
+      selected = selectedTab == tabname
+      @div segmentKind: kind, tabname: tabname, class: "control-item #{if selected then 'active'}", click: 'setSegment', tabtext
 
 View.tabs = (tabnames, options, eachTab) ->
   options.class = 'segmented-control'

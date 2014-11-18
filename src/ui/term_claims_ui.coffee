@@ -38,12 +38,12 @@ class window.ReasonEditor extends Page
     if couldBeIncluded and couldLeadTo
       return new GoodObservationMenu(value, parentValue).openIn(this)
     if couldBeIncluded
-      return current_user.observes parentValue, 'comprisedof', value, 1.0
+      return current_user.observes value, 'implements', parentValue, 1.0
     if couldLeadTo
       return current_user.observes value, 'delivers', parentValue, 1.0
 
   onChoseParent: (v) ->
-    current_user.observes v, 'comprisedof', @value
+    current_user.observes @value, 'implements', v
 
   onAddedAlias: (text) -> @value.addAlias(text)
 
@@ -57,11 +57,11 @@ class window.ReasonEditor extends Page
     for x in o.howObservations()
       howlist.append Good.fromId(x).asListEntry(suffix: o.howSuffix(x), closable: true)
     @find('.parents').html $$ ->
-      for x, _ of o.connections.whatcomprisedof
+      for x, _ of o.connections.implements
         @raw Good.fromId(x).asListEntry()
 
   @content: (value, cb, name) ->
-    @div class: 'reason_editor chilllozenges', =>
+    @div class: 'reason_editor', =>
       @header class: 'bar bar-nav', =>
         @a class: 'icon icon-left-nav pull-left', click: 'back'
       @div class: 'content', =>

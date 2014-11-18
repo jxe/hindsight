@@ -2,10 +2,10 @@ class window.Observations
   @live: (guy, value) ->
     goods = observations = null
     new Stream (s) ->
-      s.listen 'value', fb('gifts/%', value.id), (snap) ->
+      s.listen 'value', fb('terms/%', value.id), (snap) ->
         goods = snap.val() || {}
         s.emit new Observations(value, goods, observations) if observations
-      s.listen 'value', fb('discoveries/%', guy), (snap) ->
+      s.listen 'value', fb('claims/%', guy), (snap) ->
         observations = snap.val() || {}
         s.emit new Observations(value, goods, observations) if goods
 
@@ -36,10 +36,16 @@ class window.Observations
     it.whatdrives? or it.delivers?
   isWhyObservation: (x) ->
     it = @relatives[x]
-    it.whatcomprisedof? or it.delivers?
+    it.implements? or it.delivers?
   isHowObservation: (x) ->
     it = @relatives[x]
-    it.comprisedof? or it.whatdelivers?
+    it.whatimplements? or it.whatdelivers?
+
+  isGoodFor: (x) ->
+    return 'unknown' unless it = @relatives[x.id||x]
+    return 'yes' if it.whatdelivers? && it.whatdelivers > 0.5
+    return 'no'  if it.whatdelivers? && it.whatdelivers < 0.5
+    return 'unknown'
 
   pursualState: (x) ->
     sought = @isSought(x)
@@ -47,8 +53,8 @@ class window.Observations
     console.log 'pursualState', (x.id||x), sought, handled
     switch
       when sought then 'seeking'
-      when handled then 'happy with'
-      else 'done with'
+      when handled then 'enjoying'
+      else 'abandoned'
 
   isSought: (x) ->
     sought = @observations[x.id||x]?.sought
@@ -78,13 +84,13 @@ class window.Observations
   whyPrefix: (x) ->
     it = @relatives[x]
     switch
-      when it.whatcomprisedof? then "it's part of"
+      when it.implements? then "it's part of"
       when it.delivers? then "it leads to"
   howSuffix: (x) ->
     it = @relatives[x]
     switch
       when it.whatdelivers? then "leads to this"
-      when it.comprisedof? then "is part of this"
+      when it.whatimplements? then "is part of this"
 
   valence: (x) ->
     it = @relatives[x]
@@ -106,21 +112,21 @@ class window.Observations
 
   @set: (guy, x, rel, y, val) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    if rel == 'comprisedof'
-      fb('gifts/%/%/%', x.id, rel, y.id).set true
-      fb('gifts/%/%/%', y.id, inv, x.id).set true
+    if rel == 'implements'
+      fb('terms/%/%/%', x.id, rel, y.id).set true
+      fb('terms/%/%/%', y.id, inv, x.id).set true
     @_set(guy, x, rel, y, val, true)
     @_set(guy, y, inv, x, val, true)
 
   @_set: (guy, x, rel, y, val, starting) ->
     @_set(guy, x, @up[rel], y, val, false) if @up[rel]
     @unset(guy, x, @down[rel], y) if @down[rel] and starting
-    fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).set val
+    fb('claims/%/%/%/%', guy, x.id, rel, y.id).set val
 
   @unset: (guy, x, rel, y) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    fb('discoveries/%/%/%/%', guy, x.id, rel, y.id).remove()
-    fb('discoveries/%/%/%/%', guy, y.id, inv, x.id).remove()
+    fb('claims/%/%/%/%', guy, x.id, rel, y.id).remove()
+    fb('claims/%/%/%/%', guy, y.id, inv, x.id).remove()
     @unset(guy, x, @down[rel], y) if @down[rel]
 
   @up: {
