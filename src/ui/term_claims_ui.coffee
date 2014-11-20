@@ -22,13 +22,13 @@ class window.ReasonEditor extends Page
   whyClicked: (ev) =>
     v = Good.fromId($(ev.target).pattr('subvalue'))
     if $(ev.target).hasClass('icon-close')
-      return unless confirm('Sure?')
+      # return unless confirm('Sure?')
       @currentObservations.remove(v.id)
     @establishRelation(@value, v)
   howClicked: (ev) =>
     v = Good.fromId($(ev.target).pattr('subvalue'))
     if $(ev.target).hasClass('icon-close')
-      return unless confirm('Sure?')
+      # return unless confirm('Sure?')
       @currentObservations.remove(v.id)
     @establishRelation(v, @value)
 

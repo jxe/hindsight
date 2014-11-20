@@ -39,6 +39,7 @@ class window.ActivityClaimModal extends Modal
             @raw "How's your search for #{aloz}, generally?"
          @segment 'search', {enjoying:'Solved', seeking:'Still looking', abandoned:'Moved on'}, 'seeking'
          @div outlet: 'thirdQuestion'
+         @button class: 'btn btn-block', click: 'done', "Done"
 
   goal: =>
     @parent.pushPage new ReasonEditor(@a)
@@ -73,13 +74,14 @@ class window.ActivityClaimModal extends Modal
      else
         @thirdQuestion.empty()
 
-  afterClick: (rel, val) =>
-    if val < 0.5
-      new BetterActivityCollector(@delegate, value: @a)
-    else if @which == 'abandoned'
+  done: =>
+    if @perusal == 'abandoned'
       new MoreImportantGoodCollector(@delegate, value: @a)
+    else if @goodFor == 'no'
+      new BetterActivityCollector(@delegate, value: @a)
+    @close()
 
-      
+
 class window.MoreImportantGoodCollector extends Modal
   initialize: (@justifier, @options) ->
     @justifier.prompt "What is more important to you now than #{@options.value.lozenge()}?", =>

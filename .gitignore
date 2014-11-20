@@ -9,3 +9,5 @@ all.css
 node_modules
 _build
 katon.log
+_untracked
+.DS_Store

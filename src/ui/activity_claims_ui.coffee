@@ -5,16 +5,23 @@ class window.ObservationsEditor extends Page
   initialize: (ctx) ->
     { @item, @engagement, @name, @resource } = ctx
     @engagement ||= @resource.asEngagement()
+    @commonMotivations = []
     @bind observationsChanged: Observations.live(current_user_id, @engagement)
-    fb('conclusions/%/whatdrives', @engagement.id).once 'value', (snap) =>
+    fb('commonWisdom/%/whatdrives', @engagement.id).once 'value', (snap) =>
       v = snap.val()
-      @showHints Object.keys(v) if v
+      if v
+        @commonMotivations = Object.keys(v)
+      @redrawHints()
 
-  showHints: (ids) =>
+  redrawHints: =>
+    return unless @currentObservations
+    keys = (x for x in @commonMotivations when !@currentObservations.relatives[x])
+    return unless keys and keys.length
+
     @hints.html $$ ->
       @div =>
         @p "Others said:"
-        for id in ids
+        for id in keys
           @a reason: id, Good.fromId(id).name
           @raw " &nbsp; "
 
@@ -44,7 +51,7 @@ class window.ObservationsEditor extends Page
       @div class: 'content column', =>
         @ul class: "table-view brightLozenges", =>
           @div class: 'outcomes', outlet: 'outcomes', click: 'outcomeClicked'
-        @div class: 'hints expando', outlet: 'hints', click: 'hintClicked', "Hints here"
+        @div class: 'hints expando', outlet: 'hints', click: 'hintClicked', ""
         @div class: 'promptBox', outlet: 'promptBox', style: "display:none"
 
   prompt: (text, cb) =>
@@ -70,7 +77,7 @@ class window.ObservationsEditor extends Page
   outcomeClicked: (ev) =>
     tag = $(ev.target).pattr 'reason'
     if $(ev.target).hasClass('icon-close')
-      return unless confirm('Sure?')
+      # return unless confirm('Sure?')
       @currentObservations.remove(tag)
     else
       @editOutcome(tag) if tag
@@ -78,7 +85,8 @@ class window.ObservationsEditor extends Page
   observationsChanged: (o) ->
     @currentObservations = o
     arr = o.directObservations()
-    @hints.toggle( arr.length < 2 )
+    @redrawHints()
+    @hints.toggle( arr.length < 4 )
     
     @outcomes.html $$ ->
       for related_value_id in arr

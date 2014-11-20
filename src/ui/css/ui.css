@@ -225,7 +225,7 @@ input[type=search] {
   z-index: 99;
 }
 
-.hovermodal .btn-block {
+/*.hovermodal .btn-block {
   font-size: 15px;
   text-align: left;
   padding-left: 10px;
@@ -236,7 +236,7 @@ input[type=search] {
   line-height: 0px;
   position: relative;
   top: 1px;
-}
+}*/
 
 .hovermodal h4 {
   font-weight: normal;

@@ -93,7 +93,7 @@ class window.User
         id: response.uid,
         facebook_id: response.id,
         name: response.displayName,
-        location: response.location?.name,
+        location: response.location?.name || "unknown location",
         image: response.picture?.data?.url || "https://graph.facebook.com/#{response.id}/picture"
         # gender: response.gender
         # location: response.currentLocation

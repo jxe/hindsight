@@ -1,3 +1,4 @@
+#!/usr/bin/env node_modules/.bin/coffee
 # commonalities.js
 
 Firebase = require('firebase')
@@ -6,7 +7,7 @@ common = {}
 
 
 main = ->	
-	F.child('discoveries').on 'value', (snap) ->
+	F.child('claims').on 'value', (snap) ->
 		for user, wisdom of snap.val()
 			for value, learnings of wisdom
 				common[value] ||= { users: 0 }
@@ -27,7 +28,7 @@ main = ->
 					delete learnings[relatedValue] if (counts.users / learnings.users) < 0.1
 
 		prune common
-		F.child('conclusions').set common
+		F.child('commonWisdom').set common
 		# process.exit()
 
 prune = (parent, key, subtree) ->

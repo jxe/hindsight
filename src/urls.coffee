@@ -27,6 +27,7 @@ class window.Resource
     new Resource(url)
     
   @isUrl: (str) ->
+    str = str.replace(/^using /, '')
     str = "http://#{str}" unless str.match(/^http/)
     str.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)
 

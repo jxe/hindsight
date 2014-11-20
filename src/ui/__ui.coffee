@@ -63,11 +63,11 @@ View.tabs = (tabnames, options, eachTab) ->
   options.selectedTab ||= tabnames[0]
   @div options, =>
     for tabname in tabnames
-      selected = options.selectedTab == tabname
+      selected = (options.selectedTab == tabname)
       @div tabname: tabname, class: "control-item #{if selected then 'active'}", click: 'setTab', tabname
   @div class: 'tab-contents',  =>
     for tabname in tabnames
-      selected = options.selectedTab == tabname
+      selected = (options.selectedTab == tabname)
       className = tabname.replace(' ', '_')
       @div class: "#{className} tab-content #{options.tabClass}", style: (if !selected then "display:none"), ->
         eachTab(tabname)

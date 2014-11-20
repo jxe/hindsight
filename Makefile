@@ -1,3 +1,10 @@
+export PATH := $(shell pwd)/node_modules/.bin:$(PATH)
+
+
+############################
+# for basic javascript lib #
+############################
+
 DEFAULT: _build _build/vendor.js _build/css/all.css _build/compiled.js _build/fonts
 	# yay
 
@@ -12,7 +19,7 @@ _build/vendor.js: vendor/jquery.min.js vendor/typeahead.js
 	cat $^ > $@
 
 _build/fonts: vendor/ratchet/fonts
-	(cd _build; ln -s ../$^)
+	(cd _build; ln -s ../$^) || touch _build/fonts
 
 _build/css/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
 	mkdir -p _build/css
@@ -25,6 +32,11 @@ _build/js/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
 _build/compiled.js: _build/js/.built
 	mapcat _build/js/*.map -j _build/compiled.js -m _build/compiled.map
 
+
+
+########################
+# for chrome extension #
+########################
 
 zip: _build
 	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js sdk/fonts images js manifest.json popup.html sdk/css/all.css sdk/compiled.js sdk/compiled.map sdk/vendor.js)

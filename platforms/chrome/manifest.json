@@ -2,9 +2,8 @@
   "oauth2": {
     "client_id": "779200833808-3vss08g6ccrj3n0bb8r2d7u5gpt7t96u.apps.googleusercontent.com",
     "scopes": [
-        "https://www.googleapis.com/auth/plus.login",      
-        "https://www.googleapis.com/auth/plus.me",
-        "https://www.googleapis.com/auth/userinfo.email" 
+        "profile",
+        "email" 
     ]
   },
   "externally_connectable": {
@@ -19,7 +18,7 @@
    "name": "Hindsight",
    "short_name": "Hindsight",
    "description": "Browse the web with no regrets.",
-   "version": "0.0.1.1",
+   "version": "0.0.1.2",
    "author": "Joe Edelman",
    "icons": {
       "128": "images/eye.128x128.png",
