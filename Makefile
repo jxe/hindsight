@@ -1,36 +1,40 @@
 export PATH := $(shell pwd)/node_modules/.bin:$(PATH)
+JSC=_build/js
+DIR=_build/libhindsight
 
 
 ############################
 # for basic javascript lib #
 ############################
 
-DEFAULT: _build _build/vendor.js _build/css/all.css _build/compiled.js _build/fonts
+DEFAULT: node_modules/.bin $(DIR) $(DIR)/vendor.js $(DIR)/all.css $(DIR)/compiled.js $(DIR)/fonts
 	# yay
 
-watch:
+node_modules/.bin:
+	npm install
+
+watch: node_modules/.bin
 	watchman watch src
 	echo '["trigger", "src", { "name": "remake", "expression": ["pcre", "\\\.(css|coffee)$$"], "chdir": "..", "command": ["make"] }]' | watchman -j
 
-_build:
+$(DIR):
 	mkdir -p $@
 
-_build/vendor.js: vendor/jquery.min.js vendor/typeahead.js
+$(DIR)/vendor.js: vendor/jquery.min.js vendor/typeahead.js
 	cat $^ > $@
 
-_build/fonts: vendor/ratchet/fonts
-	(cd _build; ln -s ../$^) || touch _build/fonts
+$(DIR)/fonts: vendor/ratchet/fonts
+	cp -R $^ $@
 
-_build/css/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
-	mkdir -p _build/css
+$(DIR)/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
 	cat $^ > $@
 
-_build/js/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
-	coffee -o _build/js -m -c $^
+$(JSC)/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
+	coffee -o $(JSC) -m -c $^
 	touch $@
 
-_build/compiled.js: _build/js/.built
-	mapcat _build/js/*.map -j _build/compiled.js -m _build/compiled.map
+$(DIR)/compiled.js: $(JSC)/.built
+	mapcat $(JSC)/*.map -j $(DIR)/compiled.js -m $(DIR)/compiled.map
 
 
 
@@ -38,5 +42,5 @@ _build/compiled.js: _build/js/.built
 # for chrome extension #
 ########################
 
-zip: _build
-	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip background.html background.js sdk/fonts images js manifest.json popup.html sdk/css/all.css sdk/compiled.js sdk/compiled.map sdk/vendor.js)
+zip: $(DIR)
+	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip .)

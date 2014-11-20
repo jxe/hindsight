@@ -1,22 +1,15 @@
 hindsight
-=======
+=========
 
-a set of widgets for annotating choices on the web such that they become fair and expressive choices by incorporating social information about outcomes and costs and underlying values
+A javascript SDK, including various widgets, for dealing with users' expectations when engaging with different URLs and websites and so on, and collecting information about whether they worked out.
 
-see the "Fair Choices, Expressive Choices" paper http://nxhx.org/InformedChoice/
+The data model is documented at http://willandintent.org/cxp/.
 
-Here are pickers, editors, and inspectors for various data types.
-
-### Goods
-
-Why you use a particular thing.  Possibly an ongoing goal you have, i.e., a reason for multiple engagements.
-
-Things that happened during a particular interaction with a resource.  Like maybe you paid for it and you've visited it once a week.  Includes what your reasons were, and whether they worked out for you.
+See also the paper on Human Choicemaking at http://nxhx.org/Choicemaking/.
 
 
-### Observations
+## Getting started
 
+Make sure you have node+npm installed.  A simple "make" will install dependencies and build libhindsight.  The chrome extension can then be loaded as an unpacked extension in chrome by selecting the packages/chrome directory in the extensions screen, or you can start a webserver in the root directory and navigate to the test view at tests/review.html.
 
-### Resources
-
-Websites, products, venues... anything you use or engage with.
+To rebuild continuously as you change the coffeescript files, first make sure you have homebrew, then type "brew install watchman" to install facebook watchman.  Then "make watch" to monitor files for changes and remake as needed.  

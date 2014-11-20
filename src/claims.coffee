@@ -74,7 +74,7 @@ class window.Observations
     it = @relatives[x]
     switch
       when it.delivers? && it.delivers < 0.5
-        return 'sucks for'
+        return 'hasn\'t lead to'
       when @isAbandoned(x)
         return 'abandoned for'
       when it.delivers
