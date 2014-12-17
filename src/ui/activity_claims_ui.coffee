@@ -7,7 +7,7 @@ class window.ObservationsEditor extends Page
     @engagement ||= @resource.asEngagement()
     @commonMotivations = []
     @bind observationsChanged: Observations.live(current_user_id, @engagement)
-    fb('commonWisdom/%/whatdrives', @engagement.id).once 'value', (snap) =>
+    fb('commonWisdom/%/promises', @engagement.id).once 'value', (snap) =>
       v = snap.val()
       if v
         @commonMotivations = Object.keys(v)

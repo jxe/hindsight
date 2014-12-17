@@ -25,11 +25,30 @@ class window.Good
   load: ->
   isRoot: ->
     @constructor.root == @id
-  couldInclude: (subvalue) ->
-    @type == subvalue.type
-  couldLeadTo: (parentValue) ->
-    false
-  
+
+  couldBeHonoredAs: (y) =>
+    return true if @type == y.type or (@type.isActivity and y.isActivity)
+    return true if @isActivity  and y.isRecognition
+    return false
+
+  couldDeliver: (y) ->
+    return true if @isActivity    and !y.isRecognition
+    return true if @isRecognition and  y.isEquipment
+    return true if @isEquipment   and  y.isActivity
+    return false
+
+  couldDrive: (y) ->
+    return true if y.couldDeliver(this)
+    return true if @isImpression  && !y.isImpression
+    return true if @isRecognition &&  y.isExternal
+    return false
+
+  honoredAsLabel: (y) ->
+    return "is part of"       if @isActivity  and y.isRecognition
+    return "is part of"       if @isActivity  and y.isActivity
+    return "is one kind of"   if @isEquipment and y.isEquipment
+    return "is part of"       if @type == y.type
+
   # persistence and data model
     
   addAlias: (text) ->
@@ -72,10 +91,13 @@ class window.Good
 
 
 class window.Impression extends Good
+  isImpression: true
   @root: 'impression: good feeling'
   @canOccur: true
 
 class window.Recognition extends Good
+  isRecognition: true
+  isAcquirable: true
   @root: 'recognition: being who and where I want to be'
   @rootOccuranceLabel: 'being who and where I want to be'
   @rootAssetLabel: 'personal or environmental alignment'
@@ -83,15 +105,15 @@ class window.Recognition extends Good
   @canBeAcquired: true
 
 class window.Activity extends Good
+  isActivity: true
+  isExternal: true
   @root: 'activity: doing what I value'
   @canOccur: true
-  isActivity: true
-  couldInclude: (subvalue) ->
-    subvalue.type == 'equipment' or super(subvalue)
-  couldLeadTo: (parentValue) ->
-    not parentValue.isActivity
 
 class window.Equipment extends Good
+  isEquipment: true
+  isAcquirable: true
+  isExternal: true
   @root: 'equipment: thing that supports me'
   @canBeAcquired: true
 

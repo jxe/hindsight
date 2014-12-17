@@ -16,34 +16,49 @@ class window.ReasonEditor extends Page
     @pushPage new ReasonEditor Good.fromId(id) if id
   
   onChoseWhy: (v) ->
-    @establishRelation(@value, v)
+    @askHow(@value, helpsWith: v)
   onChoseHow: (v) ->
-    @establishRelation(v, @value)
+    @askHow(v, helpsWith: @value)
   whyClicked: (ev) =>
     v = Good.fromId($(ev.target).pattr('subvalue'))
-    if $(ev.target).hasClass('icon-close')
-      # return unless confirm('Sure?')
-      @currentObservations.remove(v.id)
-    @establishRelation(@value, v)
+    return @currentObservations.remove(v.id) if $(ev.target).hasClass('icon-close')
+    # @askHow(@value, helpsWith: v)
+    @pushPage new ReasonEditor v
   howClicked: (ev) =>
     v = Good.fromId($(ev.target).pattr('subvalue'))
-    if $(ev.target).hasClass('icon-close')
-      # return unless confirm('Sure?')
-      @currentObservations.remove(v.id)
-    @establishRelation(v, @value)
+    return @currentObservations.remove(v.id) if $(ev.target).hasClass('icon-close')
+    # @askHow(v, helpsWith: @value)
+    @pushPage new ReasonEditor v
 
-  establishRelation: (value, parentValue) ->
-    couldBeIncluded = parentValue.couldInclude(value)
-    couldLeadTo     = value.couldLeadTo(parentValue)
-    if couldBeIncluded and couldLeadTo
-      return new GoodObservationMenu(value, parentValue).openIn(this)
-    if couldBeIncluded
-      return current_user.observes value, 'implements', parentValue, 1.0
-    if couldLeadTo
-      return current_user.observes value, 'delivers', parentValue, 1.0
+  askHow: (@component, x) =>
+    @helpsWith = x.helpsWith
+    o = {}
+    if component.couldBeHonoredAs(@helpsWith)
+      label = component.honoredAsLabel(@helpsWith)
+      if component.isActivity and @helpsWith.isActivity
+        o.honoredas = "#{@component.lozenge()} #{label} #{@helpsWith.lozenge()}"
+        o.whathonoredas = "#{@helpsWith.lozenge()} #{label} #{@component.lozenge()}"
+      else
+        o.honoredas = "#{@component.lozenge()} #{label} #{@helpsWith.lozenge()}"
+    if component.couldDeliver(@helpsWith)
+      o.delivers = "#{@component.lozenge()} leads to #{@helpsWith.lozenge()}"
+    if @helpsWith.couldDrive(component)
+      o.promises = "People <i>hope</i> #{@component.lozenge()} will lead to #{@helpsWith.lozenge()}, but it doesn't"
+    @menu 'how', "Why do people turn to #{@component.lozenge()} for #{@helpsWith.lozenge()}?", o
+
+  howClicked: (answer) =>
+    switch answer
+      when 'delivers'
+        current_user.observes @component, 'delivers', @helpsWith, 1.0
+      when 'promises'
+        current_user.observes @component, 'promises', @helpsWith, 1.0
+      when 'honoredas'
+        current_user.observes @component, 'honoredas', @helpsWith, 1.0
+      when 'whathonoredas'
+        current_user.observes @helpsWith, 'honoredas', @component, 1.0
 
   onChoseParent: (v) ->
-    current_user.observes @value, 'implements', v
+    current_user.observes @value, 'honoredas', v
 
   onAddedAlias: (text) -> @value.addAlias(text)
 
@@ -57,7 +72,7 @@ class window.ReasonEditor extends Page
     for x in o.howObservations()
       howlist.append Good.fromId(x).asListEntry(suffix: o.howSuffix(x), closable: true)
     @find('.parents').html $$ ->
-      for x, _ of o.connections.implements
+      for x, _ of o.connections.honoredas
         @raw Good.fromId(x).asListEntry()
 
   @content: (value, cb, name) ->

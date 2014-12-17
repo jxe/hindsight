@@ -12,7 +12,7 @@ class window.User
        when 'no'
           Observations.set(@uid, x, "delivers", y, 0.0)
        when 'unknown'
-          Observations.set(@uid, y, "drives", x, 1.0)
+          Observations.set(@uid, x, "promises", y, 1.0)
 
   observes: (x, rel, y, val) ->
     Observations.set(@uid, x, rel, y, val)

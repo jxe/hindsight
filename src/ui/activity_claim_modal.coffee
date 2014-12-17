@@ -19,7 +19,7 @@ class window.GoodObservationMenu extends ObservationMenu
   options: => 
     [
       ['delivers,1', "<b>It works.</b>. I've found #{@bloz} works for #{@aloz}.", 'check'],
-      ['implements,1', "<b>It's part of it.</b> #{@bloz} is part of #{@aloz}.", 'list']
+      ['honoredas,1', "<b>It's part of it.</b> #{@bloz} is part of #{@aloz}.", 'list']
     ]
 
 

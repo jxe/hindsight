@@ -33,13 +33,13 @@ class window.Observations
     item for item in Object.keys(@relatives) when @isHowObservation(item)
   isDirectObservation: (x) ->
     it = @relatives[x]
-    it.whatdrives? or it.delivers?
+    it.promises? or it.delivers?
   isWhyObservation: (x) ->
     it = @relatives[x]
-    it.implements? or it.delivers?
+    it.honoredas? or it.delivers? or it.promises?
   isHowObservation: (x) ->
     it = @relatives[x]
-    it.whatimplements? or it.whatdelivers?
+    it.whathonoredas? or it.whatdelivers?
 
   isGoodFor: (x) ->
     return 'unknown' unless it = @relatives[x.id||x]
@@ -79,18 +79,19 @@ class window.Observations
         return 'abandoned for'
       when it.delivers
         return 'led to'
-      when it.whatdrives
+      when it.promises
         return 'trying for'
   whyPrefix: (x) ->
     it = @relatives[x]
     switch
-      when it.implements? then "it's part of"
+      when it.honoredas? then "it's part of"
       when it.delivers? then "it leads to"
   howSuffix: (x) ->
     it = @relatives[x]
     switch
-      when it.whatdelivers? then "leads to this"
-      when it.whatimplements? then "is part of this"
+      when it.whatdelivers? && it.whatdelivers > 0.5 then "leads to this"
+      when it.whatpromises? then "promises this"
+      when it.whathonoredas? then "is part of this"
 
   valence: (x) ->
     it = @relatives[x]
@@ -103,8 +104,9 @@ class window.Observations
         return 'neutral'
 
   remove: (x) ->
-    rel = ['delivers', 'whatdrives', 'whatdelivers', 'drives'].filter((rel) => @relatives[x][rel])[0]
-    current_user.unobserves x, rel, @value
+    rel = ['delivers', 'whatdelivers', 'promises', 'whatpromises', 'honoredas', 'whathonoredas'].filter((rel) => @relatives[x][rel])[0]
+    console.log 'trying to remove', current_user_id, x, rel, @value
+    Observations.unset(current_user_id, @value, rel, x)
 
   @suffixPhrase: (rel, val) ->
     switch rel
@@ -112,9 +114,6 @@ class window.Observations
 
   @set: (guy, x, rel, y, val) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    if rel == 'implements'
-      fb('terms/%/%/%', x.id, rel, y.id).set true
-      fb('terms/%/%/%', y.id, inv, x.id).set true
     @_set(guy, x, rel, y, val, true)
     @_set(guy, y, inv, x, val, true)
 
@@ -125,16 +124,16 @@ class window.Observations
 
   @unset: (guy, x, rel, y) ->
     inv = if rel.match(/^what/) then rel.replace('what', '') else "what#{rel}"
-    fb('claims/%/%/%/%', guy, x.id, rel, y.id).remove()
-    fb('claims/%/%/%/%', guy, y.id, inv, x.id).remove()
+    fb('claims/%/%/%/%', guy, x.id||x, rel, y.id||y).remove()
+    fb('claims/%/%/%/%', guy, y.id||y, inv, x.id||x).remove()
     @unset(guy, x, @down[rel], y) if @down[rel]
 
   @up: {
-    delivers:       'whatdrives',
-    whatdelivers:   'drives'
+    delivers:       'promises',
+    whatdelivers:   'whatpromises'
   }
 
   @down: {
-    drives:      'whatdelivers',
-    whatdrives:  'delivers',
+    whatpromises:  'whatdelivers',
+    promises:      'delivers',
   }

@@ -1,4 +1,5 @@
-export PATH := $(shell pwd)/node_modules/.bin:$(PATH)
+export PATH:=/usr/local/bin:$(PATH)
+BIN=./node_modules/.bin
 JSC=_build/js
 DIR=_build/libhindsight
 
@@ -30,11 +31,11 @@ $(DIR)/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-
 	cat $^ > $@
 
 $(JSC)/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
-	coffee -o $(JSC) -m -c $^
+	$(BIN)/coffee -o $(JSC) -m -c $^
 	touch $@
 
 $(DIR)/compiled.js: $(JSC)/.built
-	mapcat $(JSC)/*.map -j $(DIR)/compiled.js -m $(DIR)/compiled.map
+	$(BIN)/mapcat $(JSC)/*.map -j $(DIR)/compiled.js -m $(DIR)/compiled.map
 
 
 
@@ -44,3 +45,6 @@ $(DIR)/compiled.js: $(JSC)/.built
 
 zip: $(DIR)
 	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip .)
+
+publish:
+	# https://github.com/jonnor/chrome-webstore-deploy
