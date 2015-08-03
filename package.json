@@ -1,21 +1,15 @@
 {
+  "name": "hindsight",
   "engines": {
-    "node": "0.10.x"
+    "node": "0.12.x"
   },
-  "private": true,
-  "main": "service/app.js",
   "devDependencies": {
-    "coffee-script": "",
-    "mapcat": ""
-  },
-  "dependencies": {
-    "firebase": "~1.0.1-npm",
-    "express": "3.4.8",
-    "cardi": "",
-    "request": "",
-    "coffee-script": ""
-  },
-  "scripts": {
-    "start": "sh -c 'make; node service/app.js'"
+    "budo": "^4.0.0",
+    "babelify": "^6.1.2",
+    "watchify": "^3.2.2",
+    "babel-core": "^5.5.8",
+    "babel-loader": "^5.1.4",
+    "garnish": "^2.1.3",
+    "firebase": "^1.0.24"
   }
 }

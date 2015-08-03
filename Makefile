@@ -1,50 +1,54 @@
-export PATH:=/usr/local/bin:$(PATH)
-BIN=./node_modules/.bin
-JSC=_build/js
-DIR=_build/libhindsight
+BUILD=_build
+CRX=$(BUILD)/chromeExtension
 
+# crx
 
-############################
-# for basic javascript lib #
-############################
+$(CRX): $(CRX)/background.js $(CRX)/all.css $(CRX)/fonts
+	rsync -rupE resources/chromeExtension/ $@
+	cp -R vendor/ratchet/css/fonts $@
 
-DEFAULT: node_modules/.bin $(DIR) $(DIR)/vendor.js $(DIR)/all.css $(DIR)/compiled.js $(DIR)/fonts
-	# yay
+$(CRX)/background.js: src/chromeExtension/background.jsx
+	mkdir -p `dirname $(BUILD)`
+	browserify $^ -t babelify --outfile $@
 
-node_modules/.bin:
-	npm install
+watch:
+	watchify src/chromeExtension/background.jsx -t babelify --outfile $(CRX)/background.js
 
-watch: node_modules/.bin
-	watchman watch src
-	echo '["trigger", "src", { "name": "remake", "expression": ["pcre", "\\\.(css|coffee)$$"], "chdir": "..", "command": ["make"] }]' | watchman -j
+$(CRX)/fonts: vendor/ratchet/css/fonts
+	rsync -rupE  $^/ $@
 
-$(DIR):
-	mkdir -p $@
-
-$(DIR)/vendor.js: vendor/jquery.min.js vendor/typeahead.js
+$(CRX)/all.css: vendor/ratchet/css/ratchet.min.css src/reviewComponent/styles.css
 	cat $^ > $@
 
-$(DIR)/fonts: vendor/ratchet/fonts
-	cp -R $^ $@
 
-$(DIR)/all.css: vendor/ratchet/css/ratchet.css vendor/ratchet/css/ratchet-theme-ios.css src/ui/css/*.css
-	cat $^ > $@
+# test pages
 
-$(JSC)/.built: vendor/*.coffee src/*.coffee src/*/*.coffee
-	$(BIN)/coffee -o $(JSC) -m -c $^
-	touch $@
+designs:
+	budo testPages/designTestPage.jsx:index.js --live -- -t babelify
 
-$(DIR)/compiled.js: $(JSC)/.built
-	$(BIN)/mapcat $(JSC)/*.map -j $(DIR)/compiled.js -m $(DIR)/compiled.map
+review:
+	budo testPages/reviewTestPage.jsx:index.js --live -- -t babelify
 
 
 
-########################
-# for chrome extension #
-########################
+# ...
 
-zip: $(DIR)
-	(cd platforms/chrome; zip -r ../../_build/hindsight-for-chrome.zip .)
+# _build/hindsight-for-chrome.zip: _build/hindsight-for-chrome
+# 	(cd $^; zip -r ../hindsight-for-chrome.zip .)
+#
+# publish:
+# 	https://github.com/jonnor/chrome-webstore-deploy
 
-publish:
-	# https://github.com/jonnor/chrome-webstore-deploy
+# watch:
+# 	watchman watch .
+# 	watchman -- trigger . $(PROJ) '*' -- make
+#
+# export PATH:=/usr/local/bin:$(PATH)
+# BIN=./node_modules/.bin
+#
+# node_modules/.bin:
+# 	npm install
+##
+# watch: node_modules/.bin
+# 	watchman watch src
+# 	echo '["trigger", "src", { "name": "remake", "expression": ["pcre", "\\\.(css|coffee)$$"], "chdir": "..", "command": ["make"] }]' | watchman -j
