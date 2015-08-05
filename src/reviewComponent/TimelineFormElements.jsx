@@ -33,6 +33,7 @@ export class AreYouNowToggle extends AbstractTimelineSlider {
 
   onToggle(){
     var { cx } = this.props
+    console.log('toggling')
     cx.toggleValue(this.props.for, this.props.window)
   }
 

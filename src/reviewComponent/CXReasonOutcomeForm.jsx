@@ -25,10 +25,7 @@ class HopeForm extends React.Component {
     var [ reasonType, reasonName ] = reasonId.split('/')
     var payoffs = cx.getTrack(`${reasonId} fulfillment ${engagement.url}`)
     var atLeastOnePayoff = payoffs.occurrencesCount && payoffs.occurrencesCount != '0'
-    var pass = {
-      cx: cx,
-      window: engagement.window
-    }
+    var pass = { cx: cx, window: engagement.usage.window }
 
     return <div className="expansion">
       <AreYouNowToggle {...pass}
@@ -68,10 +65,7 @@ class FeatureForm extends React.Component {
   render(){
     var {reasonId, cx, engagement} = this.props
     var [ reasonType, reasonName ] = reasonId.split('/')
-    var pass = {
-      cx: cx,
-      window: engagement.usage.window
-    }
+    var pass = { cx: cx, window: engagement.usage.window }
 
     return <div className="expansion">
       <HowOftenSlider {...pass}
