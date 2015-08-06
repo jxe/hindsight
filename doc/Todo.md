@@ -13,7 +13,7 @@ There are many ways to help out.
 
 ## More advanced projects
 
-* We're interested in integrating reviews based on other sources of engagement info--reviews from foursquare checkins, calendar entries, location history, purchases, android app usage, etc.  You can check out the kind of data that's returned by [usageTracker/libusage](../src/usageTracker/libusage.js) and the way that the review is displayed in [chromeExtension/background.js](../src/chromeExtension/background.js) to see if you could make another source for gathering engagement data and displaying reviews.
+* We're interested in integrating reviews based on other sources of engagement info--reviews from foursquare checkins, calendar entries, location history, purchases, android app usage, etc.  You can check out the kind of data that's returned by [usageTracker/libusage](../src/usageTracker/libusage.js) and the way that the review is displayed in [chromeExtension/background.js](../src/chromeExtension/background.jsx) to see if you could make another source for gathering engagement data and displaying reviews.
 
 * Usage and notification tracking on other platforms besides chrome is an open issue (e.g., app usage and notification tracing on ios and android).  See the same two files above.
 
