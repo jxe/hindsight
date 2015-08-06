@@ -69,9 +69,13 @@ export default {
     return newTrack
   },
 
+  windowInWeeks(track){
+    return Math.ceil((track.window[1] - track.window[0]) / (60*60*24*7))
+  },
+
   htmlSummary(track){
     var mpw = Math.floor(this.getMedianSecondsPerWeek(track) / 60)
-    var weeks = Math.ceil((track.window[1] - track.window[0]) / (60*60*24*7))
+    var weeks = this.windowInWeeks(track)
     return `<div class="usageSummary">${weeks} weeks @ ${mpw} minutes/week</div>`
   },
 

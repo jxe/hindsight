@@ -1,5 +1,6 @@
 import React from 'react'
-import CX from '../collectiveExperience/collectiveExperience.js'
+import TimelineUtil from '../collectiveExperience/timelineUtilities.js'
+
 
 export class AbstractTimelineSlider extends React.Component {
   onChange(){
@@ -49,7 +50,6 @@ export class AreYouNowToggle extends AbstractTimelineSlider {
 
 
 export class HowOftenSlider extends AbstractTimelineSlider {
-
   trackForValue(){
     var el = React.findDOMNode(this.refs.input)
     console.log(el.value)
@@ -68,15 +68,13 @@ export class HowOftenSlider extends AbstractTimelineSlider {
 
   max(){
     var { during } = this.props
-    var median = during && CX.Timelines.getMedianSecondsPerWeek(during)
+    var median = during && TimelineUtil.getMedianSecondsPerWeek(during)
     return median || 352800
   }
-
 }
 
 
 export class HowManyTimesSlider extends AbstractTimelineSlider {
-
   trackForValue(){
     var el = React.findDOMNode(this.refs.input)
     return { occurrencesCount: el.value }
@@ -94,35 +92,34 @@ export class HowManyTimesSlider extends AbstractTimelineSlider {
   max(){
     return 20
   }
-
 }
 
 
-
 export class WhenDidYouFirstSlider extends AbstractTimelineSlider {
-
   trackForValue(){
+    var { window } = this.props
     var el = React.findDOMNode(this.refs.input)
-    return { occurrences: [el.value] }
+    var t = el.value + window[0]
+    return { occurrences: [t] }
   }
 
   currentValue(){
-    var t = this.track()
-    return t.occurrences ? t.occurrences[0] : 0
-  }
-
-  weeks(){
-    return this.currentValue() / 604800
+    var { window } = this.props
+    var track = this.track()
+    var t = track.occurrences ? track.occurrences[0] : 0
+    return t - window[0]
   }
 
   desc(){
-    return `after ${this.weeks()} weeks`
+    var { window } = this.props
+    var t0 = window && window[0] || 0
+    var weeks = Math.floor(this.currentValue() / 604800)
+    return `after ${weeks} weeks`
   }
 
   max(){
     var { window } = this.props
-    if (window) return (window[1] - window[0])
+    if (window) return window[1] - window[0]
     else return 604800 * 52
   }
-
 }

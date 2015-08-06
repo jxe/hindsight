@@ -1,19 +1,114 @@
 import React from 'react'
-import ExpandingList from './ExpandingList.jsx'
 
+// data sources
 import CollectiveExperience from '../collectiveExperience/collectiveExperience.js'
+import TimelineUtil from '../collectiveExperience/timelineUtilities.js'
+
+// subwidgets
+import ExpandingList from './ExpandingList.jsx'
 import CXReasonEntryField from '../reasonComponents/CXReasonEntryField.jsx'
-import CXReasonOutcomeForm from './CXReasonOutcomeForm.jsx'
+import DeliversEquipmentForm from './DeliversEquipmentForm.jsx'
+import FeaturesActivityForm from './FeaturesActivityForm.jsx'
 
 
-Object.values = function(o){return Object.keys(o).map(function(k){return o[k]})};
 
-class ReasonOutcomeCell extends React.Component {
+export default class CXReview extends React.Component {
+  constructor(props){ super(props); this.state = {} }
+
+  render(){
+    var { cx, engagement } = this.props
+    var { addition } = this.state
+    if (!cx.loaded()) return <div>Loading</div>
+    var concerns = Object.keys(cx.concerns).map(k => cx.concerns[k])
+    var commonConcerns = concerns.slice(0,3)
+    var addedConcernIDs = cx.getConcerns(engagement.url)
+    var usageSummary = <div dangerouslySetInnerHTML={{
+      __html: TimelineUtil.htmlSummary(engagement.usage)
+    }} />
+    var body = addition ? this.renderPromptBox() : this.renderExpandingList()
+
+    return <div className="vreview">
+      <header className="bar bar-nav bar-extended">
+        <CXReasonEntryField
+          focused={addedConcernIDs.length == 0}
+          placeholder={"Why " + engagement.name + "?"}
+          commonReasons={commonConcerns}
+          allReasons={concerns}
+          excludeReasons={addedConcernIDs}
+          onAdded={this.onAdded.bind(this)} />
+      </header>
+      <div className="content column">
+        {body}
+        <div className="verticalSpace"></div>
+        {usageSummary}
+      </div>
+    </div>
+  }
+
+  renderExpandingList(){
+    var {cx, engagement} = this.props
+    var pass = { cx: cx, engagement: engagement }
+    var addedConcernIDs = cx.getConcerns(engagement.url)
+    var rowForReason = x => <ReasonRow key={x} reasonId={x} {...pass} />
+    var expandedRow =  x => <ReasonForm {...pass} reasonId={x} />
+
+    return <ExpandingList ref='list' expander={expandedRow}>
+      {addedConcernIDs.map(rowForReason)}
+    </ExpandingList>
+  }
+
+  renderPromptBox(){
+    var {addition} = this.state
+    if (!addition) return
+    return <div className="promptBox">
+      <h3>How would you describe “{addition}”?</h3>
+      <p>
+        This is
+        <a onClick={() => this.addConcern(`activity/${addition}`)}>
+          an activity
+        </a>
+        I'll do for hours each week
+      </p>
+      <p>
+        This is
+        <a onClick={() => this.addConcern(`equipment/${addition}`)}>
+          a good thing in myself, my community, or my environment
+        </a>,
+        which makes new activities possible but is not an activity in itself
+      </p>
+    </div>
+  }
+
+  onAdded(str){
+    if (str.id){
+      var { cx, engagement } = this.props
+      cx.addConcern(engagement.url, str.id)
+      this.justAddedReason = str.id
+    } else {
+      this.setState({ addition: str })
+    }
+  }
+
+  componentDidUpdate(){
+    if (!this.justAddedReason) return
+    this.refs.list.show(this.justAddedReason) // show it expanded
+    this.justAddedReason = null
+  }
+
+  addConcern(str){
+    var { cx, engagement } = this.props
+    cx.addConcern(engagement.url, str)
+    this.justAddedReason = str
+    this.setState({ addition: null })
+  }
+}
+
+
+
+class ReasonRow extends React.Component {
   render(){
     var { reasonId, cx, engagement, onClick } = this.props
     var [ type, reasonName ] = reasonId.split('/')
-    // var disposition =
-    // console.log('disposition', disposition, reasonId, engagement.url)
     var { icon, phrase, color } = cx.getDisposition(reasonId, engagement.url)
 
     return <li className="table-view-cell signalrow" onClick={onClick}>
@@ -29,111 +124,16 @@ class ReasonOutcomeCell extends React.Component {
 }
 
 
-
-export default class CXReview extends React.Component {
-
-  constructor(props){
-    super(props)
-    this.state = {}
-  }
-
-  onAdded(str){
-    console.log('onAdded', str)
-    if (str.id){
-      var { cx, engagement } = this.props
-      cx.addConcern(engagement.url, str.id)
-      this.justAddedReason = str.id
-    } else {
-      this.setState({ addition: str })
-    }
-    // var { cx, engagement } = this.props
-    // var [ type, name ] = str.split('/')
-    // if (!name) return alert('oops: no slash')
-    // if (!type.match(/^(equipment|activity)$/)) return alert('oops: weird type')
-    // cx.addConcern(engagement.url, str)
-    // this.justAddedReason = str
-  }
-
-  componentDidUpdate(){
-    if (this.justAddedReason){
-      this.refs.list.show(this.justAddedReason) // show it expanded
-      this.justAddedReason = null
-    }
-  }
-
-  addConcern(str){
-    var { cx, engagement } = this.props
-    cx.addConcern(engagement.url, str)
-    this.justAddedReason = str
-    this.setState({ addition: null })
-  }
-
-  renderPromptBox(){
-    var {addition} = this.state
-    if (addition){
-      return <div className="promptBox">
-        <h3>How would you describe “{addition}”?</h3>
-        <p>
-          This is
-          <a onClick={() => this.addConcern(`activity/${addition}`)}>
-            an activity
-          </a>
-          I'll do for hours each week
-        </p>
-        <p>
-          This is
-          <a onClick={() => this.addConcern(`equipment/${addition}`)}>
-            a good thing in myself, my community, or my environment
-          </a>,
-          which makes new activities possible but is not an activity in itself
-        </p>
-      </div>
-    }
-  }
-
+class ReasonForm extends React.Component {
   render(){
-    var {cx, engagement} = this.props
-    if (!cx.loaded()) return <div>Loading</div>;
-
-    var engagementSummaryHTML = CollectiveExperience.Timelines.htmlSummary(engagement.usage)
-
-    // var engagementSummaryHTML = LibUsage.summaryHTML(this.props.engagement)
-    // if (Object.keys(this.props.review).length < 3) commonReasons = this.props.commonReasons;
-
-    var ctx = { cx: cx, engagement: engagement }
-    var concerns = Object.values(cx.concerns)
-    var commonConcerns = concerns.slice(0,3)
-    var addedConcernIDs = cx.getConcerns(engagement.url)
-
-    return <div className="vreview">
-      <header className="bar bar-nav bar-extended">
-        <CXReasonEntryField
-          focused={addedConcernIDs.length == 0}
-          placeholder={"Why " + engagement.name + "?"}
-          commonReasons={commonConcerns}
-          allReasons={concerns}
-          excludeReasons={addedConcernIDs}
-          onAdded={this.onAdded.bind(this)} />
-      </header>
-      <div className="content column">
-        <ExpandingList
-          ref='list'
-          expander={x => <CXReasonOutcomeForm {...ctx} reasonId={x}
-        />}>{
-          addedConcernIDs.map( x => {
-            return <ReasonOutcomeCell key={x} reasonId={x} {...ctx} />
-          })
-        }</ExpandingList>
-
-        <div className="expando"></div>
-        {this.renderPromptBox()}
-        {/* prompt box */}
-        <div dangerouslySetInnerHTML={{__html: engagementSummaryHTML}} />
-      </div>
-    </div>
+    var [ type, name ] = this.props.reasonId.split('/')
+    return (type == 'equipment') ?
+      <DeliversEquipmentForm {...this.props} /> :
+      <FeaturesActivityForm  {...this.props} />
   }
-
 }
+
+
 
 
 

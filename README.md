@@ -21,3 +21,8 @@ Try `npm install` and `make` to build your own version of the extension.  If tha
 The chrome extension can then be loaded as an unpacked extension in chrome by selecting the `_build/chromeExtension` directory.
 
 To rebuild continuously, try `make watch`.
+
+
+## Contributing
+
+Check out [Todo.md](doc/Todo.md) for ideas about what to work on.
