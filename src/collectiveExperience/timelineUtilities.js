@@ -108,7 +108,6 @@ export default {
   disposition(concern, tracks){
     var [ type, name ] = concern.split('/')
     var status = this.resourceStatus(tracks)
-    console.log('status', status, concern, tracks)
     return {
       phrase: phrases[type][status],
       icon: icons[type][status],

@@ -12,9 +12,7 @@ window.renderReviewIn = el => {
   ChromeUser.withPerson( p => {
     LibUsage.withEngagementForCurrentURL( e => {
       if (!cx) cx = new CollectiveExperience(p.id, p)
-      console.log('original cx', cx)
       cx.live(() => {
-        console.log('live cx', cx)
         React.render( <CXReview cx={cx} engagement={e} />, el )
       })
     })

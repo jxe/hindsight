@@ -35,11 +35,8 @@ export default class CollectiveExperience {
 
   toggleValue(forWhat, window){
     var t = this.getTrack(forWhat)
-    console.log('toggle, old track', t)
     var v = TimelineUtil.currentValue(t)
-    console.log('toggle, old value', v)
     v = TimelineUtil.updateValue(t, !v)
-    console.log('toggle, new track', v)
     if (window) v.window = window
     this.setTrack(forWhat, v)
   }

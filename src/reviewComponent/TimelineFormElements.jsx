@@ -34,7 +34,6 @@ export class AreYouNowToggle extends AbstractTimelineSlider {
 
   onToggle(){
     var { cx } = this.props
-    console.log('toggling')
     cx.toggleValue(this.props.for, this.props.window)
   }
 
@@ -52,7 +51,6 @@ export class AreYouNowToggle extends AbstractTimelineSlider {
 export class HowOftenSlider extends AbstractTimelineSlider {
   trackForValue(){
     var el = React.findDOMNode(this.refs.input)
-    console.log(el.value)
     return { regular: { seconds: el.value, every: 604800 } }
   }
 
