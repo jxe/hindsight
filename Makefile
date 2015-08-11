@@ -8,7 +8,7 @@ $(CRX): $(CRX)/background.js $(CRX)/all.css $(CRX)/fonts
 	cp -R vendor/ratchet/css/fonts $@
 
 $(CRX)/background.js: src/chromeExtension/background.jsx
-	mkdir -p `dirname $(BUILD)`
+	mkdir -p $(@D)
 	browserify $^ -t babelify --outfile $@
 
 watch:
