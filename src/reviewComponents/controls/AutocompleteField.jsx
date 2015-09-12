@@ -16,7 +16,8 @@ export default class AutocompleteField extends React.Component {
   }
 
   onBlur(){
-    this.setState({focused:false})
+    console.log('onBlur')
+    // this.setState({focused:false})
   }
 
   render(){
@@ -25,7 +26,6 @@ export default class AutocompleteField extends React.Component {
         <input
           ref="input"
           tabIndex="-1"
-          type="search"
           value={this.state.value}
           placeholder={this.props.placeholder}
           onChange={this.onChange.bind(this)}
@@ -51,6 +51,7 @@ export default class AutocompleteField extends React.Component {
   }
 
   onClick(obj, evt){
+    console.log('onClick', obj, evt)
     this.props.onChange(evt.currentTarget, obj)
     this.clear()
   }

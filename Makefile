@@ -9,15 +9,15 @@ $(CRX): $(CRX)/background.js $(CRX)/all.css $(CRX)/fonts
 
 $(CRX)/background.js: src/chromeExtension/background.jsx
 	mkdir -p $(@D)
-	browserify $^ -t babelify --outfile $@
+	browserify $^ -t [ babelify --sourceMaps both --compact false ] --outfile $@ --debug
 
 watch:
-	watchify src/chromeExtension/background.jsx -t babelify --outfile $(CRX)/background.js
+	watchify src/chromeExtension/background.jsx -t [ babelify --sourceMaps both --compact false ] --outfile $(CRX)/background.js --debug
 
 $(CRX)/fonts: vendor/ratchet/css/fonts
 	rsync -rupE  $^/ $@
 
-$(CRX)/all.css: vendor/ratchet/css/ratchet.min.css src/reviewComponent/styles.css
+$(CRX)/all.css: vendor/ratchet/css/ratchet.min.css src/*/*/*.css src/*/*.css
 	cat $^ > $@
 
 

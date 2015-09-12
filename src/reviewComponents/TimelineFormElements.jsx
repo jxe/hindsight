@@ -29,12 +29,24 @@ export class AbstractTimelineSlider extends React.Component {
 
 export class AreYouNowToggle extends AbstractTimelineSlider {
   currentValue(){
-    return this.props.cx.getCurrentValue(this.props.for)
+    var x = this.props.cx.getCurrentValue(this.props.for)
+    if (this.props.reversed) return x == -1;
+    else return x
   }
 
   onToggle(){
     var { cx } = this.props
-    cx.toggleValue(this.props.for, this.props.window)
+    var t = cx.getTrack(this.props.for)
+    var v = TimelineUtil.currentValue(t)
+    if (this.props.window) v.window = this.props.window
+
+    if (this.props.reversed){
+      if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, -1))
+      if (v == -1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
+    } else {
+      if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 1))
+      if (v == 1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
+    }
   }
 
   render(){

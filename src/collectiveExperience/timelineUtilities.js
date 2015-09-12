@@ -1,26 +1,26 @@
 var phrases = {
-  equipment: {
-    pending: 'may lead to',
-    fulfilled: 'led to',
-    regretted: 'didn\'t lead to',
-    regrettedAnyways: 'led to'
+  furtherance: {
+    pending: 'a result you and 7 others are after',
+    fulfilled: 'a result you got from this',
+    regretted: 'a result you didn\'t get from this',
+    regrettedAnyways: 'a result you wanted'
   },
-  activity: {
-    pending: 'may include',
-    fulfilled: 'includes',
-    regretted: 'doesn\'t include',
-    regrettedAnyways: 'conflicted for'
+  experience: {
+    pending: 'an experience you and 7 others want',
+    fulfilled: 'an experience you get from this',
+    regretted: 'an experience you wanted from this',
+    regrettedAnyways: 'an experience you got from this'
   }
 }
 
 var icons = {
-  equipment: {
+  furtherance: {
     pending: 'icon-more',
     fulfilled: 'icon-check',
     regretted: 'icon-close',
     regrettedAnyways: 'icon-check'
   },
-  activity: {
+  experience: {
     pending: 'icon-more',
     fulfilled: 'icon-check',
     regretted: 'icon-close',
@@ -73,10 +73,10 @@ export default {
     return Math.ceil((track.window[1] - track.window[0]) / (60*60*24*7))
   },
 
-  htmlSummary(track){
-    var mpw = Math.floor(this.getMedianSecondsPerWeek(track) / 60)
-    var weeks = this.windowInWeeks(track)
-    return `<div class="usageSummary">${weeks} weeks @ ${mpw} minutes/week</div>`
+  addSummaryData(tracks){
+    var secondsPerWeek = this.getMedianSecondsPerWeek(tracks.usage)
+    tracks.minutesPerWeek = Math.floor(secondsPerWeek / 60)
+    tracks.windowInWeeks = this.windowInWeeks(tracks.usage)
   },
 
   getMedianSecondsPerWeek(track){
@@ -89,15 +89,16 @@ export default {
         if (!secondsByWeek[week]) secondsByWeek[week] = 0
         secondsByWeek[week] += seconds
       })
-      var sorted = Object.values(secondsByWeek)
+
+      var sorted = Object.keys(secondsByWeek).map(x => secondsByWeek[x])
       return sorted[Math.floor(sorted.length/2)]
     }
     return null
   },
 
   resourceStatus(tracks){
-    var fulfilled = tracks.fulfillment && (tracks.fulfillment.occurrencesCount || tracks.fulfillment.regular.seconds)
-    var regretted = this.currentValue(tracks.regret || {})
+    var fulfilled = tracks.fulfillments && (tracks.fulfillments.occurrencesCount || tracks.fulfillments.regular.seconds)
+    var regretted = (this.currentValue(tracks.reflections || {}) == -1)
 
     if (regretted && fulfilled) return 'regrettedAnyways'
     if (!regretted && !fulfilled) return 'pending'
@@ -105,8 +106,7 @@ export default {
     else return 'fulfilled'
   },
 
-  disposition(concern, tracks){
-    var [ type, name ] = concern.split('/')
+  disposition(type, tracks){
     var status = this.resourceStatus(tracks)
     return {
       phrase: phrases[type][status],

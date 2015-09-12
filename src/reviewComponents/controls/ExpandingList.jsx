@@ -1,4 +1,5 @@
-var React = require('react')
+import React from 'react/addons'
+
 
 export default class ExpandingList extends React.Component {
 
@@ -31,7 +32,11 @@ export default class ExpandingList extends React.Component {
       }
     })
 
-    return <ul className="table-view">{things}</ul>
+    return <ul className="table-view">
+      <React.addons.CSSTransitionGroup transitionName="elist">
+        {things}
+      </React.addons.CSSTransitionGroup>
+    </ul>
   }
 
 }

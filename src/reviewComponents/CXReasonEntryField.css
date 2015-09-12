@@ -1,0 +1,33 @@
+.vreview .AutocompleteField{
+  background-color: #eee;
+  padding: 2px 0px;
+}
+
+.vreview .AutocompleteField input {
+  text-align: center;
+  display: block;
+  width: 275px;
+  padding: 4px 10px;
+  margin: 5px 10px;
+  box-sizing: content-box;
+  font-size: 16px;
+}
+
+.vreview .AutocompleteField input:focus {
+  text-align: left;
+}
+
+.suggestions {
+  /*padding: 10px;*/
+  box-shadow: black 0px 2px 3px;
+  background: white;
+}
+
+.completion > b {
+  font-size: 14px;
+}
+
+.completion p {
+  color: gray;
+  font-size: 11px;
+}

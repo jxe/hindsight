@@ -2,7 +2,7 @@
 import React from 'react'
 import LibUsage from '../usageTracker/libusage.js'
 import ChromeUser from './chromeUser.js'
-import CXReview from '../reviewComponent/CXReview.jsx'
+import CXReview from '../reviewComponents/CXReview.jsx'
 import CollectiveExperience from '../collectiveExperience/collectiveExperience.js'
 
 var cx;

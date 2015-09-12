@@ -5,7 +5,7 @@ import {
 } from './TimelineFormElements.jsx'
 
 
-export default class FeaturesActivityForm extends React.Component {
+export default class ExperienceForm extends React.Component {
   render(){
     var {reasonId, cx, engagement} = this.props
     var [ reasonType, reasonName ] = reasonId.split('/')
@@ -13,18 +13,19 @@ export default class FeaturesActivityForm extends React.Component {
 
     return <div className="expansion">
       <HowOftenSlider {...pass}
-        for={`${reasonId} vision`}
+        for={`${reasonId} hopes`}
         text="I want to spend"
         unit="hrs/wk"
       />
       <HowOftenSlider {...pass}
-        for={`${reasonId} fulfillment ${engagement.url}`}
-        during={engagement}
+        for={`${reasonId} fulfillments ${engagement.url}`}
+        during={engagement.usage}
         text={`During how much of ${engagement.name} are you ${reasonName}?`}
         unit="hrs/wk"
       />
       <AreYouNowToggle {...pass}
-        for={`${reasonId} regret ${engagement.url}`}
+        reversed={true}
+        for={`${reasonId} reflections ${engagement.url}`}
         text={`There are alternatives to ${engagement.name} that are more compatible with ${reasonName} and these would have been better for me.`}
       />
     </div>

@@ -1,0 +1,17 @@
+.table-view .expansion.elist-enter {
+  max-height: 0px;
+}
+
+.table-view .expansion.elist-enter.elist-enter-active {
+  max-height: 500px;
+  transition: max-height 200ms ease-in;
+}
+
+.table-view .expansion.elist-leave {
+  max-height: 1000px;
+}
+
+.table-view .expansion.elist-leave.elist-leave-active {
+  max-height: 0px;
+  transition: max-height 100ms ease-in;
+}
