@@ -8,8 +8,9 @@
 .ReasonRow.table-view-cell {
   transition: background-color 100ms ease-in-out;
   margin-bottom: 3px;
-  padding: 8px 5px 6px;
+  padding: 12px 10px 8px;
   border-bottom: solid thin #ddd;
+  padding-right: 60px;
 }
 
 .ReasonRow .icon {

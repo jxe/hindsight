@@ -16,7 +16,7 @@ export default class MultipleChoice extends React.Component {
 
   constructor(props){
     super(props)
-    this.state = { }
+    this.state = { showOptions: true }
   }
 
   showOptions(){

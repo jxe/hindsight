@@ -18,18 +18,19 @@ export default {
       var data = snap.val() || {}
       cx.reviews = d(data.reviews || {})
       cx.hopes = d(data.hopes || {})
+      console.log('loaded reviews', cx.reviews)
       cb(this)
     })
   },
 
   addReasonWithId(u, resource, id){
-    this.fbProfile(u,`reviews/${e(resource)}/${id}/_`).set(true)
+    this.fbProfile(u,`reviews/${e(resource)}/${e(id)}/_`).set(true)
   },
 
   addReason(u,resource, type, title){
     var id = e(`${type}/${title}`)
-    this.fbProfile(u,`reviews/${e(resource)}/${id}/_`).set(true)
-    this.fbReasons(id).update({ id: id, type: type, title: title })
+    this.fbProfile(u,`reviews/${e(resource)}/${e(id)}/_`).set(true)
+    this.fbReasons(e(id)).update({ id: id, type: type, title: title })
     return id
   },
 

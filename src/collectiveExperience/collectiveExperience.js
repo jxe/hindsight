@@ -51,7 +51,7 @@ export default class CollectiveExperience {
   completions(str){
     console.log('allTerms', this.allTerms, this)
     var matches = this.allTerms.filter( x => x.indexOf(str) != -1 ).slice(0,10)
-    return matches.map( m => this.terms[m] ).reduce( (a, b) => a.concat(b) );
+    return matches.map( m => this.terms[m] ).reduce( (a, b) => a.concat(b), [] );
   }
 
   commonReasons(resource, type){
@@ -71,12 +71,6 @@ export default class CollectiveExperience {
 
   getReasons(resource){
     return Object.keys(this.reviews[resource] || {})
-  }
-
-  getDisposition(reason, resource){
-    var timeline = this.getTracks(reason, resource)
-    var type = this.reasons[reason].type
-    return TimelineUtil.disposition(type, timeline)
   }
 
   getCurrentValue(forWhat){

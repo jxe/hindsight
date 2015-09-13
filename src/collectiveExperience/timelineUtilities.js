@@ -1,42 +1,3 @@
-var phrases = {
-  furtherance: {
-    pending: 'a result you and 7 others are after',
-    fulfilled: 'a result you got from this',
-    regretted: 'a result you didn\'t get from this',
-    regrettedAnyways: 'a result you wanted'
-  },
-  experience: {
-    pending: 'an experience you and 7 others want',
-    fulfilled: 'an experience you get from this',
-    regretted: 'an experience you wanted from this',
-    regrettedAnyways: 'an experience you got from this'
-  }
-}
-
-var icons = {
-  furtherance: {
-    pending: 'icon-more',
-    fulfilled: 'icon-check',
-    regretted: 'icon-close',
-    regrettedAnyways: 'icon-check'
-  },
-  experience: {
-    pending: 'icon-more',
-    fulfilled: 'icon-check',
-    regretted: 'icon-close',
-    regrettedAnyways: 'icon-close'
-  }
-}
-
-var colors = {
-  pending: 'neutral',
-  fulfilled: 'positive',
-  regretted: 'negative',
-  regrettedAnyways: 'negative'
-}
-
-
-
 export default {
 
   currentValue(track){
@@ -104,15 +65,6 @@ export default {
     if (!regretted && !fulfilled) return 'pending'
     if (regretted) return 'regretted'
     else return 'fulfilled'
-  },
-
-  disposition(type, tracks){
-    var status = this.resourceStatus(tracks)
-    return {
-      phrase: phrases[type][status],
-      icon: icons[type][status],
-      color: colors[status]
-    }
   }
 
 }

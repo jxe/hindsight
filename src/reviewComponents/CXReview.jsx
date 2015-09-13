@@ -5,14 +5,11 @@ import CollectiveExperience from '../collectiveExperience/collectiveExperience.j
 
 // controls
 import Pager from './controls/Pager.jsx'
-import ExpandingList from './controls/ExpandingList.jsx'
 
 // subwidgets
 import UsageSummary from './UsageSummary.jsx'
 import CXReasonEntryField from './CXReasonEntryField.jsx'
 import ReasonRow from './ReasonRow.jsx'
-import FurtheranceForm from './FurtheranceForm.jsx'
-import ExperienceForm from './ExperienceForm.jsx'
 
 
 
@@ -35,36 +32,23 @@ export default class CXReview extends React.Component {
             focused={addedReasonIDs.length == 0}
             placeholder={"Why use this site?"}
             onAdded={this.onAdded.bind(this)} />
-          {addition ? this.renderPromptBox() : this.renderExpandingLists()}
+          {addition ? this.renderPromptBox() : this.renderReasonRows()}
         </div>
       </div>
     </Pager>
   }
   // <div className="verticalSpace"></div>
 
-  renderExpandingLists(){
+  renderReasonRows(){
     var {cx, engagement} = this.props
     var pass = { cx: cx, engagement: engagement }
     var reasons = cx.getReasons(engagement.url)
     var experiences  = reasons.filter( x => x.match(/^experience/) )
     var furtherances = reasons.filter( x => x.match(/^furtherance/) )
-    var rowForReason = x => <ReasonRow  {...pass} reasonId={x} key={x} />
-    var expandedRow  = x => <ReasonForm {...pass} reasonId={x} />
-
-    // <h3>To experience something?</h3>
-    // {!experiences.length && <ul><li>Nothing yet</li></ul>}
-    // <h3>For an eventual result?</h3>
-    // {!furtherances.length && <ul><li>Nothing yet</li></ul>}
-    return <div className="reasonsList">
-
-      <ExpandingList ref='list' expander={expandedRow}>
-        {experiences.map(rowForReason)}
-      </ExpandingList>
-      <ExpandingList ref='list' expander={expandedRow}>
-        {furtherances.map(rowForReason)}
-      </ExpandingList>
-
-    </div>
+    return <ul className="reasonsList table-view">
+      {experiences.map(x => <ReasonRow {...pass} reasonId={x} key={x} ref={x} />)}
+      {furtherances.map(x => <ReasonRow {...pass} reasonId={x} key={x} ref={x} />)}
+    </ul>
   }
 
   renderPromptBox(){
@@ -98,7 +82,7 @@ export default class CXReview extends React.Component {
 
   componentDidUpdate(){
     if (!this.justAddedReason) return
-    this.refs.list.show(this.justAddedReason) // show it expanded
+    this.refs[this.justAddedReason].show()
     this.justAddedReason = null
   }
 
@@ -107,16 +91,6 @@ export default class CXReview extends React.Component {
     var id = cx.addReason(engagement.url, type, name)
     this.justAddedReason = id
     this.setState({ addition: null })
-  }
-}
-
-
-class ReasonForm extends React.Component {
-  render(){
-    var { type } = this.props.cx.reasonData(this.props.reasonId)
-    return (type == 'furtherance') ?
-      <FurtheranceForm {...this.props} /> :
-      <ExperienceForm  {...this.props} />
   }
 }
 

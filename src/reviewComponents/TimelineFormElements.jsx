@@ -1,16 +1,18 @@
 import React from 'react'
 import TimelineUtil from '../collectiveExperience/timelineUtilities.js'
 
-
 export class AbstractTimelineSlider extends React.Component {
   onChange(){
     var trackData = this.trackForValue()
     if (!trackData.window) trackData.window = this.props.window
+    // console.log('setting track', this.props.for, trackData)
     this.props.cx.setTrack(this.props.for, trackData)
   }
 
   track(){
-    return this.props.cx.getTrack(this.props.for)
+    var t = this.props.cx.getTrack(this.props.for)
+    console.log('got track', this.props.for, t)
+    return t
   }
 
   render(){
@@ -26,44 +28,10 @@ export class AbstractTimelineSlider extends React.Component {
   }
 }
 
-
-export class AreYouNowToggle extends AbstractTimelineSlider {
-  currentValue(){
-    var x = this.props.cx.getCurrentValue(this.props.for)
-    if (this.props.reversed) return x == -1;
-    else return x
-  }
-
-  onToggle(){
-    var { cx } = this.props
-    var t = cx.getTrack(this.props.for)
-    var v = TimelineUtil.currentValue(t)
-    if (this.props.window) v.window = this.props.window
-
-    if (this.props.reversed){
-      if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, -1))
-      if (v == -1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
-    } else {
-      if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 1))
-      if (v == 1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
-    }
-  }
-
-  render(){
-    return <li className="table-view-cell" onClick={this.onToggle.bind(this)}>
-      {this.props.text}
-      <div className={`toggle ${this.currentValue() && 'active'}`}>
-        <div className="toggle-handle"></div>
-      </div>
-    </li>
-  }
-}
-
-
 export class HowOftenSlider extends AbstractTimelineSlider {
   trackForValue(){
     var el = React.findDOMNode(this.refs.input)
-    return { regular: { seconds: el.value, every: 604800 } }
+    return { regular: { seconds: Number(el.value), every: 604800 } }
   }
 
   currentValue(){
@@ -83,11 +51,10 @@ export class HowOftenSlider extends AbstractTimelineSlider {
   }
 }
 
-
 export class HowManyTimesSlider extends AbstractTimelineSlider {
   trackForValue(){
     var el = React.findDOMNode(this.refs.input)
-    return { occurrencesCount: el.value }
+    return { occurrencesCount: Number(el.value) }
   }
 
   currentValue(){
@@ -104,12 +71,11 @@ export class HowManyTimesSlider extends AbstractTimelineSlider {
   }
 }
 
-
 export class WhenDidYouFirstSlider extends AbstractTimelineSlider {
   trackForValue(){
     var { window } = this.props
     var el = React.findDOMNode(this.refs.input)
-    var t = el.value + window[0]
+    var t = Number(el.value) + window[0]
     return { occurrences: [t] }
   }
 
@@ -133,3 +99,41 @@ export class WhenDidYouFirstSlider extends AbstractTimelineSlider {
     else return 604800 * 52
   }
 }
+
+
+
+
+
+
+
+// export class AreYouNowToggle extends AbstractTimelineSlider {
+//   currentValue(){
+//     var x = this.props.cx.getCurrentValue(this.props.for)
+//     if (this.props.reversed) return x == -1;
+//     else return x
+//   }
+//
+//   onToggle(){
+//     var { cx } = this.props
+//     var t = cx.getTrack(this.props.for)
+//     var v = TimelineUtil.currentValue(t)
+//     if (this.props.window) v.window = this.props.window
+//
+//     if (this.props.reversed){
+//       if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, -1))
+//       if (v == -1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
+//     } else {
+//       if (v == 0) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 1))
+//       if (v == 1) cx.setTrack(this.props.for, cx.Timelines.updateValue(t, 0))
+//     }
+//   }
+//
+//   render(){
+//     return <li className="table-view-cell" onClick={this.onToggle.bind(this)}>
+//       {this.props.text}
+//       <div className={`toggle ${this.currentValue() && 'active'}`}>
+//         <div className="toggle-handle"></div>
+//       </div>
+//     </li>
+//   }
+// }

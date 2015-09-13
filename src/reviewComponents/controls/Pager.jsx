@@ -13,10 +13,13 @@ export default class Pager extends React.Component {
   static pop(){ current.pop() }
 
   push(child){
-    this.setState({ direction: 'right', stack: stack.unshift(child) })
+    var { stack } = this.state
+    stack.unshift(child)
+    this.setState({ direction: 'right', stack: stack })
   }
 
   pop(){
+    var { stack } = this.state
     stack.shift()
     this.setState({ direction: 'left', stack: stack })
   }
