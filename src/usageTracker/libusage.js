@@ -32,10 +32,14 @@ export default {
   getEngagement(url){
     var directBouts = UsageRecord.allBouts(url, 'direct')
     var indirectBouts = UsageRecord.allBouts(url, 'indirect')
-    var window = [directBouts[0][0], Date.now() / 1000]
+    var t0 = Date.now() / 1000
+    if (directBouts && directBouts[0] && directBouts[0][0]){
+      t0 = directBouts[0][0]
+    }
+    var win = [t0, Date.now() / 1000]
     return {
-      usage: { window: window, bouts: directBouts, },
-      indirectUsage: { window: window, bouts: indirectBouts }
+      usage: { window: win, bouts: directBouts || [], },
+      indirectUsage: { window: win, bouts: indirectBouts || [] }
     }
   }
 
