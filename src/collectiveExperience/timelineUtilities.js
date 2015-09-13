@@ -58,7 +58,11 @@ export default {
   },
 
   resourceStatus(tracks){
-    var fulfilled = tracks.fulfillments && (tracks.fulfillments.occurrencesCount || tracks.fulfillments.regular.seconds)
+    var fulfilled;
+    if (tracks.fulfillments){
+      if (tracks.fulfillments.occurrencesCount) fulfilled = true;
+      if (tracks.fulfillments.regular) fulfilled = tracks.fulfillments.regular.seconds;
+    }
     var regretted = (this.currentValue(tracks.reflections || {}) == -1)
 
     if (regretted && fulfilled) return 'regrettedAnyways'
