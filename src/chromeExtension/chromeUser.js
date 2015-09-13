@@ -6,7 +6,7 @@ export default {
     if (localStorage.cachedPlusPerson){
       return cb(JSON.parse(localStorage.cachedPlusPerson))
     }
-    this.withPersonUncached( (p) => {
+    this.withPersonUncached( p => {
       localStorage.cachedPlusPerson = JSON.stringify(p)
       cb(p)
     })
@@ -17,6 +17,7 @@ export default {
       fetch('https://www.googleapis.com/plus/v1/people/me', {
         headers: { 'Authorization': 'Bearer ' + authToken },
       }).then(r => r.json()).then(response => {
+        if (!response || !response.id) return;
         cb({
           id: "plus:" + response.id,
           plusid: response.id,
