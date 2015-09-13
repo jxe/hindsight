@@ -9,7 +9,7 @@ $(CRX): $(CRX)/background.js $(CRX)/all.css $(CRX)/fonts
 
 $(CRX)/background.js: src/chromeExtension/background.jsx
 	mkdir -p $(@D)
-	browserify $^ -t [ babelify --sourceMaps both --compact false ] --outfile $@ --debug
+	node_modules/.bin/browserify $^ -t [ babelify --sourceMaps both --compact false ] --outfile $@ --debug
 
 watch:
 	watchify src/chromeExtension/background.jsx -t [ babelify --sourceMaps both --compact false ] --outfile $(CRX)/background.js --debug
