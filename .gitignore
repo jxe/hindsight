@@ -12,3 +12,5 @@ _build
 katon.log
 _untracked
 .DS_Store
+background.js
+bundle.css

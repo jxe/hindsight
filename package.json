@@ -1,16 +1,32 @@
 {
   "name": "hindsight",
-  "engines": {
-    "node": "0.12.x"
+  "version": "0.3.0",
+  "description": "a chrome extension to capture the reasons people browse",
+  "dependencies": {
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "reasons": "file:/warez/reasons",
+    "chrome-activities": "file:/warez/chrome-activities",
+    "react-ratchet": "file:/warez/react-ratchet"
   },
   "devDependencies": {
-    "budo": "^4.0.0",
-    "babelify": "^6.1.2",
-    "watchify": "^3.2.2",
-    "babel-core": "^5.5.8",
-    "babel-loader": "^5.1.4",
-    "browserify": "latest",
-    "react": "latest",
-    "firebase": "^1.0.24"
-  }
+    "babel-preset-es2015": "latest",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "watchify": "^3.7.0",
+    "css-img-datauri-stream": "^0.1.5",
+    "parcelify": "^2.1.0"
+  },
+  "browserify": {
+    "transform": [
+      ["babelify", { "presets": ["react", "es2015"] }]
+    ]
+  },
+  "scripts": {
+    "build": "browserify --debug -p [ parcelify -t css-img-datauri-stream -d . -o bundle.css ] background.jsx -o background.js",
+    "watch": "watchify -d -p [ parcelify -t css-img-datauri-stream -wo bundle.css ] background.jsx -o background.js"
+  },
+  "author": "Joe Edelman",
+  "license": "ISC"
 }

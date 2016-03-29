@@ -12,21 +12,21 @@
       "*://localhost/*"
     ]
   },
-  "permissions": [ "tabs", "idle", "identity", "webRequest", "activeTab", "storage", "http://ajax.googleapis.com/", "http://*/*", "https://*/*" ],
+  "permissions": [ "tabs", "history", "idle", "identity", "storage", "http://ajax.googleapis.com/", "http://*/*", "https://*/*" ],
   "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
 
   "name": "Hindsight",
   "short_name": "Hindsight",
   "description": "Browse the web with no regrets.",
-  "version": "0.0.2",
+  "version": "0.3.0",
   "author": "Joe Edelman",
   "icons": {
-    "128": "img/eye.128x128.png",
-    "48": "img/eye.48x48.png"
+    "128": "images/eyes/eye-bloodshot.png",
+    "48": "images/eyes/eye-bloodshot.png"
   },
 
   "browser_action": {
-    "default_icon": "img/eye.png",
+    "default_icon": "images/eyes/eye-bloodshot.png",
     "default_name": "Hindsight",
     "default_title": "Hindsight",
     "default_popup": "popup.html"
@@ -38,36 +38,3 @@
   "background": { "scripts": ["background.js"] },
   "update_url": "https://clients2.google.com/service/update2/crx"
 }
-
-
-/*
-"commands": {
-  "agenda-back": {
-    "suggested_key": {
-      "default": "Alt+Left",
-      "mac": "Alt+Left"
-    },
-    "description": "Agenda back"
-  },
-  "agenda-forward": {
-    "suggested_key": {
-      "default": "Alt+Right",
-      "mac": "Alt+Right"
-    },
-    "description": "Agenda forward"
-  },
-  "agenda-done": {
-    "suggested_key": {
-      "default": "Alt+Up",
-      "mac": "Alt+Up"
-    },
-    "description": "Agenda done"
-  },
-  "_execute_browser_action": {
-    "suggested_key": {
-      "default": "Alt-Period",
-      "mac": "Alt-Period"
-    }
-  },
-},
-*/
