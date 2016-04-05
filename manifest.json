@@ -21,12 +21,12 @@
   "version": "0.3.0",
   "author": "Joe Edelman",
   "icons": {
-    "128": "images/eyes/eye-bloodshot.png",
-    "48": "images/eyes/eye-bloodshot.png"
+    "128": "images/eyes/clear.png",
+    "48": "images/eyes/clear.png"
   },
 
   "browser_action": {
-    "default_icon": "images/eyes/eye-bloodshot.png",
+    "default_icon": "images/eyes/clear.png",
     "default_name": "Hindsight",
     "default_title": "Hindsight",
     "default_popup": "popup.html"

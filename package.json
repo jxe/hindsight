@@ -3,11 +3,11 @@
   "version": "0.3.0",
   "description": "a chrome extension to capture the reasons people browse",
   "dependencies": {
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7",
-    "reasons": "file:/warez/reasons",
-    "chrome-activities": "file:/warez/chrome-activities",
-    "react-ratchet": "file:/warez/react-ratchet"
+    "react": "latest",
+    "react-dom": "latest",
+    "reasons": "livable/reasons",
+    "chrome-activities": "livable/chrome-activities",
+    "react-ratchet": "jxe/react-ratchet"
   },
   "devDependencies": {
     "babel-preset-es2015": "latest",
