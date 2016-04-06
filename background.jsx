@@ -48,14 +48,13 @@ function signIn(){
         headers: { 'Authorization': 'Bearer ' + tok },
       }).then(r => r.json()).then(response => {
         if (!response || !response.id) return;
+        console.log('Auth response', response)
         Reasons.registerUser({
           plusID: response.id,
-          gender: response.gender,
-          name: response.displayName,
-          location: response.currentLocation,
-          image: response.image && response.image.url,
-          language: response.language,
-          email: response.emails && response.emails[0] && response.emails[0].value
+          name: response.displayName || null,
+          image: response.image && response.image.url || null,
+          gender: response.gender || null,
+          email: response.emails && response.emails[0] && response.emails[0].value || null
         })
       }).catch(ex => console.error(ex))
     })
@@ -68,7 +67,9 @@ const PleaseSignIn = () => (
     <p>
       As you browse, you'll see an eyeball icon on chrome. When Hindsight thinks you might want to review whatever you're doing to see if it's really helpful for yourself and for others, the eyeball will turn to look at the URL bar to the left of it. If Hindsight thinks you should probably take a break the eyeball will turn red and bloodshot. If Hindsight understands how you're using the web enough to know you're on track, the iris of the eyeball turns green!
     </p>
-    <p>In order to send your reviews in to be counter, we'll need you to sign in. We only collect your email address, and we won't connected it with data from your web use.</p>
+    <p>
+      Please sign in to use Hindsight. Hindsight collects your reasons and aggregate web-use statistics, but doesn't connected them to your identity. We look for common patterns between users and all data is made publicly available to researchers. We only collect your email in case we need to email all users.
+    </p>
     <Button onClick={signIn}>
       Sign in
     </Button>

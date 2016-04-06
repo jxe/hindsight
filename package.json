@@ -1,12 +1,12 @@
 {
   "name": "hindsight",
-  "version": "0.3.0",
+  "version": "0.3.5",
   "description": "a chrome extension to capture the reasons people browse",
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
-    "reasons": "livable/reasons",
-    "chrome-activities": "livable/chrome-activities",
+    "reasons": "^0.1.2",
+    "chrome-activities": "^0.1.1",
     "react-ratchet": "jxe/react-ratchet"
   },
   "devDependencies": {
@@ -25,7 +25,8 @@
   },
   "scripts": {
     "build": "browserify --debug -p [ parcelify -t css-img-datauri-stream -d . -o bundle.css ] background.jsx -o background.js",
-    "watch": "watchify -d -p [ parcelify -t css-img-datauri-stream -wo bundle.css ] background.jsx -o background.js"
+    "watch": "watchify -d -p [ parcelify -t css-img-datauri-stream -wo bundle.css ] background.jsx -o background.js",
+    "zip": "(cd ..; zip -r hindsight.zip hindsight/{background.js,bundle.css,manifest.json,images,popup.*})"
   },
   "author": "Joe Edelman",
   "license": "ISC"

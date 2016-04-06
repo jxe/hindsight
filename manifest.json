@@ -2,23 +2,18 @@
   "oauth2": {
     "client_id": "779200833808-3vss08g6ccrj3n0bb8r2d7u5gpt7t96u.apps.googleusercontent.com",
     "scopes": [
-      "profile",
-      "email"
+      "https://www.googleapis.com/auth/plus.me",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
     ]
   },
-  "externally_connectable": {
-    "matches": [
-      "*://retroreview.herokuapp.com/*",
-      "*://localhost/*"
-    ]
-  },
-  "permissions": [ "tabs", "history", "idle", "identity", "storage", "http://ajax.googleapis.com/", "http://*/*", "https://*/*" ],
-  "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
+  "permissions": [ "tabs", "history", "idle", "identity", "storage" ],
+  "content_security_policy": "script-src 'self' https://*.google.com https://*.googleapis.com https://cdn.firebase.com https://*.firebaseio.com; object-src 'self'",
 
   "name": "Hindsight",
   "short_name": "Hindsight",
   "description": "Browse the web with no regrets.",
-  "version": "0.3.0",
+  "version": "0.3.5",
   "author": "Joe Edelman",
   "icons": {
     "128": "images/eyes/clear.png",
