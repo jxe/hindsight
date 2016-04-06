@@ -5,8 +5,8 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
-    "reasons": "^0.1.2",
-    "chrome-activities": "^0.1.1",
+    "reasons": "^0.1.3",
+    "chrome-activities": "^0.1.2",
     "react-ratchet": "jxe/react-ratchet"
   },
   "devDependencies": {

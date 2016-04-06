@@ -1,10 +1,16 @@
 ## TODO
 
-BUGS TO FIX!!!
-- switch around plus etc
+TEST
+- enter behavior is CRAZYPANTS
 - when no completions found "add a reason" completion appears
+- three tabs
 
 
+
+TOMORROW
+- pink boxes for reviewing, separately
+- after reviewing leave a log activity with an undo
+- re-do w. sophistication - reduce activity significance delay for new users
 
 ====
 
