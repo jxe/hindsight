@@ -1,25 +1,21 @@
 hindsight
 =========
 
-This repo contains a chrome extension for reviewing the websites you visit.  It is made of several independent modules that are useful in their own right:
-
-* In `src/usageTracker` you'll find a way of instrumenting chrome to record fine-grained usage data.  We track not only the minutes you spend on various websites (actually interacting with a relevant tab), but notifications and whether they bring you back, activities performed at the sites, time spent on other websites due to links from a feed from a main site, etc.  To instrument chrome, we call `LibUsage.activate()`, and thereafter calls like `LibUsage.getTimelineFor("https://facebook.com")` will return a JSON object of [Timeline](doc/Timeline.md) tracks called `usage`, `indirectUsage`, `notifications` etc.
-
-* In `src/reviewComponents` you'll find [react](https://facebook.github.io/react/) widgets for reviewing activities in general, including web usage but also visits to venues, app usage, or whatever else you'd like to review.  The reviews include information about the reasons for use, whether those reasons were fulfilled by the activity in question, whether the investments involved seemed worth it, and whether the user continues to care about those reasons.  Reviews are pushed to a firebase database by the code in `src/collectiveExperience`.  The review consists of [Timeline](doc/Timeline.md) tracks (in addition to those record for `usage`, `indirectUsage`) that record `fulfillment` due to a website, `reflections` about whether usage was worth it, and the `hopes` of the user for their life.  You'll also find a [react](https://facebook.github.io/react/) component for doing typeahead tagging about why a person would do a thing (i.e., their *reason* for doing the thing).  This currenly leverages a database of reasons kept in firebase, managed by the code in `src/collectiveExperience`.
-
-* In `src/collectiveExperience/timelines.js` you'll find utilities for dealing with [Timeline](doc/Timeline.md) tracks, a simple JSON format for describing periodic, intermittent, observed, or regular events over time -- like web usage or regret.
+Code for the chrome extension demo'd in http://nxhx.org/maximizing/, also in the [chrome web store](https://chrome.google.com/webstore/detail/hindsight/accbpganjjaadepnncaknjdkogbmgfbl).
 
 
+## Welcome to the code
+
+Your best bet is just to look inside `background.jsx`.  Mostly it's just calls out to other npm modules, chrome-activities and reasons.
 
 
 ## Getting started
 
-Try `npm install` and `make` to build your own version of the extension.  If that isn't enough, let me know and I'll help you out.  If you don't have npm, google how to install it.
+* `npm install`
+* `npm run build`
+* Load in chrome as an [unpacked extension](https://developer.chrome.com/extensions/getstarted#unpacked)
 
-Make builds the extension in the subdirectory `_build/chromeExtension`. It can then be loaded as an [unpacked extension](https://developer.chrome.com/extensions/getstarted#unpacked) in chrome by selecting that directory.
-
-To rebuild continuously, try `make watch`.  Currently this just rebuilds changed javascript files, not css, and doesn't autoload the new javascript in the browser, so you still need to click 'reload' on the chrome extensions pane.
-
+To rebuild continuously, `npm run watch`.
 
 
 ## Contributing
