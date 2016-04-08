@@ -68,7 +68,7 @@ const PleaseSignIn = () => (
       As you browse, you'll see an eyeball icon on chrome. When Hindsight thinks you might want to review whatever you're doing to see if it's really helpful for yourself and for others, the eyeball will turn to look at the URL bar to the left of it. If Hindsight thinks you should probably take a break the eyeball will turn red and bloodshot. If Hindsight understands how you're using the web enough to know you're on track, the iris of the eyeball turns green!
     </p>
     <p>
-      Please sign in to use Hindsight. Hindsight collects your reasons and aggregate web-use statistics, but doesn't connected them to your identity. We look for common patterns between users and all data is made publicly available to researchers. We only collect your email in case we need to email all users.
+      Please sign in to use Hindsight. Hindsight collects your reasons and aggregate web-use statistics, but doesn't connect them to your identity. We look for common patterns between users and all data is made publicly available to researchers. We only collect your email in case we need to email all users.
     </p>
     <Button onClick={signIn}>
       Sign in
